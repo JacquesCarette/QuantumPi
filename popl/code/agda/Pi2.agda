@@ -10,57 +10,15 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (⊤; tt)
 open import Function using (_∘_)
 
+open import PiSyntax
+open import PiZ
+
 -------------------------------------------------------------------------------------
--- Types
-
-data U : Set where
-  O : U
-  I : U
-  _+ᵤ_ : U → U → U
-  _×ᵤ_ : U → U → U
-
-⟦_⟧ : U → Set
-⟦ O ⟧ = ⊥
-⟦ I ⟧ = ⊤
-⟦ x +ᵤ y ⟧ = ⟦ x ⟧ ⊎ ⟦ y ⟧
-⟦ x ×ᵤ y ⟧ = ⟦ x ⟧ × ⟦ y ⟧
-
-infixr 40 _+ᵤ_ _×ᵤ_
-infix 30 _⟷_
-infixr 50 _◎_ _⊕_
-
 private
   variable
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
     a b c d : U
 
--- 1-combinators
-
-data _⟷_  : U → U → Set where
-  unite₊l : O +ᵤ t ⟷  t
-  uniti₊l : t ⟷  O +ᵤ t
-  unite⋆l : I ×ᵤ t ⟷  t
-  uniti⋆l : t ⟷  I ×ᵤ t
-  swap₊   : t₁ +ᵤ t₂ ⟷  t₂ +ᵤ t₁
-  swap⋆   : t₁ ×ᵤ t₂ ⟷  t₂ ×ᵤ t₁
-  assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷  (t₁ +ᵤ t₂) +ᵤ t₃
-  assocr₊ : (t₁ +ᵤ t₂) +ᵤ t₃ ⟷  t₁ +ᵤ (t₂ +ᵤ t₃)
-  assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⟷  (t₁ ×ᵤ t₂) ×ᵤ t₃
-  assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⟷  t₁ ×ᵤ (t₂ ×ᵤ t₃)
-  absorbr : O ×ᵤ t ⟷  O
-  absorbl : t ×ᵤ O ⟷  O
-  factorzr : O ⟷  t ×ᵤ O
-  factorzl : O ⟷  O ×ᵤ t
-  dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷  (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
-  distl : t₃ ×ᵤ (t₁ +ᵤ t₂)  ⟷ (t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ t₂)
-  factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ +ᵤ t₂) ×ᵤ t₃
-  factorl : {t₁ t₂ t₃ : U} → (t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ  t₂) ⟷ t₃ ×ᵤ (t₁ +ᵤ t₂)
-  id⟷  : t ⟷  t
-  _◎_     : (t₁ ⟷  t₂) → (t₂ ⟷  t₃) → (t₁ ⟷  t₃)
-  _⊕_     : (t₁ ⟷  t₃) → (t₂ ⟷  t₄) → (t₁ +ᵤ t₂ ⟷  t₃ +ᵤ t₄)
-  _⊗_     : (t₁ ⟷  t₃) → (t₂ ⟷  t₄) → (t₁ ×ᵤ t₂ ⟷  t₃ ×ᵤ t₄)
-
--------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
 record Pi (rep : U → U → Set) : Set where
@@ -71,9 +29,9 @@ record Pi (rep : U → U → Set) : Set where
     _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
 
 -- instances
-Pi⟷ : Pi _⟷_
+Pi⟷ : Pi _⟷₁_
 Pi⟷ = record
-  { idp = id⟷
+  { idp = id⟷₁
   ; _⊚_ = _◎_
   ; swapp = swap⋆
   ; _⊛_ = _⊗_
@@ -178,14 +136,14 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
     }
 
 -- we can enumerate our types
-enum : (t : U) → List ⟦ t ⟧
+enum : (t : U) → List ⟦ t ⟧z
 enum O = []
 enum I = tt ∷ []
 enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
 enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
 
 H : (t : U) → Set
-H t = ⟦ t ⟧ → Float
+H t = ⟦ t ⟧z → Float
 
 Fwd : U → U → Set
 Fwd t₁ t₂ = H t₁ → H t₂
