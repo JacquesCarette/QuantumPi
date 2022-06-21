@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split --rewriting #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module PiSyntax where
 

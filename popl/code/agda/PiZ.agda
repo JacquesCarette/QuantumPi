@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split --rewriting #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module PiZ where
 
@@ -30,7 +30,7 @@ eval swap₊ (inj₂ v) = inj₁ v
 eval swap⋆ (v₁ , v₂) = (v₂ , v₁)
 eval assocl₊ (inj₁ v) = inj₁ (inj₁ v)
 eval assocl₊ (inj₂ (inj₁ v)) = inj₁ (inj₂ v)
-eval assocl₊ (inj₂ (inj₂ v)) = inj₂ v 
+eval assocl₊ (inj₂ (inj₂ v)) = inj₂ v
 eval assocr₊ (inj₁ (inj₁ v)) = inj₁ v
 eval assocr₊ (inj₁ (inj₂ v)) = inj₂ (inj₁ v)
 eval assocr₊ (inj₂ v) = inj₂ (inj₂ v)
