@@ -82,46 +82,52 @@ Pi⟷ = record
 -------------------------------------------------------------------------------------
 -- Pairing
 
-record Pair {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
-  (p : (U → U → Set) → (U → U → Set) → U → U → Set) : Set where
+record Pair {W : Set} (rep₁ rep₂ : W → W → Set)
+  (p : W → W → Set) : Set where
   infixr 50 _⊚⊚_
   field
-    nil : p rep₁ rep₂ t t
-    cons₁ : rep₁ t₁ t₂ → p rep₁ rep₂ t₂ t₃ → p rep₁ rep₂ t₁ t₃
-    cons₂ : rep₂ t₁ t₂ → p rep₁ rep₂ t₂ t₃ → p rep₁ rep₂ t₁ t₃
-    _⊚⊚_ : p rep₁ rep₂ t₁ t₂ → p rep₁ rep₂ t₂ t₃ → p rep₁ rep₂ t₁ t₃
-    first : p rep₁ rep₂ t₁ t₂ -> p rep₁ rep₂ (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
+    nil : {t : W} → p t t
+    cons₁ : {t₁ t₂ t₃ : W} → rep₁ t₁ t₂ → p t₂ t₃ → p t₁ t₃
+    cons₂ : {t₁ t₂ t₃ : W} → rep₂ t₁ t₂ → p t₂ t₃ → p t₁ t₃
+    _⊚⊚_ : {t₁ t₂ t₃ : W} → p t₁ t₂ → p t₂ t₃ → p t₁ t₃
+
+record PiPair (rep₁ rep₂ : U → U → Set)
+  (p : U → U → Set) : Set where
+  field
+    pair : Pair rep₁ rep₂ p
+    first : p t₁ t₂ -> p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
 
 module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
-         (p : (U → U → Set) → (U → U → Set) → U → U → Set)
-         (pair : Pair p₁ p₂ p) where
+         (p : U → U → Set)
+         (πpair : PiPair rep₁ rep₂ p) where
+  open PiPair πpair
   open Pair pair
 
-  arr₁ : rep₁ t₁ t₂ -> p rep₁ rep₂ t₁ t₂
+  arr₁ : rep₁ t₁ t₂ -> p t₁ t₂
   arr₁ c = cons₁ c nil
-  arr₂ : rep₂ t₁ t₂ -> p rep₁ rep₂ t₁ t₂
+  arr₂ : rep₂ t₁ t₂ -> p t₁ t₂
   arr₂ c = cons₂ c nil
 
-  idzh : p rep₁ rep₂ t t
+  idzh : p t t
   idzh = arr₁ (Pi.idp p₁)
-  swappzh : p rep₁ rep₂ (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
+  swappzh : p (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
   swappzh = arr₁ (Pi.swapp p₁)
 
-  second : p rep₁ rep₂ t₁ t₂ → p rep₁ rep₂ (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
+  second : p t₁ t₂ → p (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
   second c = swappzh ⊚⊚ first c ⊚⊚ swappzh
 
-record StEffPi {rep₁ rep₂ : U → U → Set} {p₁ : Pi rep₁} {p₂ : Pi rep₂}
-         (p : (U → U → Set) → (U → U → Set) → U → U → Set)
-         (pair : Pair p₁ p₂ p)
-         (rep : (U → U → Set) → (U → U → Set) → Pair p₁ p₂ p → U → U → Set) : Set where
+record StEffPi {rep₁ rep₂ : U → U → Set}
+         (p : U → U → Set)
+         (pair : PiPair rep₁ rep₂ p)
+         (rep : PiPair rep₁ rep₂ p → U → U → Set) : Set where
   field
-    lift : p rep₁ rep₂ (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → rep rep₁ rep₂ pair t₁ t₃
+    lift : p (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → rep pair t₁ t₃
 
 
 module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
-         (p : (U → U → Set) → (U → U → Set) → U → U → Set)
-         (pair : Pair p₁ p₂ p)
-         (rep : (U → U → Set) → (U → U → Set) → Pair p₁ p₂ p → U → U → Set)
+         (p : U → U → Set)
+         (pair : PiPair rep₁ rep₂ p)
+         (rep : PiPair rep₁ rep₂ p → U → U → Set)
          (eff : StEffPi p pair rep) where
   open StEffPi eff
   open Arrows p₁ p₂ p pair
@@ -131,11 +137,11 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
   id₁ = Pi.idp p₁
 
   -- Lifting too general a swap:
-  lswap : rep rep₁ rep₂ pair t₁ t₃
+  lswap : rep pair t₁ t₃
   lswap = lift (arr₁ (Pi.swapp p₁))
 
   -- With annotations
-  zero : rep rep₁ rep₂ pair I (I +ᵤ I)
+  zero : rep pair I (I +ᵤ I)
   zero = lift (arr₁ (Pi.swapp p₁))
 
 -- We can have a generic list of composables
@@ -158,12 +164,16 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
   first′ (CONS (inj₁ x) y) = CONS (inj₁ (x P.⊛ P.idp )) (first′ y)
   first′ (CONS (inj₂ x) y) = CONS (inj₂ (x Q.⊛ Q.idp)) (first′ y)
 
-  LST-Pair : Pair p₁ p₂ LST
+  LST-Pair : Pair rep₁ rep₂ (LST rep₁ rep₂)
   LST-Pair = record
     { nil = NIL
     ; cons₁ = λ a b → CONS (inj₁ a) b
     ; cons₂ = λ a b → CONS (inj₂ a) b
     ; _⊚⊚_ = comp
+    }
+  LST-PiPair : PiPair rep₁ rep₂ (LST rep₁ rep₂)
+  LST-PiPair = record
+    { pair = LST-Pair
     ; first = first′
     }
 
