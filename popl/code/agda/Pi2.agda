@@ -49,8 +49,7 @@ record Pair {W : Set} (rep₁ rep₂ : W → W → Set) (p : W → W → Set) : 
     _⊚⊚_ : {t₁ t₂ t₃ : W} → p t₁ t₂ → p t₂ t₃ → p t₁ t₃
 
 -- Pair two things that depend on U types
-record PiPair (rep₁ rep₂ : U → U → Set)
-  (p : U → U → Set) : Set where
+record PiPair (rep₁ rep₂ : U → U → Set) (p : U → U → Set) : Set where
   field
     pair : Pair rep₁ rep₂ p
     first : p t₁ t₂ -> p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
@@ -58,8 +57,7 @@ record PiPair (rep₁ rep₂ : U → U → Set)
 -- Form "Arrows" over a pairing of Pi languages. We need the following 3 items:
 -- 1. idp, 2. swapp and 3. first.
 module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
-         (p : U → U → Set)
-         (πpair : PiPair rep₁ rep₂ p) where
+         (p : U → U → Set) (πpair : PiPair rep₁ rep₂ p) where
   open PiPair πpair
   open Pair pair
 
