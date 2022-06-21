@@ -2,12 +2,10 @@
 
 module Pi2 where
 
-open import Data.Empty using (⊥)
 open import Data.Float as F using (Float)
-open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct; foldr)
-open import Data.Product using (_×_; _,_)
+open import Data.List using (List; map; foldr)
+open import Data.Product using (_,_)
 open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
-open import Data.Unit using (⊤; tt)
 open import Function using (_∘_)
 
 open import PiSyntax
@@ -40,8 +38,9 @@ Pi⟷ = record
 -------------------------------------------------------------------------------------
 -- Pairing
 
-record Pair {W : Set} (rep₁ rep₂ : W → W → Set)
-  (p : W → W → Set) : Set where
+-- Pair any two things that are binary predicates over a type using alternation.
+
+record Pair {W : Set} (rep₁ rep₂ : W → W → Set) (p : W → W → Set) : Set where
   infixr 50 _⊚⊚_
   field
     nil : {t : W} → p t t
@@ -49,12 +48,15 @@ record Pair {W : Set} (rep₁ rep₂ : W → W → Set)
     cons₂ : {t₁ t₂ t₃ : W} → rep₂ t₁ t₂ → p t₂ t₃ → p t₁ t₃
     _⊚⊚_ : {t₁ t₂ t₃ : W} → p t₁ t₂ → p t₂ t₃ → p t₁ t₃
 
+-- Pair two things that depend on U types
 record PiPair (rep₁ rep₂ : U → U → Set)
   (p : U → U → Set) : Set where
   field
     pair : Pair rep₁ rep₂ p
     first : p t₁ t₂ -> p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
 
+-- Form "Arrows" over a pairing of Pi languages. We need the following 3 items:
+-- 1. idp, 2. swapp and 3. first.
 module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
          (p : U → U → Set)
          (πpair : PiPair rep₁ rep₂ p) where
@@ -74,6 +76,7 @@ module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi re
   second : p t₁ t₂ → p (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
   second c = swappzh ⊚⊚ first c ⊚⊚ swappzh
 
+-- Lifting to States and Effects.
 record StEffPi {rep₁ rep₂ : U → U → Set}
          (p : U → U → Set)
          (pair : PiPair rep₁ rep₂ p)
@@ -81,7 +84,7 @@ record StEffPi {rep₁ rep₂ : U → U → Set}
   field
     lift : p (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → rep pair t₁ t₃
 
-
+-- Some examples where we use all of the above
 module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
          (p : U → U → Set)
          (pair : PiPair rep₁ rep₂ p)
@@ -135,12 +138,8 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
     ; first = first′
     }
 
--- we can enumerate our types
-enum : (t : U) → List ⟦ t ⟧z
-enum O = []
-enum I = tt ∷ []
-enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
-enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
+-----------------------------------------------------------------------
+-- Below we start the work that correspoints to the H interpretation
 
 H : (t : U) → Set
 H t = ⟦ t ⟧z → Float

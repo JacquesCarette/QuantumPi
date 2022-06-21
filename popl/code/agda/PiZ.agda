@@ -3,9 +3,10 @@
 module PiZ where
 
 open import Data.Empty using (⊥)
-open import Data.Unit using (⊤; tt)
-open import Data.Sum using (_⊎_; inj₁; inj₂)
+open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
 open import Data.Product using (_,_; _×_)
+open import Data.Sum using (_⊎_; inj₁; inj₂)
+open import Data.Unit using (⊤; tt)
 
 open import PiSyntax
 
@@ -49,6 +50,13 @@ eval (c₁ ◎ c₂) v = eval c₂ (eval c₁ v)
 eval (c₁ ⊕ c₂) (inj₁ v) = inj₁ (eval c₁ v)
 eval (c₁ ⊕ c₂) (inj₂ v) = inj₂ (eval c₂ v)
 eval (c₁ ⊗ c₂) (v₁ , v₂) = (eval c₁ v₁ , eval c₂ v₂)
+
+-- we can enumerate our types
+enum : (t : U) → List ⟦ t ⟧z
+enum O = []
+enum I = tt ∷ []
+enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
+enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
