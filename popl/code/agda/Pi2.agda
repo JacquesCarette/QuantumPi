@@ -4,36 +4,20 @@ module Pi2 where
 
 open import Data.Float as F using (Float)
 open import Data.List using (List; map; foldr)
-open import Data.Product using (_,_)
+open import Data.Product as Prod using (_,_)
 open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
+open import Data.Unit using (tt)
 open import Function using (_∘_)
 
 open import PiSyntax
-open import PiZ
+open import PiZ hiding (Fwd)
+open import PiTagless
 
 -------------------------------------------------------------------------------------
 private
   variable
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
     a b c d : U
-
--------------------------------------------------------------------------------------
-
-record Pi (rep : U → U → Set) : Set where
-  field
-    idp : rep t t
-    _⊚_ : rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
-    swapp : rep (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
-    _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
-
--- instances
-Pi⟷ : Pi _⟷₁_
-Pi⟷ = record
-  { idp = id⟷₁
-  ; _⊚_ = _◎_
-  ; swapp = swap⋆
-  ; _⊛_ = _⊗_
-  }
 
 -------------------------------------------------------------------------------------
 -- Pairing
@@ -69,7 +53,7 @@ module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi re
   idzh : p t t
   idzh = arr₁ (Pi.idp p₁)
   swappzh : p (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
-  swappzh = arr₁ (Pi.swapp p₁)
+  swappzh = arr₁ (Pi.swap× p₁)
 
   second : p t₁ t₂ → p (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
   second c = swappzh ⊚⊚ first c ⊚⊚ swappzh
@@ -97,11 +81,11 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
 
   -- Lifting too general a swap:
   lswap : rep pair t₁ t₃
-  lswap = lift (arr₁ (Pi.swapp p₁))
+  lswap = lift (arr₁ (Pi.swap× p₁))
 
   -- With annotations
   zero : rep pair I (I +ᵤ I)
-  zero = lift (arr₁ (Pi.swapp p₁))
+  zero = lift (arr₁ (Pi.swap× p₁))
 
 -- We can have a generic list of composables
 data LST (p q : U → U → Set) : U → U → Set where
@@ -150,9 +134,14 @@ sumf = foldr F._+_ (F.fromℕ 0)
 
 PiH : Pi Fwd
 PiH = record
-  { idp = λ x → x
+  { unite+l = λ f → f ∘ inj₂
+  ; uniti+l = λ {f (inj₂ x) → f x }
+  ; unite*l = λ f x → f (tt , x)
+  ; uniti*l = λ f x → f (Prod.proj₂ x)
+  ; swap+ = λ f → f ∘ Sum.swap
+  ; swap× = λ f → f ∘ Prod.swap
+  ; idp = λ x → x
   ; _⊚_ = λ f g → g ∘ f
-  ; swapp = λ {f (a , b) → f (b , a)} -- rewrite using swap?
   ; _⊛_ = λ { {t₁} {_} {t₃} f g h (c , d) →
             f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
             g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}

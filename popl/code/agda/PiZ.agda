@@ -4,11 +4,13 @@ module PiZ where
 
 open import Data.Empty using (⊥)
 open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
-open import Data.Product using (_,_; _×_)
-open import Data.Sum using (_⊎_; inj₁; inj₂)
+open import Data.Product as Prod using (_,_; _×_; swap)
+open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (⊤; tt)
+open import Function using (id; _∘_; flip)
 
 open import PiSyntax
+open import PiTagless
 
 -------------------------------------------------------------------------------------
 -- Conventional denotations
@@ -57,6 +59,38 @@ enum O = []
 enum I = tt ∷ []
 enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
 enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
+
+-- The language is an instance of the record
+Pi⟷ : Pi _⟷₁_
+Pi⟷ = record
+  { unite+l = unite₊l
+  ; uniti+l = uniti₊l
+  ; unite*l = unite⋆l
+  ; uniti*l = uniti⋆l
+  ; swap+ = swap₊
+  ; swap× = swap⋆
+  ; idp = id⟷₁
+  ; _⊚_ = _◎_
+  ; _⊛_ = _⊗_
+  }
+
+Fwd : (t₁ t₂ : U) → Set
+Fwd t₁ t₂ = ⟦ t₁ ⟧z → ⟦ t₂ ⟧z
+
+-- So is the interpreter!
+PiFwd : Pi Fwd
+PiFwd = record
+  { unite+l = λ { (inj₂ x) → x }
+  ; uniti+l = inj₂
+  ; unite*l = Prod.proj₂
+  ; uniti*l = tt ,_
+  ; swap+ = Sum.swap
+  ; swap× = swap
+  ; idp = id
+  ; _⊚_ = λ f g → g ∘ f
+  ; _⊛_ = λ c₁ c₂ → Prod.map c₁ c₂
+  }
+  where open Pi Pi⟷
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
