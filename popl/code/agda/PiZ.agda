@@ -91,6 +91,7 @@ Fwd : (t₁ t₂ : U) → Set
 Fwd t₁ t₂ = ⟦ t₁ ⟧z → ⟦ t₂ ⟧z
 
 -- So is the interpreter!
+-- note how the action induced by each combinator is much clearer here than in `eval`
 PiFwd : Pi Fwd
 PiFwd = record
   { unite+l = λ { (inj₂ x) → x }
@@ -116,7 +117,13 @@ PiFwd = record
   ; _⊕′_ = λ c₁ c₂ → Sum.map c₁ c₂
   ; _⊛_ = λ c₁ c₂ → Prod.map c₁ c₂
   }
-  where open Pi Pi⟷
 
+-- And it's all reversible
+Bwd : (t₁ t₂ : U) → Set
+Bwd t₁ t₂ = ⟦ t₂ ⟧z → ⟦ t₁ ⟧z
+
+-- The generic reverse will do it, no need to rewrite
+PiBwd : Pi Bwd
+PiBwd = reverse Fwd PiFwd
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
