@@ -18,16 +18,16 @@ record Pi (rep : U → U → Set) : Set where
     uniti*l : rep t (I ×ᵤ t)
     swap+ : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
     swap× : rep (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
+    assocl+ : rep  (t₁ +ᵤ (t₂ +ᵤ t₃)) ((t₁ +ᵤ t₂) +ᵤ t₃)
+    assocr+ : rep  ((t₁ +ᵤ t₂) +ᵤ t₃) (t₁ +ᵤ (t₂ +ᵤ t₃))
+    assocl* : rep  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
+    assocr* : rep  ((t₁ ×ᵤ t₂) ×ᵤ t₃) (t₁ ×ᵤ (t₂ ×ᵤ t₃))
+    absorbr′ : rep (O ×ᵤ t) O
+    absorbl′ : rep (t ×ᵤ O) O
     idp : rep t t
     _⊚_ : rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
     _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
 {-
-  assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷₁  (t₁ +ᵤ t₂) +ᵤ t₃
-  assocr₊ : (t₁ +ᵤ t₂) +ᵤ t₃ ⟷₁  t₁ +ᵤ (t₂ +ᵤ t₃)
-  assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⟷₁  (t₁ ×ᵤ t₂) ×ᵤ t₃
-  assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⟷₁  t₁ ×ᵤ (t₂ ×ᵤ t₃)
-  absorbr : O ×ᵤ t ⟷₁  O
-  absorbl : t ×ᵤ O ⟷₁  O
   factorzr : O ⟷₁  t ×ᵤ O
   factorzl : O ⟷₁  O ×ᵤ t
   dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷₁  (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
