@@ -28,14 +28,9 @@ record Pi (rep : U → U → Set) : Set where
     factorzl′ : rep O (O ×ᵤ t)
     dist′ : rep ((t₁ +ᵤ t₂) ×ᵤ t₃) ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃))
     distl′ : rep (t₃ ×ᵤ (t₁ +ᵤ t₂)) ((t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ t₂))
+    factor′ : rep ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)) ((t₁ +ᵤ t₂) ×ᵤ t₃)
+    factorl′ : rep ((t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ  t₂)) (t₃ ×ᵤ (t₁ +ᵤ t₂))
     idp : rep t t
     _⊚_ : rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
+    _⊕′_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ +ᵤ t₂) (t₃ +ᵤ t₄)
     _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
-{-
-  factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) ×ᵤ t₃
-  factorl : {t₁ t₂ t₃ : U} → (t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ  t₂) ⟷₁ t₃ ×ᵤ (t₁ +ᵤ t₂)
-  id⟷₁  : t ⟷₁  t
-  _◎_     : (t₁ ⟷₁  t₂) → (t₂ ⟷₁  t₃) → (t₁ ⟷₁  t₃)
-  _⊕_     : (t₁ ⟷₁  t₃) → (t₂ ⟷₁  t₄) → (t₁ +ᵤ t₂ ⟷₁  t₃ +ᵤ t₄)
-  _⊗_     : (t₁ ⟷₁  t₃) → (t₂ ⟷₁  t₄) → (t₁ ×ᵤ t₂ ⟷₁  t₃ ×ᵤ t₄)
--}

@@ -132,6 +132,8 @@ Fwd t₁ t₂ = H t₁ → H t₂
 sumf : List Float → Float
 sumf = foldr F._+_ (F.fromℕ 0)
 
+-- Note how the interpretation is λ f → f ∘ g where g is the opposite of the Fwd interpretation for the
+-- evaluator for PiZ
 PiH : Pi Fwd
 PiH = record
   { unite+l = λ f → f ∘ inj₂
@@ -150,8 +152,11 @@ PiH = record
   ; factorzl′ = λ {f ( () , _ ) }
   ; dist′ = λ f → f ∘ Sum.[ Prod.map₁ inj₁ , Prod.map₁ inj₂ ]
   ; distl′ = λ f → f ∘ Sum.[ Prod.map₂ inj₁ , Prod.map₂ inj₂ ]
+  ; factor′ = λ f → f ∘ λ { (a , b) → Sum.map (_, b) (_, b) a }
+  ; factorl′ = λ f → f ∘ λ (a , b) → Sum.map (a ,_) (a ,_) b
   ; idp = λ x → x
   ; _⊚_ = λ f g → g ∘ f
+  ; _⊕′_ = λ f g h → Sum.[ f (h ∘ inj₁) , g (h ∘ inj₂) ]
   ; _⊛_ = λ { {t₁} {_} {t₃} f g h (c , d) →
             f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
             g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}

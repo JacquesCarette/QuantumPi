@@ -79,8 +79,11 @@ Pi⟷ = record
   ; factorzl′ = factorzl
   ; dist′ = dist
   ; distl′ = distl
+  ; factor′ = factor
+  ; factorl′ = factorl
   ; idp = id⟷₁
   ; _⊚_ = _◎_
+  ; _⊕′_ = _⊕_
   ; _⊛_ = _⊗_
   }
 
@@ -106,8 +109,11 @@ PiFwd = record
   ; factorzl′ = λ ()
   ; dist′ = λ { (a , b) → Sum.map (_, b) (_, b) a }
   ; distl′ = λ (a , b) → Sum.map (a ,_) (a ,_) b
+  ; factor′ = Sum.[ Prod.map₁ inj₁ , Prod.map₁ inj₂ ]
+  ; factorl′ = Sum.[ Prod.map₂ inj₁ , Prod.map₂ inj₂ ]
   ; idp = id
   ; _⊚_ = λ f g → g ∘ f
+  ; _⊕′_ = λ c₁ c₂ → Sum.map c₁ c₂
   ; _⊛_ = λ c₁ c₂ → Prod.map c₁ c₂
   }
   where open Pi Pi⟷
