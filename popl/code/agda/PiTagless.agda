@@ -11,6 +11,8 @@ private
     t t₁ t₂ t₃ t₄ : U
 
 record Pi (rep : U → U → Set) : Set where
+  infixr 50 _⊚_ _⊛_
+
   field
     unite+l : rep (O +ᵤ t) t
     uniti+l : rep t (O +ᵤ t)
