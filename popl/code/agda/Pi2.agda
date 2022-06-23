@@ -57,7 +57,8 @@ data LST (p q : U → U → Set) : U → U → Set where
   CONS : (p a c) ⊎ (q a c) → LST p q c b → LST p q a b
 
 -- which does give us a Pairing
-module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂) where
+module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
+    (pres₁ : representable rep₁) (pres₂ : representable rep₂) where
   private
     module P = Pi p₁
     module Q = Pi p₂
@@ -71,6 +72,11 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
   first′ (CONS (inj₁ x) y) = CONS (inj₁ (x P.⊛ P.idp )) (first′ y)
   first′ (CONS (inj₂ x) y) = CONS (inj₂ (x Q.⊛ Q.idp)) (first′ y)
 
+  inv′ : {t₁ t₂ : U} → LST rep₁ rep₂ t₁ t₂ → LST rep₁ rep₂ t₂ t₁
+  inv′ NIL = NIL
+  inv′ (CONS (inj₁ x) l) = comp (inv′ l) (CONS (inj₁ (transform p₁ pres₁ !⟷₁ x)) NIL)
+  inv′ (CONS (inj₂ y) l) = comp (inv′ l) (CONS (inj₂ (transform p₂ pres₂ !⟷₁ y)) NIL)
+
   LST-Pair : Pair rep₁ rep₂ (LST rep₁ rep₂)
   LST-Pair = record
     { nil = NIL
@@ -83,6 +89,7 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
   LST-PiPair = record
     { pair = LST-Pair
     ; first = first′
+    ; inv = inv′
     }
 
 -----------------------------------------------------------------------
