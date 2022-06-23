@@ -12,6 +12,7 @@ open import Function using (_∘_)
 open import PiSyntax
 open import PiZ hiding (Fwd)
 open import PiTagless
+open import Pairing
 
 -------------------------------------------------------------------------------------
 private
@@ -20,24 +21,6 @@ private
     a b c d : U
 
 -------------------------------------------------------------------------------------
--- Pairing
-
--- Pair any two things that are binary predicates over a type using alternation.
-
-record Pair {W : Set} (rep₁ rep₂ : W → W → Set) (p : W → W → Set) : Set where
-  infixr 50 _⊚⊚_
-  field
-    nil : {t : W} → p t t
-    cons₁ : {t₁ t₂ t₃ : W} → rep₁ t₁ t₂ → p t₂ t₃ → p t₁ t₃
-    cons₂ : {t₁ t₂ t₃ : W} → rep₂ t₁ t₂ → p t₂ t₃ → p t₁ t₃
-    _⊚⊚_ : {t₁ t₂ t₃ : W} → p t₁ t₂ → p t₂ t₃ → p t₁ t₃
-
--- Pair two things that depend on U types
-record PiPair (rep₁ rep₂ : U → U → Set) (p : U → U → Set) : Set where
-  field
-    pair : Pair rep₁ rep₂ p
-    first : p t₁ t₂ -> p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-
 -- Form "Arrows" over a pairing of Pi languages. We need the following 3 items:
 -- 1. idp, 2. swapp and 3. first.
 module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
