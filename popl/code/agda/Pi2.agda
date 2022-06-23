@@ -35,11 +35,22 @@ module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi re
 
   idzh : p t t
   idzh = arr₁ (Pi.idp p₁)
-  swappzh : p (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
-  swappzh = arr₁ (Pi.swap× p₁)
+  swap× : p (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
+  swap× = arr₁ (Pi.swap× p₁)
+  assocl× : p  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
+  assocl× = arr₁ (Pi.assocl* p₁)
+  assocr× : p  ((t₁ ×ᵤ t₂) ×ᵤ t₃) (t₁ ×ᵤ (t₂ ×ᵤ t₃))
+  assocr× = arr₁ (Pi.assocr* p₁)
+  unite*l : p (I ×ᵤ t) t
+  unite*l = arr₁ (Pi.unite*l p₁)
+  uniti*l : p t (I ×ᵤ t)
+  uniti*l = arr₁ (Pi.uniti*l p₁)
 
   second : p t₁ t₂ → p (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
-  second c = swappzh ⊚⊚ first c ⊚⊚ swappzh
+  second c = swap× ⊚⊚ first c ⊚⊚ swap×
+
+  _***_ : p t₁ t₂ → p t₃ t₄ → p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₄)
+  xs *** ys = first xs ⊚⊚ second ys
 
 -- Lifting to States and Effects.
 record StEffPi {rep₁ rep₂ : U → U → Set}

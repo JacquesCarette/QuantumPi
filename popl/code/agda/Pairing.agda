@@ -8,7 +8,10 @@ open import PiSyntax
 -- Pairing
 
 -- Pair any two things that are binary predicates over a type using alternation.
-
+-- This is basically the 'm' line of section 3.2
+-- However, we put composition in the language itself instead of at the meta-level
+-- since this is a polymorphic representation; if we'd used a inductive type, it
+-- could have been defined.
 record Pair {W : Set} (rep₁ rep₂ : W → W → Set) (p : W → W → Set) : Set where
   infixr 50 _⊚⊚_
   field
