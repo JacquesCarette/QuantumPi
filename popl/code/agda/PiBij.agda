@@ -1,6 +1,7 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module PiZ where
+-- Interpretation as sets and isormorphisms (the categorification of Bij)
+module PiBij where
 
 open import Data.Empty using (⊥)
 open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
@@ -15,15 +16,15 @@ open import PiTagless
 -------------------------------------------------------------------------------------
 -- Conventional denotations
 
-⟦_⟧z : (t : U) → Set
-⟦ O ⟧z = ⊥
-⟦ I ⟧z = ⊤
-⟦ t₁ +ᵤ t₂ ⟧z = ⟦ t₁ ⟧z ⊎ ⟦ t₂ ⟧z
-⟦ t₁ ×ᵤ t₂ ⟧z = ⟦ t₁ ⟧z × ⟦ t₂ ⟧z
+⟦_⟧ : (t : U) → Set
+⟦ O ⟧ = ⊥
+⟦ I ⟧ = ⊤
+⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
+⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
 
 -- Interpreter
 
-eval : {t₁ t₂ : U} → (t₁ ⟷₁ t₂) → ⟦ t₁ ⟧z → ⟦ t₂ ⟧z
+eval : {t₁ t₂ : U} → (t₁ ⟷₁ t₂) → ⟦ t₁ ⟧ → ⟦ t₂ ⟧
 eval unite₊l (inj₂ v) = v
 eval uniti₊l v = inj₂ v
 eval unite⋆l (tt , v)= v
@@ -54,7 +55,7 @@ eval (c₁ ⊕ c₂) (inj₂ v) = inj₂ (eval c₂ v)
 eval (c₁ ⊗ c₂) (v₁ , v₂) = (eval c₁ v₁ , eval c₂ v₂)
 
 -- we can enumerate our types
-enum : (t : U) → List ⟦ t ⟧z
+enum : (t : U) → List ⟦ t ⟧
 enum O = []
 enum I = tt ∷ []
 enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
@@ -88,7 +89,7 @@ Pi⟷ = record
   }
 
 Fwd : (t₁ t₂ : U) → Set
-Fwd t₁ t₂ = ⟦ t₁ ⟧z → ⟦ t₂ ⟧z
+Fwd t₁ t₂ = ⟦ t₁ ⟧ → ⟦ t₂ ⟧
 
 -- So is the interpreter!
 -- note how the action induced by each combinator is much clearer here than in `eval`
@@ -120,7 +121,7 @@ PiFwd = record
 
 -- And it's all reversible
 Bwd : (t₁ t₂ : U) → Set
-Bwd t₁ t₂ = ⟦ t₂ ⟧z → ⟦ t₁ ⟧z
+Bwd t₁ t₂ = ⟦ t₂ ⟧ → ⟦ t₁ ⟧
 
 -- The generic reverse will do it, no need to rewrite
 PiBwd : Pi Bwd

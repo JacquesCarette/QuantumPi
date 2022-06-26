@@ -10,7 +10,7 @@ open import Data.Unit using (tt)
 open import Function using (_∘_)
 
 open import PiSyntax
-open import PiZ hiding (Fwd)
+open import PiBij using (⟦_⟧; representable; transform; enum)
 open import PiTagless
 open import Pairing
 open import ArrowsOverPair
@@ -96,7 +96,7 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
 -- Below we start the work that correspoints to the H interpretation
 
 H : (t : U) → Set
-H t = ⟦ t ⟧z → Float
+H t = ⟦ t ⟧ → Float
 
 Fwd : U → U → Set
 Fwd t₁ t₂ = H t₁ → H t₂

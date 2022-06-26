@@ -10,7 +10,7 @@ open import Data.Unit using (tt)
 open import Function using (_∘_)
 
 open import PiSyntax
-open import PiZ hiding (Fwd)
+open import PiBij hiding (Fwd)
 open import PiTagless
 open import Pairing
 

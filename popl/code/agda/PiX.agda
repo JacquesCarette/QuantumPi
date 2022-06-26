@@ -8,7 +8,7 @@ open import Data.Product using (_,_)
 open import Function using (_∘_)
 
 open import PiSyntax
-open import PiZ
+open import PiBij using (⟦_⟧; eval)
 
 -------------------------------------------------------------------------------------
 -- Walsh functions as denotations
@@ -24,7 +24,7 @@ mul MinusOne One = MinusOne
 mul MinusOne MinusOne = One
 
 ⟦_⟧x : (t : U) → Set
-⟦ t ⟧x = ⟦ t ⟧z → PMOne
+⟦ t ⟧x = ⟦ t ⟧ → PMOne
 
 𝟚 : U
 𝟚 = I +ᵤ I
@@ -39,7 +39,7 @@ walsh1 (inj₂ tt) = MinusOne
 _**_ : { t₁ t₂ : U } → ⟦ t₁ ⟧x → ⟦ t₂ ⟧x → ⟦ (t₁ ×ᵤ t₂ ) ⟧x
 (w₁ ** w₂) (v₁ , v₂) = mul (w₁ v₁) (w₂ v₂)
 
-lift : { t₁ t₂ : U } → (⟦ t₁ ⟧z → ⟦ t₂ ⟧z) → (⟦ t₂ ⟧x → ⟦ t₁ ⟧x)
+lift : { t₁ t₂ : U } → (⟦ t₁ ⟧ → ⟦ t₂ ⟧) → (⟦ t₂ ⟧x → ⟦ t₁ ⟧x)
 lift bf w = w ∘ bf
 
 -- Examples
