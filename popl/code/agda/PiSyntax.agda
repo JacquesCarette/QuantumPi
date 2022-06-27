@@ -2,15 +2,7 @@
 
 module PiSyntax where
 
-open import Data.Nat using (ℕ)
-
 -------------------------------------------------------------------------------------
--- Nat
-
-private
-  variable
-    m n o p q r : ℕ
-
 -- Types
 
 data U : Set where

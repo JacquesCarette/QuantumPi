@@ -2,8 +2,8 @@
 
 module PiExamples where
 
-open import PiSyntax
-open import PiTagless
+open import PiSyntax using (U; I;  _+ᵤ_; _×ᵤ_)
+open import PiTagless using (Pi)
 
 Bool : U
 Bool = I +ᵤ I
