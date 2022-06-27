@@ -4,18 +4,10 @@
 
 module StatesAndEffects where
 
-open import Data.Float as F using (Float)
-open import Data.List using (List; map; foldr)
-open import Data.Product as Prod using (_,_)
-open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
-open import Data.Unit using (tt)
-open import Function using (_∘_)
-
-open import PiSyntax
-open import PiBij using (⟦_⟧; representable; transform; enum)
-open import PiTagless
-open import Pairing
-open import ArrowsOverPair
+open import PiSyntax using (U; I; _×ᵤ_; _+ᵤ_)
+open import PiTagless using (Pi)
+open import Pairing using (PiPair)
+open import ArrowsOverPair using (module Arrows)
 
 -------------------------------------------------------------------------------------
 private

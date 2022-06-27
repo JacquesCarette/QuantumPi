@@ -2,7 +2,7 @@
 
 module Pairing where
 
-open import PiSyntax
+open import PiSyntax using (U; _×ᵤ_)
 
 -------------------------------------------------------------------------------------
 -- Pairing

@@ -2,7 +2,7 @@
 
 module PiTagless where
 
-open import PiSyntax
+open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
 
 -------------------------------------------------------------------------------------
 

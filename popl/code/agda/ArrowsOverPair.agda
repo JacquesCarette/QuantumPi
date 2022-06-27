@@ -2,17 +2,10 @@
 
 module ArrowsOverPair where
 
-open import Data.Float as F using (Float)
-open import Data.List using (List; map; foldr)
-open import Data.Product as Prod using (_,_)
-open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
-open import Data.Unit using (tt)
-open import Function using (_∘_)
-
-open import PiSyntax
+open import PiSyntax using (U; I; _×ᵤ_)
 open import PiBij hiding (Fwd)
-open import PiTagless
-open import Pairing
+open import PiTagless using (Pi)
+open import Pairing using (Pair; PiPair)
 
 -------------------------------------------------------------------------------------
 private

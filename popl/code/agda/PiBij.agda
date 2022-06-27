@@ -10,8 +10,8 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (⊤; tt)
 open import Function using (id; _∘_; flip)
 
-open import PiSyntax
-open import PiTagless
+open import PiSyntax -- everything!
+open import PiTagless using (Pi; reverse)
 
 -------------------------------------------------------------------------------------
 -- Conventional denotations
