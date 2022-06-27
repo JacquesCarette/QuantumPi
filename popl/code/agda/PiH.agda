@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module Pi2 where
+module PiH where
 
 open import Data.Float as F using (Float)
 open import Data.List using (List; map; foldr)
@@ -9,13 +9,9 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (tt)
 open import Function using (_∘_)
 
-open import PiSyntax
-open import PiBij using (⟦_⟧; representable; transform; enum)
-open import PiTagless
-open import Pairing
-open import ArrowsOverPair
-open import StatesAndEffects
-open import GenericList
+open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
+open import PiBij using (⟦_⟧; enum)
+open import PiTagless using (Pi)
 
 -----------------------------------------------------------------------
 -- Below we start the work that correspoints to the H interpretation
