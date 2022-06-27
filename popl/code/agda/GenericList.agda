@@ -6,7 +6,7 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 
 open import PiSyntax using (U; _×ᵤ_; !⟷₁)
 open import PiBij using (representable; transform)
-open import PiTagless using (Pi)
+open import PiTagless using (Pi; PiR)
 open import Pairing using (Pair; PiPair)
 
 -------------------------------------------------------------------------------------
@@ -37,11 +37,11 @@ module _ {rep₁ rep₂ : U → U → Set} where
 
 -- if we want to pair up Pi representations, they need to be 'representable' to
 -- get an inverse
-module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
+module _ {rep₁ rep₂ : U → U → Set} (p₁ : PiR rep₁) (p₂ : PiR rep₂)
     (pres₁ : representable rep₁) (pres₂ : representable rep₂) where
   private
-    module P = Pi p₁
-    module Q = Pi p₂
+    module P = PiR p₁
+    module Q = PiR p₂
 
   first′ : {t₁ t₂ t₃ : U} → LST rep₁ rep₂ t₁ t₂ → LST rep₁ rep₂ (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
   first′ NIL = NIL

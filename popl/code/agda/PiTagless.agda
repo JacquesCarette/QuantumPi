@@ -10,6 +10,7 @@ private
   variable
     t t₁ t₂ t₃ t₄ : U
 
+-- The basic language itself
 record Pi (rep : U → U → Set) : Set where
   infixr 50 _⊚_ _⊛_
 
@@ -36,6 +37,13 @@ record Pi (rep : U → U → Set) : Set where
     _⊚_ : rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
     _⊕′_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ +ᵤ t₂) (t₃ +ᵤ t₄)
     _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
+
+-- And a witness that it's reversible
+record PiR (rep : U → U → Set) : Set where
+  field
+    pi : Pi rep
+    !_ : rep t₁ t₂ → rep t₂ t₁
+  open Pi pi public
 
 -- It's reversible
 reverse : (rep : U → U → Set) → Pi rep → Pi (λ x y → rep y x)
