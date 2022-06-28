@@ -9,6 +9,7 @@ open import PiSyntax
 open import PiTagless
 open import PiBij
 open import PiZ
+open import Unitary
 open import PiH
 open import PiExamples
 open import Pairing
