@@ -12,12 +12,13 @@ open import Function using (_∘_)
 open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
 open import PiBij using (⟦_⟧; enum)
 open import PiTagless using (Pi)
+open import Unitary using (𝒰)
 
 -----------------------------------------------------------------------
 -- Below we start the work that correspoints to the Z interpretation
 
 Z : (t : U) → Set
-Z t = ⟦ t ⟧ → Float
+Z = 𝒰
 
 Fwd : U → U → Set
 Fwd t₁ t₂ = Z t₁ → Z t₂
