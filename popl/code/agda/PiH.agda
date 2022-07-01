@@ -12,12 +12,13 @@ open import Function using (_∘_)
 open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
 open import PiBij using (⟦_⟧; enum)
 open import PiTagless using (Pi)
+open import Unitary using (𝒰; R; R⁻¹)
 
 -----------------------------------------------------------------------
 -- Below we start the work that correspoints to the H interpretation
 
 H : (t : U) → Set
-H t = ⟦ t ⟧ → Float
+H = 𝒰
 
 Fwd : U → U → Set
 Fwd t₁ t₂ = H t₁ → H t₂
@@ -25,10 +26,12 @@ Fwd t₁ t₂ = H t₁ → H t₂
 sumf : List Float → Float
 sumf = foldr F._+_ (F.fromℕ 0)
 
+-- We can show that, in the H basis, we can make Fwd an interpretation of Pi.
+-- But this is not the one we really want, as it is not conjugated.
 -- Note how the interpretation is λ f → f ∘ g where g is the opposite of the Fwd interpretation for the
 -- evaluator for PiZ
-PiH : Pi Fwd
-PiH = record
+PiH₀ : Pi Fwd
+PiH₀ = record
   { unite+l = λ f → f ∘ inj₂
   ; uniti+l = λ {f (inj₂ x) → f x }
   ; unite*l = λ f x → f (tt , x)
@@ -54,6 +57,35 @@ PiH = record
             f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
             g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}
   }
+
+{-
+-- Here is the one we want.
+PiH : Pi Fwd
+PiH = record
+  { unite+l = λ {t} f → {!(R⁻¹ (t ∘ ? ∘ R⁻¹ t) ?!}
+  ; uniti+l = {!!}
+  ; unite*l = {!!}
+  ; uniti*l = {!!}
+  ; swap+ = {!!}
+  ; swap× = {!!}
+  ; assocl+ = {!!}
+  ; assocr+ = {!!}
+  ; assocl* = {!!}
+  ; assocr* = {!!}
+  ; absorbr′ = {!!}
+  ; absorbl′ = {!!}
+  ; factorzr′ = {!!}
+  ; factorzl′ = {!!}
+  ; dist′ = {!!}
+  ; distl′ = {!!}
+  ; factor′ = {!!}
+  ; factorl′ = {!!}
+  ; idp = {!!}
+  ; _⊚_ = {!!}
+  ; _⊕′_ = {!!}
+  ; _⊛_ = {!!}
+  }
+-}
 
 Bool : U
 Bool = I +ᵤ I
