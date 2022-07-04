@@ -50,30 +50,42 @@ data _⟷₁_  : U → U → Set where
 
 -- Equational reasoning
 
-infixr 10 _⟷₁⟨_⟩_
-infix  15 _⟷₁∎
+infixr 10 _⟨_⟩_
+infix  15 _∎
 
-_⟷₁⟨_⟩_ : (t₁ : U) → (t₁ ⟷₁  t₂) → (t₂ ⟷₁  t₃) → (t₁ ⟷₁  t₃)
-_ ⟷₁⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
+_⟨_⟩_ : (t₁ : U) → (t₁ ⟷₁  t₂) → (t₂ ⟷₁  t₃) → (t₁ ⟷₁  t₃)
+_ ⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
 
-_⟷₁∎ : (t : U) → t ⟷₁  t
-_⟷₁∎ t = id⟷₁
+_∎ : (t : U) → t ⟷₁  t
+_∎ t = id⟷₁
 
 -- Simon fragments
 
 A[B[CD]]→[AC][BD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)
-A[B[CD]]→[AC][BD] = {!!}
+A[B[CD]]→[AC][BD] {t₁} {t₂} {t₃} {t₄} =
+ t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷₁ ⊗ assocl⋆ ⟩
+ t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷₁ ⊗ swap⋆ ⊗ id⟷₁ ⟩
+ t₁ ×ᵤ (t₃ ×ᵤ t₂) ×ᵤ t₄     ⟨ id⟷₁ ⊗ assocr⋆ ⟩
+ t₁ ×ᵤ t₃ ×ᵤ (t₂ ×ᵤ t₄)     ⟨ assocl⋆ ⟩
+ (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)   ∎
 
 A[B[CD]]→[AD][BC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)
-A[B[CD]]→[AD][BC] = {!!}
+A[B[CD]]→[AD][BC] {t₁} {t₂} {t₃} {t₄} =
+ t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷₁ ⊗ assocl⋆ ⟩
+ t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷₁ ⊗ swap⋆ ⟩
+ t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)     ⟨ assocl⋆ ⟩
+ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)   ∎
 
 A[B[CD]]→[BC][AD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)
-A[B[CD]]→[BC][AD] = {!!}
+A[B[CD]]→[BC][AD] {t₁} {t₂} {t₃} {t₄} =
+  t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))  ⟨ id⟷₁ ⊗ assocl⋆ ⟩
+  t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄    ⟨ id⟷₁ ⊗ swap⋆ ⟩
+  t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)    ⟨ assocl⋆ ⟩
+  (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)  ⟨ swap⋆ ⟩
+  (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)  ∎
 
 A[B[CD]]→[BD][AC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₄) ×ᵤ (t₁ ×ᵤ t₃)
-A[B[CD]]→[BD][AC] = {!!}
-
-
+A[B[CD]]→[BD][AC] {t₁} {t₂} {t₃} {t₄} = A[B[CD]]→[AC][BD] ◎ swap⋆
 
 𝟚 : U
 𝟚 = I +ᵤ I
@@ -82,7 +94,7 @@ cnot : 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚
 cnot = dist ◎ ((id⟷₁ ⊗ swap₊) ⊕ id⟷₁) ◎ factor
 
 simon₁ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁ 
+simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁
 
 simon₂ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon₂ =
