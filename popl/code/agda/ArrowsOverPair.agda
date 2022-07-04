@@ -21,6 +21,8 @@ module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi re
   open PiPair πpair
   open Pair pair
 
+  infixr 50 _>>>_
+
   arr₁ : rep₁ t₁ t₂ -> p t₁ t₂
   arr₁ c = cons₁ c nil
   arr₂ : rep₂ t₁ t₂ -> p t₁ t₂
@@ -44,3 +46,6 @@ module Arrows {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi re
 
   _***_ : p t₁ t₂ → p t₃ t₄ → p (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₄)
   xs *** ys = first xs ⊚⊚ second ys
+
+  _>>>_ : p t₁ t₂ → p t₂ t₃ → p t₁ t₃
+  c₀ >>> c₁ = c₀ ⊚⊚ c₁
