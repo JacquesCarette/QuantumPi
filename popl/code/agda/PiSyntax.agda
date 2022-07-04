@@ -13,7 +13,9 @@ data U : Set where
 
 infixr 40 _+ᵤ_ _×ᵤ_
 infix 30 _⟷₁_
-infixr 50 _◎_ _⊕_
+infixr 10 _◎_
+infixr 20 _⊕_
+infixr 30 _⊗_
 
 private
   variable
@@ -56,6 +58,39 @@ _ ⟷₁⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
 
 _⟷₁∎ : (t : U) → t ⟷₁  t
 _⟷₁∎ t = id⟷₁
+
+-- Simon fragments
+
+A[B[CD]]→[AC][BD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)
+A[B[CD]]→[AC][BD] = {!!}
+
+A[B[CD]]→[AD][BC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)
+A[B[CD]]→[AD][BC] = {!!}
+
+A[B[CD]]→[BC][AD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)
+A[B[CD]]→[BC][AD] = {!!}
+
+A[B[CD]]→[BD][AC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₄) ×ᵤ (t₁ ×ᵤ t₃)
+A[B[CD]]→[BD][AC] = {!!}
+
+
+
+𝟚 : U
+𝟚 = I +ᵤ I
+
+cnot : 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚
+cnot = dist ◎ ((id⟷₁ ⊗ swap₊) ⊕ id⟷₁) ◎ factor
+
+simon₁ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁ 
+
+simon₂ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+simon₂ =
+     A[B[CD]]→[AC][BD]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[AC][BD]
+  ◎  A[B[CD]]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[AD][BC]
+  ◎  A[B[CD]]→[BC][AD]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[BC][AD]
+  ◎  A[B[CD]]→[BD][AC]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[BD][AC]
+
 
 -- Coherence
 
