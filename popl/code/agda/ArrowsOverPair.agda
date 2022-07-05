@@ -2,9 +2,7 @@
 
 module ArrowsOverPair where
 
-open import PiSyntax using (U; I; _×ᵤ_; _⟷₁_; id⟷₁; swap⋆; assocl⋆; assocr⋆; unite⋆l; uniti⋆l)
-open import PiBij hiding (Fwd)
-open import PiTagless using (Pi)
+open import PiSyntax using (U; I; _×ᵤ_; _⟷₁_; id⟷₁; swap⋆; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁)
 open import GenericList using (TList; nil; cons₁; cons₂; _⊚⊚_; first; inv)
 
 -------------------------------------------------------------------------------------
@@ -44,3 +42,8 @@ xs *** ys = first xs ⊚⊚ second ys
 
 _>>>_ : TList t₁ t₂ → TList t₂ t₃ → TList t₁ t₃
 c₀ >>> c₁ = c₀ ⊚⊚ c₁
+
+inv′ : TList t₁ t₂ → TList t₂ t₁
+inv′ nil = nil
+inv′ (cons₁ x l) = inv′ l >>> arr₁ (!⟷₁ x)
+inv′ (cons₂ x l) = inv′ l >>> arr₂ (!⟷₁ x)
