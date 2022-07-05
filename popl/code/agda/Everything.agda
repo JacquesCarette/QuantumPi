@@ -34,6 +34,9 @@ open import Unitary
 -- The combinators are then representation of linear actions from vectors to vectors,
 --  aka matrices.
 open import PiZ
+-- PiH gives an instance of Pi where the "values" are again Real-valued vectors indexed by
+--  [an enumeration of] a type (t : U). But this time the action is conjugated by R, i.e.
+-- "rotated". The result is still matrices, but in a different basis.
 open import PiH
 open import PiExamples
 open import Pairing
