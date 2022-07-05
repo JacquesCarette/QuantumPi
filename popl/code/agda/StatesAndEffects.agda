@@ -42,3 +42,6 @@ module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
   -- With annotations
   zero : rep pair I (I +ᵤ I)
   zero = lift (arr₁ (Pi.swap× p₁))
+
+  assertZero : rep pair (I +ᵤ I) I
+  assertZero = lift (arr₁ (Pi.swap× p₁))
