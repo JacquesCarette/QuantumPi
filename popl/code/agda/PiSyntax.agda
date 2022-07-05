@@ -46,7 +46,6 @@ data _⟷₁_  : U → U → Set where
   _◎_     : (t₁ ⟷₁ t₂) → (t₂ ⟷₁ t₃) → (t₁ ⟷₁ t₃)
   _⊕_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ +ᵤ t₂ ⟷₁ t₃ +ᵤ t₄)
   _⊗_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ ×ᵤ t₂ ⟷₁ t₃ ×ᵤ t₄)
-  inv : (t₁ ⟷₁ t₂) → (t₂ ⟷₁ t₁)
 
 -- Equational reasoning
 
@@ -58,6 +57,32 @@ _ ⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
 
 _∎ : (t : U) → t ⟷₁  t
 _∎ t = id⟷₁
+
+-- Inverse
+!⟷₁ : t₁ ⟷₁  t₂ → t₂ ⟷₁  t₁
+!⟷₁ unite₊l = uniti₊l
+!⟷₁ uniti₊l = unite₊l
+!⟷₁ unite⋆l = uniti⋆l
+!⟷₁ uniti⋆l = unite⋆l
+!⟷₁ swap₊   = swap₊
+!⟷₁ swap⋆   = swap⋆
+!⟷₁ assocl₊ = assocr₊
+!⟷₁ assocr₊ = assocl₊
+!⟷₁ assocl⋆ = assocr⋆
+!⟷₁ assocr⋆ = assocl⋆
+!⟷₁ absorbr = factorzl
+!⟷₁ absorbl = factorzr
+!⟷₁ factorzr = absorbl
+!⟷₁ factorzl = absorbr
+!⟷₁ dist = factor
+!⟷₁ distl = factorl
+!⟷₁ factorl = distl
+!⟷₁ factor = dist
+!⟷₁ id⟷₁ = id⟷₁
+!⟷₁ (c₁ ◎ c₂) = !⟷₁ c₂ ◎ !⟷₁ c₁
+!⟷₁ (c₁ ⊕ c₂) = !⟷₁ c₁ ⊕ !⟷₁ c₂
+!⟷₁ (c₁ ⊗ c₂) = !⟷₁ c₁ ⊗ !⟷₁ c₂
+
 
 -- Simon fragments
 
@@ -98,10 +123,10 @@ simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁
 
 simon₂ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon₂ =
-     A[B[CD]]→[AC][BD]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[AC][BD]
-  ◎  A[B[CD]]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[AD][BC]
-  ◎  A[B[CD]]→[BC][AD]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[BC][AD]
-  ◎  A[B[CD]]→[BD][AC]  ◎ (cnot ⊗ id⟷₁) ◎ inv A[B[CD]]→[BD][AC]
+     A[B[CD]]→[AC][BD]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[AC][BD]
+  ◎  A[B[CD]]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[AD][BC]
+  ◎  A[B[CD]]→[BC][AD]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BC][AD]
+  ◎  A[B[CD]]→[BD][AC]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BD][AC]
 
 
 -- Coherence
@@ -117,31 +142,6 @@ unite⋆r = swap⋆ ◎ unite⋆l
 
 uniti⋆r : t ⟷₁  t ×ᵤ I
 uniti⋆r = uniti⋆l ◎ swap⋆
-
-!⟷₁ : t₁ ⟷₁  t₂ → t₂ ⟷₁  t₁
-!⟷₁ unite₊l = uniti₊l
-!⟷₁ uniti₊l = unite₊l
-!⟷₁ unite⋆l = uniti⋆l
-!⟷₁ uniti⋆l = unite⋆l
-!⟷₁ swap₊   = swap₊
-!⟷₁ swap⋆   = swap⋆
-!⟷₁ assocl₊ = assocr₊
-!⟷₁ assocr₊ = assocl₊
-!⟷₁ assocl⋆ = assocr⋆
-!⟷₁ assocr⋆ = assocl⋆
-!⟷₁ absorbr = factorzl
-!⟷₁ absorbl = factorzr
-!⟷₁ factorzr = absorbl
-!⟷₁ factorzl = absorbr
-!⟷₁ dist = factor
-!⟷₁ distl = factorl
-!⟷₁ factorl = distl
-!⟷₁ factor = dist
-!⟷₁ id⟷₁ = id⟷₁
-!⟷₁ (c₁ ◎ c₂) = !⟷₁ c₂ ◎ !⟷₁ c₁
-!⟷₁ (c₁ ⊕ c₂) = !⟷₁ c₁ ⊕ !⟷₁ c₂
-!⟷₁ (c₁ ⊗ c₂) = !⟷₁ c₁ ⊗ !⟷₁ c₂
-!⟷₁ (inv c) = c
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

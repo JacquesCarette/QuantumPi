@@ -4,10 +4,10 @@
 
 module StatesAndEffects where
 
-open import PiSyntax using (U; I; _×ᵤ_; _+ᵤ_)
-open import PiTagless using (Pi)
-open import Pairing using (PiPair)
-open import ArrowsOverPair using (module Arrows)
+open import PiSyntax using (U; I; _×ᵤ_; _+ᵤ_; swap⋆)
+-- open import PiTagless using (Pi)
+open import GenericList
+open import ArrowsOverPair
 
 -------------------------------------------------------------------------------------
 private
@@ -16,32 +16,21 @@ private
 
 -------------------------------------------------------------------------------------
 -- Lifting an abstract pair
-record StEffPi {rep₁ rep₂ : U → U → Set}
-         (p : U → U → Set)
-         (pair : PiPair rep₁ rep₂ p)
-         (rep : PiPair rep₁ rep₂ p → U → U → Set) : Set where
-  field
-    lift : p (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → rep pair t₁ t₃
+data StEffPi : U → U → Set where
+  lift : TList (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → StEffPi t₁ t₃
 
 -- Some examples where we use all of the above
-module _ {rep₁ rep₂ : U → U → Set} (p₁ : Pi rep₁) (p₂ : Pi rep₂)
-         {p : U → U → Set}
-         {pair : PiPair rep₁ rep₂ p}
-         {rep : PiPair rep₁ rep₂ p → U → U → Set}
-         (eff : StEffPi p pair rep) where
-  open StEffPi eff
-  open Arrows p₁ p₂ p pair
+-- Lifting too general a swap:
+lswap : StEffPi t₁ t₃
+lswap = lift (arr₁ swap⋆)
 
-  id₁ : rep₁ I I
-  id₁ = Pi.idp p₁
+-- With annotations
+zero : StEffPi I (I +ᵤ I)
+zero = lift (arr₁ swap⋆)
 
-  -- Lifting too general a swap:
-  lswap : rep pair t₁ t₃
-  lswap = lift (arr₁ (Pi.swap× p₁))
+assertZero : StEffPi (I +ᵤ I) I
+assertZero = lift (arr₁ swap⋆)
 
-  -- With annotations
-  zero : rep pair I (I +ᵤ I)
-  zero = lift (arr₁ (Pi.swap× p₁))
-
-  assertZero : rep pair (I +ᵤ I) I
-  assertZero = lift (arr₁ (Pi.swap× p₁))
+-- A function is an Interpreter when:
+Interpreter : (rep : U → U → Set) → Set
+Interpreter rep = ∀ {t₁ t₂} → StEffPi t₁ t₂ → rep t₁ t₂

@@ -2,12 +2,7 @@
 
 module GenericList where
 
-open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
-
-open import PiSyntax using (U; _×ᵤ_; !⟷₁)
-open import PiBij using (representable; transform)
-open import PiTagless using (Pi; PiR)
-open import Pairing using (Pair; PiPair)
+open import PiSyntax using (U; _×ᵤ_; _⟷₁_; !⟷₁; _⊗_; id⟷₁)
 
 -------------------------------------------------------------------------------------
 private
@@ -15,47 +10,37 @@ private
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
     a b c d : U
 
--- We can have a generic list of composables
-data LST (p q : U → U → Set) : U → U → Set where
-  NIL : LST p q a a
-  CONS : (p a c) ⊎ (q a c) → LST p q c b → LST p q a b
+infixr 10 _⊚⊚_
 
--- which does give us a Pairing very generically
-module _ {rep₁ rep₂ : U → U → Set} where
-  comp : {t₁ t₂ t₃ : U} → LST rep₁ rep₂ t₁ t₂ → LST rep₁ rep₂ t₂ t₃ → LST rep₁ rep₂ t₁ t₃
-  comp NIL y = y
-  comp z@(CONS _ _) NIL = z
-  comp (CONS x y) z@(CONS _ _) = CONS x (comp y z)
+data TList : U → U → Set where
+  nil : TList a a
+  cons₁ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
+  cons₂ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
 
-  LST-Pair : Pair rep₁ rep₂ (LST rep₁ rep₂)
-  LST-Pair = record
-    { nil = NIL
-    ; cons₁ = λ a b → CONS (inj₁ a) b
-    ; cons₂ = λ a b → CONS (inj₂ a) b
-    ; _⊚⊚_ = comp
-    }
+_⊚⊚_ : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList t₂ t₃ → TList t₁ t₃
+nil         ⊚⊚ z = z
+(cons₁ x y) ⊚⊚ z = cons₁ x (y ⊚⊚ z)
+(cons₂ x y) ⊚⊚ z = cons₂ x (y ⊚⊚ z)
 
--- if we want to pair up Pi representations, they need to be 'representable' to
--- get an inverse
-module _ {rep₁ rep₂ : U → U → Set} (p₁ : PiR rep₁) (p₂ : PiR rep₂)
-    (pres₁ : representable rep₁) (pres₂ : representable rep₂) where
-  private
-    module P = PiR p₁
-    module Q = PiR p₂
+first : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
+first nil = nil
+first (cons₁ x y) = cons₁ (x ⊗ id⟷₁) (first y)
+first (cons₂ x y) = cons₂ (x ⊗ id⟷₁) (first y)
 
-  first′ : {t₁ t₂ t₃ : U} → LST rep₁ rep₂ t₁ t₂ → LST rep₁ rep₂ (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-  first′ NIL = NIL
-  first′ (CONS (inj₁ x) y) = CONS (inj₁ (x P.⊛ P.idp )) (first′ y)
-  first′ (CONS (inj₂ x) y) = CONS (inj₂ (x Q.⊛ Q.idp)) (first′ y)
+inv : {t₁ t₂ : U} → TList t₁ t₂ → TList t₂ t₁
+inv nil          = nil
+inv (cons₁ x xs) = inv xs ⊚⊚ (cons₁ (!⟷₁ x) nil)
+inv (cons₂ x xs) = inv xs ⊚⊚ (cons₂ (!⟷₁ x) nil)
 
-  inv′ : {t₁ t₂ : U} → LST rep₁ rep₂ t₁ t₂ → LST rep₁ rep₂ t₂ t₁
-  inv′ NIL = NIL
-  inv′ (CONS (inj₁ x) l) = comp (inv′ l) (CONS (inj₁ (transform p₁ pres₁ !⟷₁ x)) NIL)
-  inv′ (CONS (inj₂ y) l) = comp (inv′ l) (CONS (inj₂ (transform p₂ pres₂ !⟷₁ y)) NIL)
+record Categorical (rep : U → U → Set) : Set where
+  field
+    idr : {t : U} → rep t t
+    comp : {t₁ t₂ t₃ : U} → rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
 
-  LST-PiPair : PiPair rep₁ rep₂ (LST rep₁ rep₂)
-  LST-PiPair = record
-    { pair = LST-Pair
-    ; first = first′
-    ; inv = inv′
-    }
+open Categorical
+
+-- We have 2 different evaluators for the same interpretation, we can combine them
+evalTL : {rep : U → U → Set} → Categorical rep → (∀ {t₁ t₂} → t₁ ⟷₁ t₂ → rep t₁ t₂) → (∀ {t₁ t₂} → t₁ ⟷₁ t₂ → rep t₁ t₂) → TList t₃ t₄ → rep t₃ t₄
+evalTL c i₁ i₂ nil         = idr c
+evalTL c i₁ i₂ (cons₁ x l) = comp c (i₁ x) (evalTL c i₁ i₂ l)
+evalTL c i₁ i₂ (cons₂ x l) = comp c (i₂ x) (evalTL c i₁ i₂ l)

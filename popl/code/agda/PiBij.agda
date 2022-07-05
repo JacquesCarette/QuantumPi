@@ -55,7 +55,6 @@ eval (c₁ ◎ c₂) v = eval c₂ (eval c₁ v)
 eval (c₁ ⊕ c₂) (inj₁ v) = inj₁ (eval c₁ v)
 eval (c₁ ⊕ c₂) (inj₂ v) = inj₂ (eval c₂ v)
 eval (c₁ ⊗ c₂) (v₁ , v₂) = (eval c₁ v₁ , eval c₂ v₂)
-eval (inv c) = evalB c
 
 evalB unite₊l v = inj₂ v
 evalB uniti₊l (inj₂ y) = y
@@ -79,7 +78,6 @@ evalB id⟷₁ v = v
 evalB (c ◎ c₁) v = evalB c (evalB c₁ v)
 evalB (c ⊕ c₁) v = Sum.map (evalB c) (evalB c₁) v
 evalB (c ⊗ c₁) v = Prod.map (evalB c) (evalB c₁) v
-evalB (inv c) v = eval c v
 
 -- we can enumerate our types
 enum : (t : U) → List ⟦ t ⟧
@@ -164,36 +162,26 @@ PiBwd = reverse Fwd PiFwd
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 
-representable : (rep : U → U → Set) → Set
-representable rep = ∀ {t₁ t₂} → rep t₁ t₂ → t₁ ⟷₁ t₂
-
-generalize : {t₁ t₂ : U} {rep : U → U → Set} → PiR rep → (t₁ ⟷₁ t₂) → rep t₁ t₂
-generalize p unite₊l = PiR.unite+l p
-generalize p uniti₊l = PiR.uniti+l p
-generalize p unite⋆l = PiR.unite*l p
-generalize p uniti⋆l = PiR.uniti*l p
-generalize p swap₊ = PiR.swap+ p
-generalize p swap⋆ = PiR.swap× p
-generalize p assocl₊ = PiR.assocl+ p
-generalize p assocr₊ = PiR.assocr+ p
-generalize p assocl⋆ = PiR.assocl* p
-generalize p assocr⋆ = PiR.assocr* p
-generalize p absorbr = PiR.absorbr′ p
-generalize p absorbl = PiR.absorbl′ p
-generalize p factorzr = PiR.factorzr′ p
-generalize p factorzl = PiR.factorzl′ p
-generalize p dist = PiR.dist′ p
-generalize p distl = PiR.distl′ p
-generalize p factor = PiR.factor′ p
-generalize p factorl = PiR.factorl′ p
-generalize p id⟷₁ = PiR.idp p
-generalize p (c ◎ c₁) = PiR._⊚_ p (generalize p c) (generalize p c₁)
-generalize p (c ⊕ c₁) = PiR._⊕′_ p (generalize p c) (generalize p c₁)
-generalize p (c ⊗ c₁) = PiR._⊛_ p (generalize p c) (generalize p c₁)
-generalize p (inv c) = PiR.!_ p (generalize p c)
-
-transform : {t₁ t₂ t₃ t₄ : U} {rep : U → U → Set} → (p : PiR rep) →
-  representable rep →
-  ((t₁ ⟷₁ t₂) → (t₃ ⟷₁ t₄)) →
-  rep t₁ t₂ → rep t₃ t₄
-transform p represent tr c = generalize p (tr (represent c))
+generalize : {t₁ t₂ : U} {rep : U → U → Set} → Pi rep → (t₁ ⟷₁ t₂) → rep t₁ t₂
+generalize p unite₊l = Pi.unite+l p
+generalize p uniti₊l = Pi.uniti+l p
+generalize p unite⋆l = Pi.unite*l p
+generalize p uniti⋆l = Pi.uniti*l p
+generalize p swap₊ = Pi.swap+ p
+generalize p swap⋆ = Pi.swap× p
+generalize p assocl₊ = Pi.assocl+ p
+generalize p assocr₊ = Pi.assocr+ p
+generalize p assocl⋆ = Pi.assocl* p
+generalize p assocr⋆ = Pi.assocr* p
+generalize p absorbr = Pi.absorbr′ p
+generalize p absorbl = Pi.absorbl′ p
+generalize p factorzr = Pi.factorzr′ p
+generalize p factorzl = Pi.factorzl′ p
+generalize p dist = Pi.dist′ p
+generalize p distl = Pi.distl′ p
+generalize p factor = Pi.factor′ p
+generalize p factorl = Pi.factorl′ p
+generalize p id⟷₁ = Pi.idp p
+generalize p (c ◎ c₁) = Pi._⊚_ p (generalize p c) (generalize p c₁)
+generalize p (c ⊕ c₁) = Pi._⊕′_ p (generalize p c) (generalize p c₁)
+generalize p (c ⊗ c₁) = Pi._⊛_ p (generalize p c) (generalize p c₁)
