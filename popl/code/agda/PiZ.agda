@@ -17,6 +17,9 @@ open import Unitary using (𝒰)
 -----------------------------------------------------------------------
 -- Below we start the work that correspoints to the Z interpretation
 
+-- The Z representation is as a vector with basis an enumeration of a type (t : U) with
+-- real values (here represented as Floats). We use functions to represent such vectors.
+-- So 'enum' from PiBij plays a crucial role here.
 Z : (t : U) → Set
 Z = 𝒰
 
@@ -28,6 +31,9 @@ sumf = foldr F._+_ (F.fromℕ 0)
 
 -- Note how the interpretation is λ f → f ∘ g where g is the opposite of the Fwd interpretation for the
 -- evaluator for PiBij
+-- The interpretations pretty much follow the types. The only tricky one is for product, where a
+-- convolution is used. Here again 'enum' is crucial, as we need to accumulate the action of 'h' over
+-- all pairs, where we only have one of the two values in hand.
 PiZ : Pi Fwd
 PiZ = record
   { unite+l = λ f → f ∘ inj₂
@@ -66,4 +72,4 @@ falseZ (inj₁ x) = 0.0
 falseZ (inj₂ y) = 1.0
 
 notH : Z Bool → Z Bool
-notH f b = f (Sum.swap b)
+notH = Pi.swap+ PiZ
