@@ -58,34 +58,33 @@ PiH₀ = record
             g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}
   }
 
-{-
--- Here is the one we want.
+-- Here is the one we want. We pre-conjugate with R⁻¹ and post-apply R, to the version above.
 PiH : Pi Fwd
 PiH = record
-  { unite+l = λ {t} f → {!(R⁻¹ (t ∘ ? ∘ R⁻¹ t) ?!}
-  ; uniti+l = {!!}
-  ; unite*l = {!!}
-  ; uniti*l = {!!}
-  ; swap+ = {!!}
-  ; swap× = {!!}
-  ; assocl+ = {!!}
-  ; assocr+ = {!!}
-  ; assocl* = {!!}
-  ; assocr* = {!!}
-  ; absorbr′ = {!!}
-  ; absorbl′ = {!!}
-  ; factorzr′ = {!!}
-  ; factorzl′ = {!!}
-  ; dist′ = {!!}
-  ; distl′ = {!!}
-  ; factor′ = {!!}
-  ; factorl′ = {!!}
-  ; idp = {!!}
-  ; _⊚_ = {!!}
-  ; _⊕′_ = {!!}
-  ; _⊛_ = {!!}
+  { unite+l = λ {t} → R⁻¹ t ∘ unite+l ∘ R (O +ᵤ t)
+  ; uniti+l = λ {t} → R⁻¹ (O +ᵤ t) ∘ uniti+l ∘ R t
+  ; unite*l = λ {t} → R⁻¹ t ∘ unite*l ∘ R (I ×ᵤ t)
+  ; uniti*l = λ {t} → R⁻¹ (I ×ᵤ t) ∘ uniti*l ∘ R t
+  ; swap+ = λ {t₀} {t₁} → R⁻¹ (t₁ +ᵤ t₀) ∘ swap+ ∘ R (t₀ +ᵤ t₁)
+  ; swap× = λ {t₀} {t₁} → R⁻¹ (t₁ ×ᵤ t₀) ∘ swap× ∘ R (t₀ ×ᵤ t₁)
+  ; assocl+ = λ {t₀} {t₁} {t₂} → R⁻¹ ((t₀ +ᵤ t₁) +ᵤ t₂) ∘ assocl+ ∘ R (t₀ +ᵤ (t₁ +ᵤ t₂))
+  ; assocr+ = λ {t₀} {t₁} {t₂} →  R⁻¹ (t₀ +ᵤ (t₁ +ᵤ t₂)) ∘ assocr+ ∘ R ((t₀ +ᵤ t₁) +ᵤ t₂)
+  ; assocl* = λ {t₀} {t₁} {t₂} → R⁻¹ ((t₀ ×ᵤ t₁) ×ᵤ t₂) ∘ assocl* ∘ R (t₀ ×ᵤ (t₁ ×ᵤ t₂))
+  ; assocr* = λ {t₀} {t₁} {t₂} → R⁻¹ (t₀ ×ᵤ (t₁ ×ᵤ t₂)) ∘ assocr* ∘ R ((t₀ ×ᵤ t₁) ×ᵤ t₂)
+  ; absorbr′ = λ {t} → R⁻¹ O ∘ absorbr′ ∘ R (O ×ᵤ t)
+  ; absorbl′ = λ {t} → R⁻¹ O ∘ absorbl′ ∘ R (t ×ᵤ O)
+  ; factorzr′ = λ {t} → R⁻¹ (t ×ᵤ O) ∘ factorzr′ ∘ R O
+  ; factorzl′ = λ {t} → R⁻¹ (O ×ᵤ t) ∘ factorzl′ ∘ R O
+  ; dist′ = λ {t₀} {t₁} {t₂} → R⁻¹ ((t₀ ×ᵤ t₂) +ᵤ t₁ ×ᵤ t₂) ∘ dist′ ∘ R ((t₀ +ᵤ t₁) ×ᵤ t₂)
+  ; distl′ = λ {t₀} {t₁} {t₂} → R⁻¹ ((t₀ ×ᵤ t₁) +ᵤ t₀ ×ᵤ t₂) ∘ distl′ ∘ R (t₀ ×ᵤ t₁ +ᵤ t₂)
+  ; factor′ = λ {t₀} {t₁} {t₂} → R⁻¹ ((t₀ +ᵤ t₂) ×ᵤ t₁) ∘ factor′ ∘ R ((t₀ ×ᵤ t₁) +ᵤ t₂ ×ᵤ t₁)
+  ; factorl′ = λ {t₀} {t₁} {t₂} → R⁻¹ (t₀ ×ᵤ t₁ +ᵤ t₂) ∘ factorl′ ∘ R ((t₀ ×ᵤ t₁) +ᵤ t₀ ×ᵤ t₂)
+  ; idp = λ {t} → R⁻¹ t ∘ idp ∘ R t
+  ; _⊚_ = λ {t₀} {t₁} {t₂} c₀ c₁ → R⁻¹ t₂ ∘ (c₀ ⊚ c₁) ∘ R t₀
+  ; _⊕′_ = λ {t₀} {t₁} {t₂} {t₃} c₀ c₁ → R⁻¹ (t₁ +ᵤ t₃) ∘ (c₀ ⊕′ c₁) ∘ R (t₀ +ᵤ t₂)
+  ; _⊛_ = λ {t₀} {t₁} {t₂} {t₃} c₀ c₁ → R⁻¹ (t₁ ×ᵤ t₃) ∘ (c₀ ⊛ c₁) ∘ R (t₀ ×ᵤ t₂)
   }
--}
+  where open Pi PiH₀
 
 Bool : U
 Bool = I +ᵤ I

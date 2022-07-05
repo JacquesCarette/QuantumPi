@@ -35,18 +35,19 @@ sumf = foldr F._+_ (F.fromℕ 0)
 Aut : Set → Set
 Aut X = X → X
 
--- make it clearer that this is direct product.
-_⊕_ : {t₁ t₂ : U} → Aut (𝒰 t₁) → Aut (𝒰 t₂) → Aut (𝒰 (t₁ +ᵤ t₂))
--- simple definition:
--- c₁ ⊕ c₂ = λ f → Sum.[ c₁ (f ∘ inj₁) , c₂ (f ∘ inj₂) ]
--- expanded:
-(c₁ ⊕ c₂) f (inj₁ x) = c₁ (f ∘ inj₁) x
-(c₁ ⊕ c₂) f (inj₂ y) = c₂ (f ∘ inj₂) y
+private
+  -- make it clearer that this is direct product.
+  _⊕_ : {t₁ t₂ : U} → Aut (𝒰 t₁) → Aut (𝒰 t₂) → Aut (𝒰 (t₁ +ᵤ t₂))
+  -- simple definition:
+  -- c₁ ⊕ c₂ = λ f → Sum.[ c₁ (f ∘ inj₁) , c₂ (f ∘ inj₂) ]
+  -- expanded:
+  (c₁ ⊕ c₂) f (inj₁ x) = c₁ (f ∘ inj₁) x
+  (c₁ ⊕ c₂) f (inj₂ y) = c₂ (f ∘ inj₂) y
 
-_⊗_ : {t₁ t₂ : U} → Aut (𝒰 t₁) → Aut (𝒰 t₂) → Aut (𝒰 (t₁ ×ᵤ t₂))
-_⊗_ {t₁} {t₂} c₁ c₂ f (v₁ , v₂) =
-  c₁ (λ a → sumf (map (λ z → f ( a , z)) (enum t₂))) v₁ F.*
-  c₂ (λ c → sumf (map (λ z → f ( z , c)) (enum t₁))) v₂
+  _⊗_ : {t₁ t₂ : U} → Aut (𝒰 t₁) → Aut (𝒰 t₂) → Aut (𝒰 (t₁ ×ᵤ t₂))
+  _⊗_ {t₁} {t₂} c₁ c₂ f (v₁ , v₂) =
+    c₁ (λ a → sumf (map (λ z → f ( a , z)) (enum t₂))) v₁ F.*
+    c₂ (λ c → sumf (map (λ z → f ( z , c)) (enum t₁))) v₂
 
 size : U → ℕ
 size O = 0
