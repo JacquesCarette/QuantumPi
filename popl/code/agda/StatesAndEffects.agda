@@ -15,15 +15,24 @@ private
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
 
 -------------------------------------------------------------------------------------
+
+-- This is the type of Ancillas
+data N : Set where
+  I′ : N
+  Two : N
+  _×ₙ_ : N → N → N
+
+-- Inject N into U
+N⇒U : N → U
+N⇒U I′ = I
+N⇒U Two = I +ᵤ I
+N⇒U (x ×ₙ y) = N⇒U x ×ᵤ N⇒U y
+
 -- Lifting an abstract pair
 data StEffPi : U → U → Set where
-  lift : TList (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄) → StEffPi t₁ t₃
+  lift : {n₁ n₂ : N} → TList (t₁ ×ᵤ N⇒U n₁) (t₂ ×ᵤ N⇒U n₂) → StEffPi t₁ t₂
 
 -- Some examples where we use all of the above
--- Lifting too general a swap:
-lswap : StEffPi t₁ t₃
-lswap = lift (arr₁ swap⋆)
-
 -- With annotations
 zero : StEffPi I (I +ᵤ I)
 zero = lift (arr₁ swap⋆)
