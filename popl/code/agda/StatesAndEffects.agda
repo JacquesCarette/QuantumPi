@@ -4,7 +4,12 @@
 
 module StatesAndEffects where
 
+open import Data.List using (List; []; _∷_)
+open import Data.Maybe using (Maybe; just; nothing)
+open import Data.Unit using (tt)
+
 open import PiSyntax
+open import PiBij using (enum; ⟦_⟧)
 open import GenericList as GL using (TList)
 import ArrowsOverPair as A
 open A using (_>>>_)
@@ -18,17 +23,23 @@ private
 
 -------------------------------------------------------------------------------------
 
--- This is the type of Ancillas
-data N : Set where
-  I′ : N
-  Two : N
-  _×ₙ_ : N → N → N
+-- This is the type of non-trivial Ancillas
+data Anc : Set where
+  Two : Anc
+  _×ₙ_ : Anc → Anc → Anc
+
+N : Set
+N = Maybe Anc
 
 -- Inject N into U
 N⇒U : N → U
-N⇒U I′ = I
-N⇒U Two = I +ᵤ I
-N⇒U (x ×ₙ y) = N⇒U x ×ᵤ N⇒U y
+N⇒U nothing = I
+N⇒U (just Two) = I +ᵤ I
+N⇒U (just (x ×ₙ y)) = N⇒U (just x) ×ᵤ N⇒U (just y)
+
+enumN : (n : N) → List ⟦ N⇒U n ⟧
+enumN n = enum (N⇒U n)
+-- enumN nothing = enum I
 
 -- Lifting an abstract pair
 data StEffPi : U → U → Set where
@@ -41,7 +52,7 @@ data StEffPi : U → U → Set where
 module Direct where
   -- First arr.
   arr : TList t₁ t₂ → StEffPi t₁ t₂
-  arr c = lift (A.unite*l >>> c >>> A.uniti*l)
+  arr c = lift {n₁ = nothing} {nothing} (A.unite*l >>> c >>> A.uniti*l)
 
   -- Then use that to lift id, swap, assoc and unit
   idst : StEffPi t t
@@ -57,11 +68,26 @@ module Direct where
   uniti*l : StEffPi t (I ×ᵤ t)
   uniti*l = arr A.uniti*l
 
+  a* : N → N → N
+  a* (just x) (just y) = just (x ×ₙ y)
+  a* (just x) nothing = just x
+  a* nothing (just x) = just x
+  a* nothing nothing = nothing
+
+  unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷₁ N⇒U n₁ ×ᵤ N⇒U n₂
+  unpack (just x) (just y) = id⟷₁
+  unpack (just x) nothing = uniti⋆r
+  unpack nothing (just x) = uniti⋆l
+  unpack nothing nothing = uniti⋆l
+
   -- >>>< composition
   infixr 10 _>>>>_
   _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
-  lift m >>>> lift p =
-    lift (A.assocr× >>> A.second m >>> A.assocl× >>> GL.first A.swap× >>> A.assocr× >>> A.second p >>> A.assocl×)
+  lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
+    lift {n₁ = a* n₃ n₁} {a* n₂ n₄} (GL.first (A.arr₁ (unpack n₃ n₁)) >>>
+      A.assocr× >>> A.second m >>> A.assocl× >>> GL.first A.swap× >>> A.assocr× >>> A.second p >>> A.assocl×
+      >>> GL.first (A.arr₁ (!⟷₁ (unpack n₂ n₄)))
+      )
 
   -- first
   firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
