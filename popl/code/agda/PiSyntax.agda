@@ -83,51 +83,11 @@ _∎ t = id⟷₁
 !⟷₁ (c₁ ⊕ c₂) = !⟷₁ c₁ ⊕ !⟷₁ c₂
 !⟷₁ (c₁ ⊗ c₂) = !⟷₁ c₁ ⊗ !⟷₁ c₂
 
-
--- Simon fragments
-
-A[B[CD]]→[AC][BD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)
-A[B[CD]]→[AC][BD] {t₁} {t₂} {t₃} {t₄} =
- t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷₁ ⊗ assocl⋆ ⟩
- t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷₁ ⊗ swap⋆ ⊗ id⟷₁ ⟩
- t₁ ×ᵤ (t₃ ×ᵤ t₂) ×ᵤ t₄     ⟨ id⟷₁ ⊗ assocr⋆ ⟩
- t₁ ×ᵤ t₃ ×ᵤ (t₂ ×ᵤ t₄)     ⟨ assocl⋆ ⟩
- (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)   ∎
-
-A[B[CD]]→[AD][BC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)
-A[B[CD]]→[AD][BC] {t₁} {t₂} {t₃} {t₄} =
- t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷₁ ⊗ assocl⋆ ⟩
- t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷₁ ⊗ swap⋆ ⟩
- t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)     ⟨ assocl⋆ ⟩
- (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)   ∎
-
-A[B[CD]]→[BC][AD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)
-A[B[CD]]→[BC][AD] {t₁} {t₂} {t₃} {t₄} =
-  t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))  ⟨ id⟷₁ ⊗ assocl⋆ ⟩
-  t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄    ⟨ id⟷₁ ⊗ swap⋆ ⟩
-  t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)    ⟨ assocl⋆ ⟩
-  (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)  ⟨ swap⋆ ⟩
-  (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)  ∎
-
-A[B[CD]]→[BD][AC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷₁ (t₂ ×ᵤ t₄) ×ᵤ (t₁ ×ᵤ t₃)
-A[B[CD]]→[BD][AC] {t₁} {t₂} {t₃} {t₄} = A[B[CD]]→[AC][BD] ◎ swap⋆
-
 𝟚 : U
 𝟚 = I +ᵤ I
 
 cnot : 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚
 cnot = dist ◎ ((id⟷₁ ⊗ swap₊) ⊕ id⟷₁) ◎ factor
-
-simon₁ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁
-
-simon₂ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-simon₂ =
-     A[B[CD]]→[AC][BD]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[AC][BD]
-  ◎  A[B[CD]]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[AD][BC]
-  ◎  A[B[CD]]→[BC][AD]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BC][AD]
-  ◎  A[B[CD]]→[BD][AC]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BD][AC]
-
 
 -- Coherence
 

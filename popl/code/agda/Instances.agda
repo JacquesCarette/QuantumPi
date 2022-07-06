@@ -61,28 +61,3 @@ eval (lift {t₁} {t₂} {just x} {nothing} z)  = evalTL₁ A.uniti*l ○ state 
 eval (lift {t₁} {t₂} {nothing} {just x} z)  = evalTL₁ A.uniti*l ○                  evalTL₁ z ○ effect (just x) ○ evalTL₁ A.unite*l
 eval (lift {t₁} {t₂} {nothing} {nothing} z) = evalTL₁ A.uniti*l ○                  evalTL₁ z ○                   evalTL₁ A.unite*l
 -}
-
-Bool : U
-Bool = I +ᵤ I
-
-{--
-
-1 -> unit intro
-1 x 1 x 1 x 1 -> zero
-2 x 2 x 2 x 2 -> simon1 ; simon2 ; simon1
-
---}
-
--- Simon using the Direct method
-module SimonDirect where
-  open Direct
-
-  simon : StEffPi I (Bool ×ᵤ Bool ×ᵤ Bool ×ᵤ Bool)
-  simon =
-    uniti*l >>>>
-    idst *** uniti*l >>>>
-    idst *** (idst *** uniti*l) >>>>
-    (zero *** (zero *** (zero *** zero))) >>>>
-    arr (A.arr₂ simon₁) >>>>
-    arr (A.arr₁ simon₂) >>>>
-    arr (A.arr₂ simon₁)
