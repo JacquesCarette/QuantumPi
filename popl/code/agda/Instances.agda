@@ -4,12 +4,12 @@
 
 module Instances where
 
-open import PiSyntax using (U)
+open import PiSyntax -- using (U)
 import PiZ
 import PiH
 open import PiBij using (generalize)
 open import Unitary
-open import ArrowsOverPair
+open import ArrowsOverPair hiding (_***_)
 open import GenericList
 open import StatesAndEffects
 
@@ -32,3 +32,24 @@ Unitary-hasEffects (lift nil) = Categorical.idr FC
 Unitary-hasEffects (lift (cons₁ x x₁)) = {!evalTL₁ (cons₁ x x₁)!}
 Unitary-hasEffects (lift (cons₂ x x₁)) = {!!}
 -}
+
+Bool = I +ᵤ I
+
+{--
+
+1 -> unit intro
+1 x 1 x 1 x 1 -> zero
+2 x 2 x 2 x 2 -> simon1 ; simon2 ; simon1
+
+--}
+
+simon : StEffPi I (Bool ×ᵤ Bool ×ᵤ Bool ×ᵤ Bool)
+simon =
+  arr (arr₁ uniti⋆l) >>>> 
+  arr (arr₁ (id⟷₁ ⊗ uniti⋆l)) >>>> 
+  arr (arr₁ (id⟷₁ ⊗ id⟷₁ ⊗ uniti⋆l)) >>>> 
+  (zero *** (zero *** (zero *** zero))) >>>>
+  arr (arr₁ simon₁) >>>>
+  arr (arr₁ simon₂) >>>> 
+  arr (arr₁ simon₁)
+  
