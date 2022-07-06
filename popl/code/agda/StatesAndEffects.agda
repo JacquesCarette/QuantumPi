@@ -84,7 +84,7 @@ assertZero = lift (A.arr₁ swap⋆)
 
 -- Sanity check
 inv0 : invSE zero ≡ assertZero
-inv0 = {!refl!}
+inv0 = refl
 
 -- A function is an Interpreter when:
 Interpreter : (rep : U → U → Set) → Set
