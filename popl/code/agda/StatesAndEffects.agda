@@ -89,25 +89,3 @@ module Direct where
   -- Sanity check
   inv0 : invSE zero ≡ assertZero
   inv0 = refl
-
-module Syntax where
-  infix 30 _⇼_
-  infixr 10 _>>>>_
-  infixr 30 _***_
-
-  data _⇼_  : U → U → Set where
-    lift    : {n₁ n₂ : N} → TList (N⇒U n₁ ×ᵤ t₁) (N⇒U n₂ ×ᵤ t₂) → t₁ ⇼ t₂
-    unite⋆l : I ×ᵤ t ⇼  t
-    uniti⋆l : t ⇼  I ×ᵤ t
-    swap⋆   : t₁ ×ᵤ t₂ ⇼  t₂ ×ᵤ t₁
-    assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⇼ (t₁ ×ᵤ t₂) ×ᵤ t₃
-    assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⇼ t₁ ×ᵤ (t₂ ×ᵤ t₃)
-    id⇼    : t ⇼ t
-    _>>>>_  : (t₁ ⇼ t₂) → (t₂ ⇼ t₃) → (t₁ ⇼ t₃)
-    _***_   : (t₁ ⇼ t₃) → (t₂ ⇼ t₄) → (t₁ ×ᵤ t₂ ⇼ t₃ ×ᵤ t₄)
-    first   : t₁ ⇼ t₂ → (t₁ ×ᵤ t₃) ⇼ (t₂ ×ᵤ t₃)
-    second  : t₁ ⇼ t₂ → (t₃ ×ᵤ t₁) ⇼ (t₃ ×ᵤ t₂)
-    arr     : TList t₁ t₂ → t₁ ⇼ t₂
-    inv     : t₁ ⇼ t₂ → t₂ ⇼ t₁
-    zero    : I ⇼ I +ᵤ I
-    assertZero : I +ᵤ I ⇼ I
