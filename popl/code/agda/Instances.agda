@@ -53,3 +53,16 @@ module SimonDirect where
     arr (A.arr₂ simon₁) >>>>
     arr (A.arr₁ simon₂) >>>>
     arr (A.arr₂ simon₁)
+
+module SimonSyntax where
+  open Syntax
+
+  simon : I ⇼ (Bool ×ᵤ Bool ×ᵤ Bool ×ᵤ Bool)
+  simon =
+    uniti⋆l >>>>
+    (id⇼ *** uniti⋆l >>>>
+    (id⇼ *** id⇼ *** uniti⋆l >>>>
+    (zero *** zero *** zero *** zero >>>>
+    (arr (A.arr₂ simon₁) >>>>
+    arr (A.arr₁ simon₂) >>>>
+    arr (A.arr₂ simon₁)))))
