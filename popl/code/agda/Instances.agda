@@ -4,12 +4,17 @@
 
 module Instances where
 
-open import PiSyntax using (U)
+open import Data.Unit using (tt)
+open import Data.Product using (_,_; proj₁; proj₂)
+open import Data.Sum using (inj₁; inj₂)
+open import Function using (_∘_)
+
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_)
 import PiZ
 import PiH
 open import PiBij using (generalize)
 open import Unitary
-open import ArrowsOverPair
+open import ArrowsOverPair hiding (_***_)
 open import GenericList
 open import StatesAndEffects
 
@@ -25,10 +30,3 @@ FC = record
 
 evalTL₁ : ∀ {t₁ t₂ : U} → TList t₁ t₂ → Fwd t₁ t₂
 evalTL₁ tl = evalTL FC (generalize PiZ.PiZ) (generalize PiH.PiH) tl
-
-{-
-Unitary-hasEffects : Interpreter Fwd
-Unitary-hasEffects (lift nil) = Categorical.idr FC
-Unitary-hasEffects (lift (cons₁ x x₁)) = {!evalTL₁ (cons₁ x x₁)!}
-Unitary-hasEffects (lift (cons₂ x x₁)) = {!!}
--}
