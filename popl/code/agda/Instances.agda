@@ -14,7 +14,7 @@ import PiZ
 import PiH
 open import PiBij using (generalize)
 open import Unitary
-open import ArrowsOverPair hiding (_***_)
+import ArrowsOverPair as A
 open import GenericList
 open import StatesAndEffects
 
@@ -46,10 +46,11 @@ module SimonDirect where
 
   simon : StEffPi I (Bool ×ᵤ Bool ×ᵤ Bool ×ᵤ Bool)
   simon =
-    arr (arr₁ uniti⋆l) >>>>
-    arr (arr₁ (id⟷₁ ⊗ uniti⋆l)) >>>>
-    arr (arr₁ (id⟷₁ ⊗ id⟷₁ ⊗ uniti⋆l)) >>>>
+    uniti*l >>>>
+    idst *** uniti*l >>>>
+    idst *** (idst *** uniti*l) >>>>
+--    arr (A.arr₁ (id⟷₁ ⊗ id⟷₁ ⊗ uniti⋆l)) >>>>
     (zero *** (zero *** (zero *** zero))) >>>>
-    arr (arr₂ simon₁) >>>>
-    arr (arr₁ simon₂) >>>>
-    arr (arr₂ simon₁)
+    arr (A.arr₂ simon₁) >>>>
+    arr (A.arr₁ simon₂) >>>>
+    arr (A.arr₂ simon₁)
