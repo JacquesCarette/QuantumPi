@@ -49,7 +49,6 @@ module SimonDirect where
     uniti*l >>>>
     idst *** uniti*l >>>>
     idst *** (idst *** uniti*l) >>>>
---    arr (A.arr₁ (id⟷₁ ⊗ id⟷₁ ⊗ uniti⋆l)) >>>>
     (zero *** (zero *** (zero *** zero))) >>>>
     arr (A.arr₂ simon₁) >>>>
     arr (A.arr₁ simon₂) >>>>
