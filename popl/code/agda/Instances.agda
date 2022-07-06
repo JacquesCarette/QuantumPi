@@ -50,6 +50,6 @@ module SimonDirect where
     arr (arr₁ (id⟷₁ ⊗ uniti⋆l)) >>>>
     arr (arr₁ (id⟷₁ ⊗ id⟷₁ ⊗ uniti⋆l)) >>>>
     (zero *** (zero *** (zero *** zero))) >>>>
-    arr (arr₁ simon₁) >>>>
+    arr (arr₂ simon₁) >>>>
     arr (arr₁ simon₂) >>>>
-    arr (arr₁ simon₁)
+    arr (arr₂ simon₁)
