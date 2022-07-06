@@ -48,8 +48,6 @@ private
   effect : {t : U} (n : N) → 𝒰 (I ×ᵤ t) → 𝒰 ((N⇒U n) ×ᵤ t)
   effect x f z = f (tt , proj₂ z)
 
--- The tricky part here is that t₁ and t₂ may no longer be equivalent,
--- so we end up with differently-sized matrices.
 eval : ∀ {t₁ t₂ : U} → StEffPi t₁ t₂ → Fwd t₁ t₂
 eval (lift {t₁} {t₂} {just x} {just y} z)   = evalTL₁ A.uniti*l ○ effect (just x) ○ evalTL₁ z ○ state (just y) ○ evalTL₁ A.unite*l
 eval (lift {t₁} {t₂} {just x} {nothing} z)  = evalTL₁ A.uniti*l ○ effect (just x) ○ evalTL₁ (z A.>>> A.unite*l)

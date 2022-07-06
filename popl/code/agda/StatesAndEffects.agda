@@ -39,7 +39,6 @@ N⇒U (just (x ×ₙ y)) = N⇒U (just x) ×ᵤ N⇒U (just y)
 
 enumN : (n : N) → List ⟦ N⇒U n ⟧
 enumN n = enum (N⇒U n)
--- enumN nothing = enum I
 
 -- Lifting an abstract pair
 data StEffPi : U → U → Set where
