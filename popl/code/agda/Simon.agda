@@ -2,9 +2,16 @@
 
 module Simon where
 
+open import Data.Float using (Float)
+open import Data.List using (List; map)
+open import Data.Product using (_×_; _,_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+
 open import PiSyntax
+open import PiBij using (⟦_⟧; enum)
 import ArrowsOverPair as A
 open import StatesAndEffects
+open import Instances using (eval)
 
 private
   variable
@@ -67,3 +74,14 @@ simon =
   arr (A.arr₂ simon₁) >>>>
   arr (A.arr₁ simon₂) >>>>
   arr (A.arr₂ simon₁)
+
+simonRes :  ⟦ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟧ → Float
+simonRes = eval simon (λ tt → 1.0)
+
+show : {t : U} → (⟦ t ⟧ → Float) → List (⟦ t ⟧ × Float)
+show {t} v = map (λ i → (i , v i)) (enum t)
+
+{-
+simonSays : show simonRes ≡ {!!}
+simonSays = {!show (eval (uniti*l {𝟚}) ?)!}
+-}

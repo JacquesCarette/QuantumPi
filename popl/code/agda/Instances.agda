@@ -20,7 +20,6 @@ open import Unitary
 import ArrowsOverPair as A
 open import GenericList
 open import StatesAndEffects
-open Direct
 
 -- This "Forward" interpreter is in 𝒰 space, which is common to PiZ and PiH
 Fwd : U → U → Set
