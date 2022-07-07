@@ -2,7 +2,8 @@
 
 module ArrowsOverAmalg where
 
-open import PiSyntax using (U; I; _×ᵤ_; _⟷₁_; id⟷₁; swap⋆; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁; _⊗_)
+open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷₁_; id⟷₁;
+  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁; _⊗_; ctrl; 𝟚)
 open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------
@@ -15,6 +16,9 @@ private
 -- Form "Arrows" over a pairing of Pi languages.
 infixr 10 _>>>_
 
+-- We use ₁ and ₂ instead of subscripts Z and H to be
+-- 1) more generic and 2) avoid the unpleasant issue that
+-- Agda doesn't actually define those subscripts.
 arr₁ : t₁ ⟷₁ t₂ -> TList t₁ t₂
 arr₁ c = cons₁ c nil
 arr₂ : t₁ ⟷₁ t₂ -> TList t₁ t₂
@@ -73,3 +77,17 @@ cons₁ x xs *** cons₂ x₁ ys = cons₁ (x ⊗ id⟷₁) (cons₂ (id⟷₁ �
 cons₂ x xs *** nil = cons₂ (x ⊗ id⟷₁) (xs *** nil)
 cons₂ x xs *** cons₁ x₁ ys = cons₂ (x ⊗ id⟷₁) (cons₂ (id⟷₁ ⊗ x₁) (xs *** ys))
 cons₂ x xs *** cons₂ x₁ ys = cons₂ (x ⊗ x₁) (xs *** ys)
+
+-- Add some definitions from 5.1
+X : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+X = arr₁ swap₊
+CX : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CX = arr₁ (ctrl swap₊)
+CCX : TList (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
+CCX = arr₁ (ctrl (ctrl swap₊))
+H : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+H = arr₂ swap₊
+Z : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+Z = H >>> X >>> H
+CZ : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CZ = idzh *** H >>> CX >>> idzh *** H
