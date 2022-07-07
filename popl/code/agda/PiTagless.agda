@@ -19,6 +19,10 @@ record Pi (rep : U → U → Set) : Set where
     uniti+l : rep t (O +ᵤ t)
     unite*l : rep (I ×ᵤ t) t
     uniti*l : rep t (I ×ᵤ t)
+    unite+  : rep (t +ᵤ O) t
+    uniti+  : rep t (t +ᵤ O)
+    unite*  : rep (t ×ᵤ I) t
+    uniti*  : rep t (t ×ᵤ I)
     swap+ : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
     swap× : rep (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
     assocl+ : rep  (t₁ +ᵤ (t₂ +ᵤ t₃)) ((t₁ +ᵤ t₂) +ᵤ t₃)
@@ -52,6 +56,10 @@ reverse rep p = record
   ; uniti+l = unite+l
   ; unite*l = uniti*l
   ; uniti*l = unite*l
+  ; unite+  = uniti+
+  ; uniti+  = unite+
+  ; unite*  = uniti*
+  ; uniti*  = unite*
   ; swap+ = swap+
   ; swap× = swap×
   ; assocl+ = assocr+

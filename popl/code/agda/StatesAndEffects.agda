@@ -73,7 +73,7 @@ a* nothing nothing = nothing
 -- "unpack" a product of ancillas (including none) into a proper product
 unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷₁ N⇒U n₁ ×ᵤ N⇒U n₂
 unpack (just x) (just y) = id⟷₁
-unpack (just x) nothing = uniti⋆r
+unpack (just x) nothing = uniti⋆
 unpack nothing (just x) = uniti⋆l
 unpack nothing nothing = uniti⋆l
 

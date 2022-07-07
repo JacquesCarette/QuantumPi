@@ -28,6 +28,10 @@ data _⟷₁_  : U → U → Set where
   uniti₊l : t ⟷₁  O +ᵤ t
   unite⋆l : I ×ᵤ t ⟷₁  t
   uniti⋆l : t ⟷₁  I ×ᵤ t
+  unite₊  : t +ᵤ O ⟷₁  t
+  uniti₊  : t ⟷₁  t +ᵤ O
+  unite⋆  : t ×ᵤ I ⟷₁  t
+  uniti⋆  : t ⟷₁ t ×ᵤ I
   swap₊   : t₁ +ᵤ t₂ ⟷₁  t₂ +ᵤ t₁
   swap⋆   : t₁ ×ᵤ t₂ ⟷₁  t₂ ×ᵤ t₁
   assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) +ᵤ t₃
@@ -64,6 +68,10 @@ _∎ t = id⟷₁
 !⟷₁ uniti₊l = unite₊l
 !⟷₁ unite⋆l = uniti⋆l
 !⟷₁ uniti⋆l = unite⋆l
+!⟷₁ unite₊  = uniti₊
+!⟷₁ uniti₊  = unite₊
+!⟷₁ unite⋆  = uniti⋆
+!⟷₁ uniti⋆  = unite⋆
 !⟷₁ swap₊   = swap₊
 !⟷₁ swap⋆   = swap⋆
 !⟷₁ assocl₊ = assocr₊
@@ -88,20 +96,6 @@ _∎ t = id⟷₁
 
 cx : 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚
 cx = dist ◎ ((id⟷₁ ⊗ swap₊) ⊕ id⟷₁) ◎ factor
-
--- Coherence
-
-unite₊r : {t : U} → t +ᵤ O ⟷₁  t
-unite₊r = swap₊ ◎ unite₊l
-
-uniti₊r : t ⟷₁  t +ᵤ O
-uniti₊r = uniti₊l ◎ swap₊
-
-unite⋆r : {t : U} → t ×ᵤ I ⟷₁  t
-unite⋆r = swap⋆ ◎ unite⋆l
-
-uniti⋆r : t ⟷₁  t ×ᵤ I
-uniti⋆r = uniti⋆l ◎ swap⋆
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
