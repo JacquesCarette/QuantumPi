@@ -54,11 +54,11 @@ simon₁ = swap₊ ⊗ swap₊ ⊗ id⟷₁ ⊗ id⟷₁
 -- The core of the circuit
 simon₂ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon₂ =
-     A[B[CD]]→[AC][BD]  ◎ (cnot ⊗ id⟷₁) ◎
-     [AC][BD]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ -- swap⋆ to do [AD][BC]→[BC][AD]
-     swap⋆              ◎ (cnot ⊗ id⟷₁) ◎
+     A[B[CD]]→[AC][BD]  ◎ (cx ⊗ id⟷₁) ◎
+     [AC][BD]→[AD][BC]  ◎ (cx ⊗ id⟷₁) ◎ -- swap⋆ to do [AD][BC]→[BC][AD]
+     swap⋆              ◎ (cx ⊗ id⟷₁) ◎
      -- up to renaming, [AC][BD]→[AD][BC] does the same as [BC][AD]→[BD][AC]
-     [AC][BD]→[AD][BC]  ◎ (cnot ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BD][AC]
+     [AC][BD]→[AD][BC]  ◎ (cx ⊗ id⟷₁) ◎ !⟷₁ A[B[CD]]→[BD][AC]
 
 {--
 
