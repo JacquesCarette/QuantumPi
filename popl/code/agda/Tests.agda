@@ -47,7 +47,7 @@ test-vec2 (inj₂ y , inj₁ x) = 0.0
 test-vec2 (inj₂ y , inj₂ y₁) = 0.0
 
 
-test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ generalize PiZ.PiZ (id⟷₁ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
+test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PiZ.evalZ (id⟷₁ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
   ((inj₁ tt , inj₁ tt) , 0.7071067811706743) ∷
       ((inj₁ tt , inj₂ tt) , 0.707106781202421) ∷
       ((inj₂ tt , inj₁ tt) , 0.0) ∷

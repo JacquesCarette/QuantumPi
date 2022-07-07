@@ -13,9 +13,9 @@ open import Data.Unit using (tt)
 open import Function using (_∘_; flip)
 
 open import PiSyntax
-import PiZ
-import PiH
-open import PiBij using (generalize; ⟦_⟧)
+open import PiZ using (evalZ)
+open import PiH using (evalH)
+open import PiBij using (⟦_⟧)
 open import Unitary
 import ArrowsOverAmalg as A
 open import Amalgamation using (TList; Categorical; evalTL)
@@ -32,7 +32,7 @@ FC = record
   }
 
 evalTL₁ : ∀ {t₁ t₂ : U} → TList t₁ t₂ → Fwd t₁ t₂
-evalTL₁ tl = evalTL FC (generalize PiZ.PiZ) (PiH.evalH) tl
+evalTL₁ tl = evalTL FC evalZ evalH tl
 
 infixl 9 _○_
 

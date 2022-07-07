@@ -5,26 +5,18 @@ module PiH where
 open import Function using (_∘_)
 
 open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_; _⟷₁_; 𝟚; swap₊)
-open import PiBij using (⟦_⟧; generalize)
-open import PiZ using (PiZ; trueZ; falseZ)
+open import PiBij using (generalize)
+open import GenericPi using (Fwd; GenericPi; true; false)
 open import Unitary using (𝒰; R; R⁻¹)
 
 -----------------------------------------------------------------------
--- Below we start the work that correspoints to the H interpretation
-
-H : (t : U) → Set
-H = 𝒰
-
-Fwd : U → U → Set
-Fwd t₁ t₂ = H t₁ → H t₂
-
--- An evaluator for H can re-use PiZ and conjugate before/after:
+-- An evaluator for H can re-use GenericPi and conjugate before/after:
 evalH : {t₁ t₂ : U} → t₁ ⟷₁ t₂ → Fwd t₁ t₂
-evalH {t₁} {t₂} c = R⁻¹ t₂ ∘ generalize PiZ c ∘ R t₁
+evalH {t₁} {t₂} c = R⁻¹ t₂ ∘ generalize GenericPi c ∘ R t₁
 
-trueH falseH  : H 𝟚
-trueH =  R⁻¹ 𝟚 trueZ
-falseH = R⁻¹ 𝟚 falseZ
+trueH falseH  : 𝒰 𝟚
+trueH =  R⁻¹ 𝟚 true
+falseH = R⁻¹ 𝟚 false
 
-x : H 𝟚 → H 𝟚
+x : Fwd 𝟚 𝟚
 x = evalH swap₊
