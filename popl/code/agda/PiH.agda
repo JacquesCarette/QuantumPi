@@ -26,5 +26,5 @@ trueH falseH  : H 𝟚
 trueH =  R⁻¹ 𝟚 trueZ
 falseH = R⁻¹ 𝟚 falseZ
 
-notH : H 𝟚 → H 𝟚
-notH = evalH swap₊
+x : H 𝟚 → H 𝟚
+x = evalH swap₊

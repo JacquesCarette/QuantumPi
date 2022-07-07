@@ -13,12 +13,12 @@ private
 module _ {rep : U → U → Set} (p : Pi rep) where
   open Pi p
 
-  not : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
-  not = swap+
+  x : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+  x = swap+
 
   -- cx is sometimes called cnot too
   cx : rep ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃) ) ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃))
-  cx = dist′ ⊚ (idp ⊕′ (idp ⊛ not)) ⊚ factor′
+  cx = dist′ ⊚ (idp ⊕′ (idp ⊛ x)) ⊚ factor′
 
   -- note how c₂ has to be an automorphism
   cif : rep t₁ t₂ → rep t₃ t₃ → rep ((t₁ +ᵤ t₄) ×ᵤ t₃) ((t₂ +ᵤ t₄) ×ᵤ t₃)

@@ -61,5 +61,5 @@ trueZ (inj₂ y) = 0.0
 falseZ (inj₁ x) = 0.0
 falseZ (inj₂ y) = 1.0
 
-not : Z 𝟚 → Z 𝟚
-not = Pi.swap+ PiZ
+x : Z 𝟚 → Z 𝟚
+x = Pi.swap+ PiZ
