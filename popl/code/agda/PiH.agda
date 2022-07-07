@@ -9,8 +9,8 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (tt)
 open import Function using (_∘_)
 
-open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
-open import PiBij using (⟦_⟧; enum)
+open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_; _⟷₁_)
+open import PiBij using (⟦_⟧; generalize)
 open import PiTagless using (Pi)
 open import Unitary using (𝒰; R; R⁻¹)
 
@@ -25,6 +25,12 @@ Fwd t₁ t₂ = H t₁ → H t₂
 
 sumf : List Float → Float
 sumf = foldr F._+_ (F.fromℕ 0)
+
+private
+  -- try to cache the enumerations as much as possible
+  -- convention: a : ⟦ t₁ ⟧ ... d : ⟦ t₄ ⟧
+  prod :  {t₁ t₂ t₃ t₄ : U} → Fwd t₁ t₃ → Fwd t₂ t₄ → Fwd (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
+  prod A₁₃ B₂₄ v (i , j) = A₁₃ (λ a → B₂₄ (λ b → v (a , b)) j) i
 
 -- We can show that, in the H basis, we can make Fwd an interpretation of Pi.
 -- But this is not the one we really want, as it is not conjugated.
@@ -53,9 +59,7 @@ PiH₀ = record
   ; idp = λ x → x
   ; _⊚_ = λ f g → g ∘ f
   ; _⊕′_ = λ f g h → Sum.[ f (h ∘ inj₁) , g (h ∘ inj₂) ]
-  ; _⊛_ = λ { {t₁} {_} {t₃} f g h (c , d) →
-            f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
-            g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}
+  ; _⊛_ = prod
   }
 
 -- Here is the one we want. We pre-conjugate with R⁻¹ and post-apply R, to the version above.
@@ -85,6 +89,10 @@ PiH = record
   ; _⊛_ = λ {t₀} {t₁} {t₂} {t₃} c₀ c₁ → R⁻¹ (t₁ ×ᵤ t₃) ∘ (c₀ ⊛ c₁) ∘ R (t₀ ×ᵤ t₂)
   }
   where open Pi PiH₀
+
+-- a much better evaluator?
+evalH : {t₁ t₂ : U} → t₁ ⟷₁ t₂ → Fwd t₁ t₂
+evalH {t₁} {t₂} c = R⁻¹ t₂ ∘ generalize PiH₀ c ∘ R t₁
 
 Bool : U
 Bool = I +ᵤ I

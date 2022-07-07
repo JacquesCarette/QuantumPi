@@ -45,10 +45,10 @@ private
   (c₁ ⊕ c₂) f (inj₂ y) = c₂ (f ∘ inj₂) y
 
   _⊗_ : {t₁ t₂ : U} → Aut (𝒰 t₁) → Aut (𝒰 t₂) → Aut (𝒰 (t₁ ×ᵤ t₂))
-  _⊗_ {t₁} {t₂} c₁ c₂ f (v₁ , v₂) =
+  _⊗_ {t₁} {t₂} c₁ c₂ f (v₁ , v₂) = c₁ (λ a → c₂ (λ b → f (a , b)) v₂) v₁ {-
     c₁ (λ a → sumf (map (λ z → f ( a , z)) (enum t₂))) v₁ F.*
     c₂ (λ c → sumf (map (λ z → f ( z , c)) (enum t₁))) v₂
-
+    -}
 size : U → ℕ
 size O = 0
 size I = 1

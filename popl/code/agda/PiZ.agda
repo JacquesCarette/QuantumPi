@@ -57,9 +57,9 @@ PiZ = record
   ; idp = λ x → x
   ; _⊚_ = λ f g → g ∘ f
   ; _⊕′_ = λ f g h → Sum.[ f (h ∘ inj₁) , g (h ∘ inj₂) ]
-  ; _⊛_ = λ { {t₁} {_} {t₃} f g h (c , d) →
-            f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
-            g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}
+  ; _⊛_ = λ A₁₃ B₂₄ v (i , j) → A₁₃ (λ a → B₂₄ (λ b → v (a , b)) j) i
+            -- f (λ a → sumf (map (λ z → h (a , z)) (enum t₃))) c  F.*
+            -- g (λ c → sumf (map (λ z → h (z , c)) (enum t₁))) d}
   }
 
 Bool : U

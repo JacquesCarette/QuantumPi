@@ -32,7 +32,7 @@ FC = record
   }
 
 evalTL₁ : ∀ {t₁ t₂ : U} → TList t₁ t₂ → Fwd t₁ t₂
-evalTL₁ tl = evalTL FC (generalize PiZ.PiZ) (generalize PiH.PiH) tl
+evalTL₁ tl = evalTL FC (generalize PiZ.PiZ) (PiH.evalH) tl
 
 infixl 9 _○_
 
