@@ -18,7 +18,7 @@ import PiH
 open import PiBij using (generalize; ⟦_⟧)
 open import Unitary
 import ArrowsOverPair as A
-open import GenericList
+open import Amalgamation using (TList; Categorical; evalTL)
 open import StatesAndEffects
 
 -- This "Forward" interpreter is in 𝒰 space, which is common to PiZ and PiH

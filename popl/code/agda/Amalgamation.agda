@@ -1,6 +1,8 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module GenericList where
+module Amalgamation where
+
+-- Sequencing of 2 copies of Pi
 
 open import PiSyntax using (U; _×ᵤ_; _⟷₁_; !⟷₁; _⊗_; id⟷₁)
 
@@ -10,27 +12,10 @@ private
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
     a b c d : U
 
-infixr 10 _⊚⊚_
-
 data TList : U → U → Set where
   nil : TList a a
   cons₁ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
   cons₂ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
-
-_⊚⊚_ : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList t₂ t₃ → TList t₁ t₃
-nil         ⊚⊚ z = z
-(cons₁ x y) ⊚⊚ z = cons₁ x (y ⊚⊚ z)
-(cons₂ x y) ⊚⊚ z = cons₂ x (y ⊚⊚ z)
-
-first : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-first nil = nil
-first (cons₁ x y) = cons₁ (x ⊗ id⟷₁) (first y)
-first (cons₂ x y) = cons₂ (x ⊗ id⟷₁) (first y)
-
-inv : {t₁ t₂ : U} → TList t₁ t₂ → TList t₂ t₁
-inv nil          = nil
-inv (cons₁ x xs) = inv xs ⊚⊚ (cons₁ (!⟷₁ x) nil)
-inv (cons₂ x xs) = inv xs ⊚⊚ (cons₂ (!⟷₁ x) nil)
 
 record Categorical (rep : U → U → Set) : Set where
   field

@@ -3,7 +3,7 @@
 module ArrowsOverPair where
 
 open import PiSyntax using (U; I; _×ᵤ_; _⟷₁_; id⟷₁; swap⋆; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁; _⊗_)
-open import GenericList using (TList; nil; cons₁; cons₂; _⊚⊚_; first; inv)
+open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------
 private
@@ -23,6 +23,12 @@ arr₂ c = cons₂ c nil
 
 idzh : TList t t
 idzh = arr₁ id⟷₁
+
+first : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
+first nil = nil
+first (cons₁ x y) = cons₁ (x ⊗ id⟷₁) (first y)
+first (cons₂ x y) = cons₂ (x ⊗ id⟷₁) (first y)
+
 swap× : TList (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
 swap× = arr₁ swap⋆
 assocl× : TList  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
@@ -34,12 +40,24 @@ unite*l = arr₁ unite⋆l
 uniti*l : TList t (I ×ᵤ t)
 uniti*l = arr₁ uniti⋆l
 
+_>>>_ : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList t₂ t₃ → TList t₁ t₃
+nil         >>> z = z
+(cons₁ x y) >>> z = cons₁ x (y >>> z)
+(cons₂ x y) >>> z = cons₂ x (y >>> z)
+
+
+-- Warning: this is quadratic!
+inv : {t₁ t₂ : U} → TList t₁ t₂ → TList t₂ t₁
+inv nil          = nil
+inv (cons₁ x xs) = inv xs >>> (cons₁ (!⟷₁ x) nil)
+inv (cons₂ x xs) = inv xs >>> (cons₂ (!⟷₁ x) nil)
+
 second : TList t₁ t₂ → TList (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
-second c = swap× ⊚⊚ first c ⊚⊚ swap×
+second c = swap× >>> first c >>> swap×
 
 -- This is slow?  Implement directly instead
 _***_ : TList t₁ t₂ → TList t₃ t₄ → TList (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₄)
--- xs *** ys = first xs ⊚⊚ second ys
+-- xs *** ys = first xs >>> second ys
 nil *** nil = nil
 nil *** cons₁ x ys = cons₁ (id⟷₁ ⊗ x) (nil *** ys)
 nil *** cons₂ x ys = cons₂ (id⟷₁ ⊗ x) (nil *** ys)
@@ -49,11 +67,3 @@ cons₁ x xs *** cons₂ x₁ ys = cons₁ (x ⊗ id⟷₁) (cons₂ (id⟷₁ �
 cons₂ x xs *** nil = cons₂ (x ⊗ id⟷₁) (xs *** nil)
 cons₂ x xs *** cons₁ x₁ ys = cons₂ (x ⊗ id⟷₁) (cons₂ (id⟷₁ ⊗ x₁) (xs *** ys))
 cons₂ x xs *** cons₂ x₁ ys = cons₂ (x ⊗ x₁) (xs *** ys)
-
-_>>>_ : TList t₁ t₂ → TList t₂ t₃ → TList t₁ t₃
-c₀ >>> c₁ = c₀ ⊚⊚ c₁
-
-inv′ : TList t₁ t₂ → TList t₂ t₁
-inv′ nil = nil
-inv′ (cons₁ x l) = inv′ l >>> arr₁ (!⟷₁ x)
-inv′ (cons₂ x l) = inv′ l >>> arr₂ (!⟷₁ x)

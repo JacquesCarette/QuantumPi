@@ -10,7 +10,7 @@ open import Data.Unit using (tt)
 
 open import PiSyntax
 open import PiBij using (enum; ⟦_⟧)
-open import GenericList as GL using (TList)
+open import Amalgamation using (TList)
 import ArrowsOverPair as A
 open A using (_>>>_)
 
@@ -81,14 +81,14 @@ unpack nothing nothing = uniti⋆l
 infixr 10 _>>>>_
 _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
-  lift {n₁ = a* n₃ n₁} {a* n₂ n₄} (GL.first (A.arr₁ (unpack n₃ n₁)) >>>
-    A.assocr× >>> A.second m >>> A.assocl× >>> GL.first A.swap× >>> A.assocr× >>> A.second p >>> A.assocl×
-    >>> GL.first (A.arr₁ (!⟷₁ (unpack n₂ n₄)))
+  lift {n₁ = a* n₃ n₁} {a* n₂ n₄} (A.first (A.arr₁ (unpack n₃ n₁)) >>>
+    A.assocr× >>> A.second m >>> A.assocl× >>> A.first A.swap× >>> A.assocr× >>> A.second p >>> A.assocl×
+    >>> A.first (A.arr₁ (!⟷₁ (unpack n₂ n₄)))
     )
 
 -- first
 firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-firstSE (lift m) = lift (A.assocl× >>> GL.first m >>> A.assocr×)
+firstSE (lift m) = lift (A.assocl× >>> A.first m >>> A.assocr×)
 
 -- second and ***
 secondSE : StEffPi t₁ t₂ → StEffPi (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
@@ -99,7 +99,7 @@ xs *** ys = firstSE xs >>>> secondSE ys
 
 -- inverse
 invSE : StEffPi t₁ t₂ → StEffPi t₂ t₁
-invSE (lift m) = lift (A.inv′ m)
+invSE (lift m) = lift (A.inv m)
 
 -- Some examples where we use all of the above
 -- With annotations

@@ -39,7 +39,7 @@ open import PiZ
 -- "rotated". The result is still matrices, but in a different basis.
 open import PiH
 open import PiExamples
-open import GenericList
+open import Amalgamation
 open import ArrowsOverPair
 open import StatesAndEffects
 open import Instances
