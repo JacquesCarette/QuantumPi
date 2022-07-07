@@ -13,7 +13,7 @@ private
 
 -------------------------------------------------------------------------------------
 -- Form "Arrows" over a pairing of Pi languages.
-infixr 50 _>>>_
+infixr 10 _>>>_
 
 arr₁ : t₁ ⟷₁ t₂ -> TList t₁ t₂
 arr₁ c = cons₁ c nil

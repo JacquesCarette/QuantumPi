@@ -10,7 +10,7 @@ open import Data.Unit using (tt)
 
 open import PiSyntax
 open import PiBij using (enum; ⟦_⟧)
-open import Amalgamation using (TList)
+open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
 
@@ -45,9 +45,7 @@ data StEffPi : U → U → Set where
   lift : {n₁ n₂ : N} → TList (N⇒U n₁ ×ᵤ t₁) (N⇒U n₂ ×ᵤ t₂) → StEffPi t₁ t₂
 
 -- And now define the rest of the language
--- We actually do it 2 ways (and later show coherence)
-
--- First arr.
+-- lifting:
 arr : TList t₁ t₂ → StEffPi t₁ t₂
 arr c = lift {n₁ = nothing} {nothing} (A.unite*l >>> c >>> A.uniti*l)
 
@@ -65,19 +63,23 @@ unite*l = arr A.unite*l
 uniti*l : StEffPi t (I ×ᵤ t)
 uniti*l = arr A.uniti*l
 
+-- Combining ancillas, i.e. product of ancillas
 a* : N → N → N
 a* (just x) (just y) = just (x ×ₙ y)
 a* (just x) nothing = just x
 a* nothing (just x) = just x
 a* nothing nothing = nothing
 
+-- "unpack" a product of ancillas (including none) into a proper product
 unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷₁ N⇒U n₁ ×ᵤ N⇒U n₂
 unpack (just x) (just y) = id⟷₁
 unpack (just x) nothing = uniti⋆r
 unpack nothing (just x) = uniti⋆l
 unpack nothing nothing = uniti⋆l
 
--- >>>< composition
+-- >>>> composition.
+-- Note how we have to unpack & pack up the ancillas
+-- This is needed to move between the types (and elided in the paper version)
 infixr 10 _>>>>_
 _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
@@ -87,13 +89,17 @@ lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
     )
 
 -- first
+-- Note how we don't use >>> twice, as that would do 2 full traversals
 firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-firstSE (lift m) = lift (A.assocl× >>> A.first m >>> A.assocr×)
+firstSE (lift m) = lift (cons₁ assocl⋆ (A.first m >>> A.assocr×))
 
 -- second and ***
 secondSE : StEffPi t₁ t₂ → StEffPi (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
+-- it is inefficient to do 3 passes, but quite difficult to do otherwise
+-- as the swaps are needed.
 secondSE c = swap >>>> firstSE c >>>> swap
 
+-- This is likewise inefficient
 _***_ : StEffPi t₁ t₂ → StEffPi t₃ t₄ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₄)
 xs *** ys = firstSE xs >>>> secondSE ys
 
