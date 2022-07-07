@@ -13,7 +13,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax
 open import PiBij using (⟦_⟧; enum; generalize)
-import ArrowsOverPair as A
+import ArrowsOverAmalg as A
 open import Amalgamation using (TList)
 open import Instances using (evalTL₁)
 import PiZ

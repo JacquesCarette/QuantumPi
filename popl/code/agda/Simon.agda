@@ -9,7 +9,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax
 open import PiBij using (⟦_⟧; enum)
-import ArrowsOverPair as A
+import ArrowsOverAmalg as A
 open import StatesAndEffects
 open import Instances using (eval)
 

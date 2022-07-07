@@ -40,7 +40,7 @@ open import PiZ
 open import PiH
 open import PiExamples
 open import Amalgamation
-open import ArrowsOverPair
+open import ArrowsOverAmalg
 open import StatesAndEffects
 open import Instances
 open import Simon

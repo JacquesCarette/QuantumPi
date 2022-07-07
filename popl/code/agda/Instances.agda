@@ -17,7 +17,7 @@ import PiZ
 import PiH
 open import PiBij using (generalize; ⟦_⟧)
 open import Unitary
-import ArrowsOverPair as A
+import ArrowsOverAmalg as A
 open import Amalgamation using (TList; Categorical; evalTL)
 open import StatesAndEffects
 

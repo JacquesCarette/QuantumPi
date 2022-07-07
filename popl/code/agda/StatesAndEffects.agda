@@ -11,7 +11,7 @@ open import Data.Unit using (tt)
 open import PiSyntax
 open import PiBij using (enum; ⟦_⟧)
 open import Amalgamation using (TList)
-import ArrowsOverPair as A
+import ArrowsOverAmalg as A
 open A using (_>>>_)
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
