@@ -5,7 +5,6 @@ module Simon where
 open import PiSyntax
 import ArrowsOverAmalg as A
 open import StatesAndEffects
--- open import Instances using (eval)
 
 private
   variable

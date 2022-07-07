@@ -73,14 +73,12 @@ test-Had2-2 : show (evalTL₁ (A.arr₁ swap₊ A.*** A.idzh) test-vec2) ≡
   ((inj₂ tt , inj₁ tt) , 1.0) ∷ ((inj₂ tt , inj₂ tt) , 0.0) ∷ []
 test-Had2-2 = refl
 
--- very slow and supremely wrong
 test-Had2-3 : show (evalTL₁ (A.arr₂ swap₊ A.*** A.idzh) test-vec2) ≡
   ((inj₁ tt , inj₁ tt) , 0.7071067811706744) ∷
       ((inj₁ tt , inj₂ tt) , 0.0) ∷
       ((inj₂ tt , inj₁ tt) , 0.7071067812024212) ∷
       ((inj₂ tt , inj₂ tt) , 0.0) ∷ []
 test-Had2-3 = refl
-
 
 inner-simon : TList (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 inner-simon = A.arr₂ simon₁ A.>>> A.arr₁ simon₂ A.>>> A.arr₂ simon₁
@@ -89,10 +87,42 @@ test-vec4 : ⟦ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟧ → Float
 test-vec4 (inj₁ _ , inj₁ _ , inj₁ _ , inj₁ _) = 1.0
 test-vec4 (_ , _ , _ , _) = 0.0
 
-{-
-test-s₁ : show (evalTL₁ (A.arr₂ simon₁) test-vec4) ≡ {!!}
-test-s₁ = {!show (PiH.evalH simon₁ test-vec4)!}
+-- the first part of Simon "works" decently now
+test-s₁ : show (evalTL₁ (A.arr₂ simon₁) test-vec4) ≡
+  ((inj₁ tt , inj₁ tt , inj₁ tt , inj₁ tt) , 0.49999999997755185) ∷
+  ((inj₁ tt , inj₁ tt , inj₁ tt , inj₂ tt) , 1.6348909148276115e-17) ∷
+  ((inj₁ tt , inj₁ tt , inj₂ tt , inj₁ tt) , 2.7755575614747768e-17) ∷
+  ((inj₁ tt , inj₁ tt , inj₂ tt , inj₂ tt) , -2.2893051763283195e-17) ∷
+  ((inj₁ tt , inj₂ tt , inj₁ tt , inj₁ tt) , 0.5) ∷
+  ((inj₁ tt , inj₂ tt , inj₁ tt , inj₂ tt) , 2.0237652028100054e-17) ∷
+  ((inj₁ tt , inj₂ tt , inj₂ tt , inj₁ tt) , 3.925231146709438e-17) ∷
+  ((inj₁ tt , inj₂ tt , inj₂ tt , inj₂ tt) , -2.1659708620061032e-17) ∷
+  ((inj₂ tt , inj₁ tt , inj₁ tt , inj₁ tt) , 0.5) ∷
+  ((inj₂ tt , inj₁ tt , inj₁ tt , inj₂ tt) , 2.0237652028100058e-17) ∷
+  ((inj₂ tt , inj₁ tt , inj₂ tt , inj₁ tt) , 3.925231146709438e-17) ∷
+  ((inj₂ tt , inj₁ tt , inj₂ tt , inj₂ tt) , -2.165970862006103e-17) ∷
+  ((inj₂ tt , inj₂ tt , inj₁ tt , inj₁ tt) , 0.5000000000224483) ∷
+  ((inj₂ tt , inj₂ tt , inj₁ tt , inj₂ tt) , 2.807041067731488e-17) ∷
+  ((inj₂ tt , inj₂ tt , inj₂ tt , inj₁ tt) , 2.7755575616510065e-17) ∷
+  ((inj₂ tt , inj₂ tt , inj₂ tt , inj₂ tt) , -3.3059056140334115e-17) ∷ []
+test-s₁ = refl
 
-test-is : show (evalTL₁ inner-simon test-vec4) ≡ {!!}
-test-is = {!!}
--}
+-- takes ~22s on my MacBook Air
+test-is : show (evalTL₁ inner-simon test-vec4) ≡
+  ((inj₁ tt , inj₁ tt , inj₁ tt , inj₁ tt) , 0.5000000000000001)  ∷
+  ((inj₁ tt , inj₁ tt , inj₁ tt , inj₂ tt) , 4.738173134873553e-17) ∷
+  ((inj₁ tt , inj₁ tt , inj₂ tt , inj₁ tt) , 4.5106981034918784e-17) ∷
+  ((inj₁ tt , inj₁ tt , inj₂ tt , inj₂ tt) , 0.5000000000000001) ∷
+  ((inj₁ tt , inj₂ tt , inj₁ tt , inj₁ tt) , -2.24482377131352e-11) ∷
+  ((inj₁ tt , inj₂ tt , inj₁ tt , inj₂ tt) , 3.350394354180222e-17) ∷
+  ((inj₁ tt , inj₂ tt , inj₂ tt , inj₁ tt) , 1.8013739550477034e-17) ∷
+  ((inj₁ tt , inj₂ tt , inj₂ tt , inj₂ tt) , 2.244829322428643e-11) ∷
+  ((inj₂ tt , inj₁ tt , inj₁ tt , inj₁ tt) , -2.2448209957559584e-11) ∷
+  ((inj₂ tt , inj₁ tt , inj₁ tt , inj₂ tt) , 5.7483679261733055e-18) ∷
+  ((inj₂ tt , inj₁ tt , inj₂ tt , inj₁ tt) , 5.1923354385602495e-18) ∷
+  ((inj₂ tt , inj₁ tt , inj₂ tt , inj₂ tt) , 2.24482377131352e-11) ∷
+  ((inj₂ tt , inj₂ tt , inj₁ tt , inj₁ tt) , 0.5000000000000002) ∷
+  ((inj₂ tt , inj₂ tt , inj₁ tt , inj₂ tt) , 8.129419882522301e-18) ∷
+  ((inj₂ tt , inj₂ tt , inj₂ tt , inj₁ tt) , -1.7351405419289864e-17) ∷
+  ((inj₂ tt , inj₂ tt , inj₂ tt , inj₂ tt) , -0.5000000000000001) ∷ []
+test-is = refl
