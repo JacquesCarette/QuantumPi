@@ -19,7 +19,6 @@ open import Instances using (evalTL₁)
 import PiZ
 import PiH
 open import Simon using (simon₁; simon₂)
-open import PiTagless using (Pi)
 open import Unitary
 
 -- Infrastructure for testing
@@ -29,10 +28,10 @@ show {t} v = map (λ i → (i , v i)) (enum t)
 -- Note: these tests are EVIL because they use the most brutal equality possible on the worst thing imaginable, i.e. Floats.
 
 -- Test things in Amalgamated language
-test-notH : show (evalTL₁ (A.arr₂ swap₊) PiH.trueH) ≡ (inj₁ tt , 0.3818376618201004) ∷ (inj₂ tt , 0.9192388155510836) ∷ []
+test-notH : show (evalTL₁ (A.arr₂ swap₊) PiH.trueH) ≡ (inj₁ tt , 0.38268343235472) ∷ (inj₂ tt , 0.9238795325155821) ∷ []
 test-notH = refl
 
-test-id : show (evalTL₁ (A.idzh) PiH.trueH) ≡ (inj₁ tt , 0.92) ∷ (inj₂ tt , -0.38) ∷ []
+test-id : show (evalTL₁ (A.idzh) PiH.trueH) ≡ (inj₁ tt , 0.9238795325155821) ∷ (inj₂ tt , -0.38268343235472) ∷ []
 test-id = refl
 
 test-Had-true : show (evalTL₁ (A.arr₂ swap₊) PiZ.trueZ) ≡ (inj₁ tt , 0.7071067811706743) ∷ (inj₂ tt , 0.707106781202421) ∷ []
@@ -48,7 +47,7 @@ test-vec2 (inj₂ y , inj₁ x) = 0.0
 test-vec2 (inj₂ y , inj₂ y₁) = 0.0
 
 
-test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ generalize PiH.PiH₀ (id⟷₁ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
+test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ generalize PiZ.PiZ (id⟷₁ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
   ((inj₁ tt , inj₁ tt) , 0.7071067811706743) ∷
       ((inj₁ tt , inj₂ tt) , 0.707106781202421) ∷
       ((inj₂ tt , inj₁ tt) , 0.0) ∷

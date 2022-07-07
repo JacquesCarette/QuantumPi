@@ -39,8 +39,9 @@ open import PiZ
 -- "rotated". The result is still matrices, but in a different basis.
 open import PiH
 open import PiExamples
-open import ArrowsOverPair
 open import GenericList
+open import ArrowsOverPair
 open import StatesAndEffects
 open import Instances
 open import Simon
+open import Tests

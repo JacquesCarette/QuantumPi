@@ -5,9 +5,6 @@ module PiExamples where
 open import PiSyntax using (U; I;  _+ᵤ_; _×ᵤ_)
 open import PiTagless using (Pi)
 
-Bool : U
-Bool = I +ᵤ I
-
 private
   variable
     t t₁ t₂ t₃ t₄ t₅ : U
@@ -29,4 +26,3 @@ module _ {rep : U → U → Set} (p : Pi rep) where
   toffoli : rep ((t₁ +ᵤ t₂) ×ᵤ ((t₃ +ᵤ t₄) ×ᵤ (t₅ +ᵤ t₅)))
                 ((t₁ +ᵤ t₂) ×ᵤ ((t₃ +ᵤ t₄) ×ᵤ (t₅ +ᵤ t₅)))
   toffoli = cif idp cnot
-            -- dist′ ⊚ ((idp ⊕′ (idp ⊛ cnot)) ⊚ factor′)
