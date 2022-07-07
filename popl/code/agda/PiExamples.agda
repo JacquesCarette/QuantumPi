@@ -21,10 +21,10 @@ module _ {rep : U → U → Set} (p : Pi rep) where
   cx = dist′ ⊚ (idp ⊕′ (idp ⊛ x)) ⊚ factor′
 
   -- note how c has to be an automorphism
-  cif : rep t₃ t₃ → rep ((t₁ +ᵤ t₄) ×ᵤ t₃) ((t₁ +ᵤ t₄) ×ᵤ t₃)
-  cif c = dist′ ⊚ (idp ⊕′ idp ⊛ c) ⊚ factor′
+  ctrl : rep t₃ t₃ → rep ((t₁ +ᵤ t₄) ×ᵤ t₃) ((t₁ +ᵤ t₄) ×ᵤ t₃)
+  ctrl c = dist′ ⊚ (idp ⊛ c ⊕′ idp) ⊚ factor′
 
   -- ccx is also known as the Toffoli gate
   ccx : rep ((t₁ +ᵤ t₂) ×ᵤ ((t₃ +ᵤ t₄) ×ᵤ (t₅ +ᵤ t₅)))
                 ((t₁ +ᵤ t₂) ×ᵤ ((t₃ +ᵤ t₄) ×ᵤ (t₅ +ᵤ t₅)))
-  ccx = cif cx
+  ccx = ctrl cx
