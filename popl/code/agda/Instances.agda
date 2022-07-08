@@ -40,8 +40,8 @@ _○_ : {A B C : Set} → (A → B) → (B → C) → (A → C)
 f ○ g = λ a → g (f a)
 
 private
-  effect : {t₂ : U} (n : N) → 𝒰 ((N⇒U n) ×ᵤ t₂) → 𝒰 (I ×ᵤ t₂)
-  effect n f z = sumf (map (λ w → f (w , proj₂ z)) (enumN n))
+  effect : {t₂ : U} (n : N) → 𝒰 (t₂ ×ᵤ (N⇒U n)) → 𝒰 (t₂ ×ᵤ I)
+  effect n f z = sumf (map (λ w → f (proj₁ z , w)) (enumN n))
 
   delta : (n : N) → (x : ⟦ N⇒U n ⟧) → F.Float
   delta (just Two)        (inj₁ x) = 1.0
@@ -49,14 +49,8 @@ private
   delta (just (x₁ ×ₙ x₂)) x        = delta (just x₁) (proj₁ x) F.* delta (just x₂) (proj₂ x)
   delta nothing           _        = 1.0
 
-  state : {t : U} (n : N) → 𝒰 (I ×ᵤ t) → 𝒰 ((N⇒U n) ×ᵤ t)
-  state n f (i , x) = delta n i F.* f ( tt , x )
+  state : {t : U} (n : N) → 𝒰 (t ×ᵤ I) → 𝒰 (t ×ᵤ (N⇒U n))
+  state n f (x , i) = delta n i F.* f ( x , tt )
 
 eval : ∀ {t₁ t₂ : U} → StEffPi t₁ t₂ → Fwd t₁ t₂
-eval (lift {n₁ = n₁} {n₂} z) = evalTL₁ A.uniti*l ○ state n₁ ○ evalTL₁ z ○ effect n₂ ○ evalTL₁ A.unite*l
-{-
-eval (lift {t₁} {t₂} {just x} {just y} z)   = evalTL₁ A.uniti*l ○ state (just x) ○ evalTL₁ z ○ effect (just y) ○ evalTL₁ A.unite*l
-eval (lift {t₁} {t₂} {just x} {nothing} z)  = evalTL₁ A.uniti*l ○ state (just x) ○ evalTL₁ z ○                   evalTL₁ A.unite*l
-eval (lift {t₁} {t₂} {nothing} {just x} z)  = evalTL₁ A.uniti*l ○                  evalTL₁ z ○ effect (just x) ○ evalTL₁ A.unite*l
-eval (lift {t₁} {t₂} {nothing} {nothing} z) = evalTL₁ A.uniti*l ○                  evalTL₁ z ○                   evalTL₁ A.unite*l
--}
+eval (lift {n₁ = n₁} {n₂} z) = evalTL₁ A.uniti* ○ state n₁ ○ evalTL₁ z ○ effect n₂ ○ evalTL₁ A.unite*

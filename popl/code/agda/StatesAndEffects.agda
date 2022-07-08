@@ -42,12 +42,12 @@ enumN n = enum (N⇒U n)
 
 -- Lifting an abstract pair
 data StEffPi : U → U → Set where
-  lift : {n₁ n₂ : N} → TList (N⇒U n₁ ×ᵤ t₁) (N⇒U n₂ ×ᵤ t₂) → StEffPi t₁ t₂
+  lift : {n₁ n₂ : N} → TList (t₁ ×ᵤ N⇒U n₁) (t₂ ×ᵤ N⇒U n₂) → StEffPi t₁ t₂
 
 -- And now define the rest of the language
 -- lifting:
 arr : TList t₁ t₂ → StEffPi t₁ t₂
-arr c = lift {n₁ = nothing} {nothing} (A.unite*l >>> c >>> A.uniti*l)
+arr c = lift {n₁ = nothing} {nothing} (A.unite* >>> c >>> A.uniti*)
 
 -- Then use that to lift id, swap, assoc and unit
 idst : StEffPi t t
@@ -83,15 +83,15 @@ unpack nothing nothing = uniti⋆l
 infixr 10 _>>>>_
 _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
-  lift {n₁ = a* n₃ n₁} {a* n₂ n₄} (A.first (A.arr₁ (unpack n₃ n₁)) >>>
-    A.assocr× >>> A.second m >>> A.assocl× >>> A.first A.swap× >>> A.assocr× >>> A.second p >>> A.assocl×
-    >>> A.first (A.arr₁ (!⟷₁ (unpack n₂ n₄)))
+  lift {n₁ = a* n₁ n₃} {a* n₄ n₂} (A.second (A.arr₁ (unpack n₁ n₃)) >>>
+    A.assocl× >>> A.first m >>> A.assocr× >>> A.second A.swap× >>> A.assocl× >>> A.first p >>> A.assocr×
+    >>> A.second (A.arr₁ (!⟷₁ (unpack n₄ n₂)))
     )
 
 -- first
 -- Note how we don't use >>> twice, as that would do 2 full traversals
 firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-firstSE (lift m) = lift (cons₁ assocl⋆ (A.first m >>> A.assocr×))
+firstSE (lift m) = lift (cons₁ assocr⋆ (A.second A.swap× >>> A.assocl× >>> A.first m >>> A.assocr× >>> A.second A.swap× >>> A.assocl×))
 
 -- second and ***
 secondSE : StEffPi t₁ t₂ → StEffPi (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
