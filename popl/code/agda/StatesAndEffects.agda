@@ -6,6 +6,7 @@ module StatesAndEffects where
 
 open import Data.List using (List; []; _∷_)
 open import Data.Maybe using (Maybe; just; nothing)
+open import Data.Product using (_×_; _,_)
 open import Data.Unit using (tt)
 
 open import PiSyntax
@@ -62,6 +63,10 @@ unite*l : StEffPi (I ×ᵤ t) t
 unite*l = arr A.unite*l
 uniti*l : StEffPi t (I ×ᵤ t)
 uniti*l = arr A.uniti*l
+unite*  : StEffPi (t ×ᵤ I) t
+unite*  = arr A.unite*
+uniti*  : StEffPi t (t ×ᵤ I)
+uniti*  = arr A.uniti*
 
 -- Combining ancillas, i.e. product of ancillas
 a* : N → N → N
@@ -118,3 +123,64 @@ assertZero = lift (A.arr₁ swap⋆)
 -- Sanity check
 inv0 : invSE zero ≡ assertZero
 inv0 = refl
+
+---------------------
+-- Additional combinators for complementarity
+X : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+X = arr A.X
+CX : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CX = arr A.CX
+CCX : StEffPi (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
+CCX = arr A.CCX
+H : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+H = arr A.H
+Z : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+Z = arr A.Z
+CZ : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CZ = arr A.CZ
+
+copyZ : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
+copyZ = uniti* >>>> idst *** zero >>>> arr A.CX
+copyH : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
+copyH = H >>>> copyZ >>>> H *** H
+
+--------------------------------------------
+-- complementarity equations
+
+-- Define this equivalence for display purposes, and hack it to be ≡ for now,
+-- until a proper equivalence can be defined.
+infix 4 _≈_
+_≈_ : StEffPi t₁ t₂ → StEffPi t₁ t₂ → Set
+_≈_ x y = x ≡ y
+
+-- Just typecheck them
+eqZ₁ eqZ₂ eqZ₃ eqZ₄ : Set
+eqZ₁ = copyZ >>>> (idst *** copyZ) ≈ copyZ >>>> (copyZ *** idst) >>>> assocr×
+eqZ₂ = copyZ >>>> swap ≈ copyZ
+eqZ₃ = copyZ >>>> invSE copyZ ≈ idst
+eqZ₄ = (copyZ *** idst) >>>> (idst *** copyZ) ≈ (idst *** copyZ) >>>> (copyZ *** idst)
+
+eqH₁ eqH₂ eqH₃ eqH₄ : Set
+eqH₁ = copyH >>>> (idst *** copyH) ≈ copyH >>>> (copyH *** idst) >>>> assocr×
+eqH₂ = copyH >>>> swap ≈ copyH
+eqH₃ = copyH >>>> invSE copyH ≈ idst
+eqH₄ = (copyH *** idst) >>>> (idst *** copyH) ≈ (idst *** copyH) >>>> (copyH *** idst)
+
+eqZH : Set
+eqZH = (copyZ *** idst) >>>> (idst *** (invSE copyH)) >>>> (idst *** copyH) >>>> ((invSE copyZ) *** idst) ≈ idst
+
+---------------------------------------------
+-- Special states and effects
+one : StEffPi I 𝟚
+one = zero >>>> X
+plus : StEffPi I 𝟚
+plus = zero >>>> H
+minus : StEffPi I 𝟚
+minus = plus >>>> Z
+
+assertOne : StEffPi 𝟚 I
+assertOne = X >>>> assertZero
+assertPlus : StEffPi 𝟚 I
+assertPlus = H >>>> assertZero
+assertMinus : StEffPi 𝟚 I
+assertMinus = Z >>>> assertZero
