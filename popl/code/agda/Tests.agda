@@ -3,7 +3,7 @@
 --Note: not exact-split here, that's too much of a pain
 module Tests where
 
-open import Data.Float using (Float)
+open import Data.Float as F using (Float)
 open import Data.List using (List; _∷_; []; map)
 open import Data.Product using (_×_; _,_)
 open import Data.Sum using (inj₁; inj₂)
@@ -15,11 +15,12 @@ open import PiSyntax
 open import PiBij using (⟦_⟧; enum; generalize)
 import ArrowsOverAmalg as A
 open import Amalgamation using (TList)
-open import Instances using (evalTL₁)
+open import Instances using (evalTL₁; evalSE)
 import PiZ
 import PiH
 open import Simon using (simon₁; simon₂)
 open import Unitary
+open import StatesAndEffects
 
 -- Infrastructure for testing
 show : {t : U} → (⟦ t ⟧ → Float) → List (⟦ t ⟧ × Float)
@@ -107,7 +108,8 @@ test-s₁ : show (evalTL₁ (A.arr₂ simon₁) test-vec4) ≡
   ((inj₂ tt , inj₂ tt , inj₂ tt , inj₂ tt) , -3.3059056140334115e-17) ∷ []
 test-s₁ = refl
 
--- takes ~22s on my MacBook Air
+{-
+-- takes ~22s on my MacBook Air - moved to TestsSlow
 -- use columns to highly values from virtual 0s
 test-is : show (evalTL₁ inner-simon test-vec4) ≡
   ((inj₁ tt , inj₁ tt , inj₁ tt , inj₁ tt) , 0.5000000000000001)  ∷
@@ -127,3 +129,40 @@ test-is : show (evalTL₁ inner-simon test-vec4) ≡
   ((inj₂ tt , inj₂ tt , inj₂ tt , inj₁ tt) ,        -1.7351405419289864e-17) ∷
   ((inj₂ tt , inj₂ tt , inj₂ tt , inj₂ tt) , -0.5000000000000001) ∷ []
 test-is = refl
+-}
+
+---------------------------------------------------------------------
+-- Tests of effectful language
+<0|0> <0|+> <0|-> <0|1> : StEffPi I I
+<0|0> = zero >>>> assertZero
+<0|+> = plus >>>> assertZero
+<0|-> = minus >>>> assertZero
+<0|1> = one >>>> assertZero
+
+-- Simple tests
+|0> : show (evalSE zero (λ tt → 1.0)) ≡
+  (inj₁ tt , 1.0) ∷ (inj₂ tt , 0.0) ∷ []
+|0> = refl
+
+|1> : show (evalSE one (λ tt → 1.0)) ≡
+  (inj₁ tt , 0.0) ∷ (inj₂ tt , 1.0) ∷ []
+|1> = refl
+
+{-
+<0| : show (evalSE assertZero λ {(inj₁ _) → 0.4; (inj₂ _) → 0.916}) ≡ {!!}
+<0| = {!(0.4 F.* 0.4) F.+ (0.916 F.* 0.916)!}
+-}
+-- This first one is good
+<0|0>≡1 : show (evalSE <0|0> (λ tt → 1.0)) ≡ (tt , 1.0) ∷ []
+<0|0>≡1 = refl
+
+-- The next 3 are WRONG
+-- First 2 should be 1/sqrt(2) and last should be 0.0.
+<0|+>≡1 : show (evalSE <0|+> (λ tt → 1.0)) ≡ (tt , 1.4142135623730954) ∷ []
+<0|+>≡1 = refl
+
+<0|->≡1 : show (evalSE <0|-> (λ tt → 1.0)) ≡ (tt , 3.174671636685389e-11) ∷ []
+<0|->≡1 = refl
+
+<0|1>≡1 : show (evalSE <0|1> (λ tt → 1.0)) ≡ (tt , 1.0) ∷ []
+<0|1>≡1 = refl

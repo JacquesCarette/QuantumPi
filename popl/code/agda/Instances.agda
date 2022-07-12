@@ -5,7 +5,7 @@
 module Instances where
 
 import Data.Float as F
-open import Data.List using (map)
+open import Data.List using (map; length)
 open import Data.Maybe using (Maybe; just; nothing)
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 open import Data.Sum using (inj₁; inj₂)
@@ -41,7 +41,8 @@ f ○ g = λ a → g (f a)
 
 private
   effect : {t₂ : U} (n : N) → 𝒰 (t₂ ×ᵤ (N⇒U n)) → 𝒰 (t₂ ×ᵤ I)
-  effect n f z = sumf (map (λ w → f (proj₁ z , w)) (enumN n))
+  effect n f z = let all = enumN n in
+    sumf (map (λ w → f (proj₁ z , w)) all)
 
   delta : (n : N) → (x : ⟦ N⇒U n ⟧) → F.Float
   delta (just Two)        (inj₁ x) = 1.0
@@ -52,5 +53,10 @@ private
   state : {t : U} (n : N) → 𝒰 (t ×ᵤ I) → 𝒰 (t ×ᵤ (N⇒U n))
   state n f (x , i) = delta n i F.* f ( x , tt )
 
-eval : ∀ {t₁ t₂ : U} → StEffPi t₁ t₂ → Fwd t₁ t₂
-eval (lift {n₁ = n₁} {n₂} z) = evalTL₁ A.uniti* ○ state n₁ ○ evalTL₁ z ○ effect n₂ ○ evalTL₁ A.unite*
+-- re-expand out to test each part
+evalSE : ∀ {t₁ t₂ : U} → StEffPi t₁ t₂ → Fwd t₁ t₂
+evalSE (lift {n₁ = nothing} {nothing}   z) = evalTL₁ A.uniti* ○           evalTL₁ z ○            evalTL₁ A.unite*
+evalSE (lift {n₁ = nothing} y@{just _}  z) = evalTL₁ A.uniti* ○           evalTL₁ z ○ effect y ○ evalTL₁ A.unite*
+evalSE (lift x@{n₁ = just _} {nothing}  z) = evalTL₁ A.uniti* ○ state x ○ evalTL₁ z ○  evalTL₁ A.unite*
+evalSE (lift x@{n₁ = just _} y@{just _} z) = evalTL₁ A.uniti* ○ state x ○ evalTL₁ z ○ effect y ○ evalTL₁ A.unite*
+--- evalSE (lift {n₁ = n₁} {n₂} z) = evalTL₁ A.uniti* ○ state n₁ ○ evalTL₁ z ○ effect n₂ ○ evalTL₁ A.unite*
