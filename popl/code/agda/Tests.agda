@@ -148,21 +148,18 @@ test-is = refl
   (inj₁ tt , 0.0) ∷ (inj₂ tt , 1.0) ∷ []
 |1> = refl
 
-{-
-<0| : show (evalSE assertZero λ {(inj₁ _) → 0.4; (inj₂ _) → 0.916}) ≡ {!!}
-<0| = {!(0.4 F.* 0.4) F.+ (0.916 F.* 0.916)!}
--}
+<0| : show (evalSE assertZero λ {(inj₁ _) → 0.4; (inj₂ _) → 0.916}) ≡ (tt , 0.4) ∷ []
+<0| = refl
+
 -- This first one is good
 <0|0>≡1 : show (evalSE <0|0> (λ tt → 1.0)) ≡ (tt , 1.0) ∷ []
 <0|0>≡1 = refl
 
--- The next 3 are WRONG
--- First 2 should be 1/sqrt(2) and last should be 0.0.
-<0|+>≡1 : show (evalSE <0|+> (λ tt → 1.0)) ≡ (tt , 1.4142135623730954) ∷ []
+<0|+>≡1 : show (evalSE <0|+> (λ tt → 1.0)) ≡ (tt , 0.7071067811706743) ∷ []
 <0|+>≡1 = refl
 
-<0|->≡1 : show (evalSE <0|-> (λ tt → 1.0)) ≡ (tt , 3.174671636685389e-11) ∷ []
+<0|->≡1 : show (evalSE <0|-> (λ tt → 1.0)) ≡ (tt , 0.7071067812024211) ∷ []
 <0|->≡1 = refl
 
-<0|1>≡1 : show (evalSE <0|1> (λ tt → 1.0)) ≡ (tt , 1.0) ∷ []
+<0|1>≡1 : show (evalSE <0|1> (λ tt → 1.0)) ≡ (tt , 0.0) ∷ []
 <0|1>≡1 = refl

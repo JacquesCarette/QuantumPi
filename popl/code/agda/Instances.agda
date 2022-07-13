@@ -5,7 +5,7 @@
 module Instances where
 
 import Data.Float as F
-open import Data.List using (map; length)
+open import Data.List using (map; length; head)
 open import Data.Maybe using (Maybe; just; nothing)
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 open import Data.Sum using (inj₁; inj₂)
@@ -41,8 +41,10 @@ f ○ g = λ a → g (f a)
 
 private
   effect : {t₂ : U} (n : N) → 𝒰 (t₂ ×ᵤ (N⇒U n)) → 𝒰 (t₂ ×ᵤ I)
-  effect n f z = let all = enumN n in
-    sumf (map (λ w → f (proj₁ z , w)) all)
+  effect n f z = effect′ (head (enumN n))
+    where effect′ : Maybe ⟦ N⇒U n ⟧ → F.Float
+          effect′ (just x) = f (proj₁ z , x)
+          effect′ nothing = 0.0 -- if we had a vector, we could prove this cannot happen
 
   delta : (n : N) → (x : ⟦ N⇒U n ⟧) → F.Float
   delta (just Two)        (inj₁ x) = 1.0
