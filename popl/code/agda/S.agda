@@ -1,14 +1,15 @@
 module S where
 
 open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
-open import Data.Float using (Float)
+open import Data.Float using (Float) renaming (_+_ to _+f_; _*_ to _*f_)
 open import Data.Empty using (⊥)
 open import Data.Unit using (⊤; tt)
+open import Data.Bool using (Bool; false; true; _∧_; if_then_else_)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Product using (_×_; _,_)
 open import Function using (_∘_)
-open import Data.Vec using (Vec; []; _∷_; _++_; map; concat)
-open import Relation.Binary.PropositionalEquality using (_≡_)
+open import Data.Vec using (Vec; []; _∷_; _++_; map; concat; foldr)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 infixr 40 _+ᵤ_ _×ᵤ_
 infix 30 _⟷_ _⇔_
@@ -98,11 +99,44 @@ private
 ⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
 ⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
 
+pattern F = inj₂ tt
+pattern T = inj₁ tt
+
+∣_∣ : U → ℕ
+∣ O ∣  = 0
+∣ I ∣ = 1
+∣  t₁ +ᵤ t₂ ∣ = ∣ t₁ ∣ + ∣ t₂ ∣
+∣ t₁ ×ᵤ t₂ ∣ = ∣ t₁ ∣ * ∣ t₂ ∣
+
+enum : (t : U) → Vec ⟦ t ⟧ ∣ t ∣
+enum O = []
+enum I = tt ∷ []
+enum (t₁ +ᵤ t₂) = map inj₁ (enum t₁) ++ map inj₂ (enum t₂)
+enum (t₁ ×ᵤ t₂) = concat (map (λ v₁ → map (λ v₂ → (v₁ , v₂)) (enum t₂)) (enum t₁))
+
 𝒱 : (t : U) → Set
 𝒱 t = ⟦ t ⟧ → Float
 
+show : {t : U} → 𝒱 t → Vec (⟦ t ⟧ × Float) ∣ t ∣
+show {t} k = map (λ v → (v , k v)) (enum t) 
+
+_≟_ : {t : U} → ⟦ t ⟧ → ⟦ t ⟧ → Bool
+_≟_ {O} () v₂
+_≟_ {I} tt tt = true
+_≟_ {t₁ +ᵤ t₂} (inj₁ v₁) (inj₁ v₂) = v₁ ≟ v₂
+_≟_ {t₁ +ᵤ t₂} (inj₁ _) (inj₂ _) = false
+_≟_ {t₁ +ᵤ t₂} (inj₂ _) (inj₁ _) = false
+_≟_ {t₁ +ᵤ t₂} (inj₂ v₁) (inj₂ v₂) = v₁ ≟ v₂
+_≟_ {t₁ ×ᵤ t₂} (v₁ , v₂) (w₁ , w₂) = v₁ ≟ w₁ ∧ v₂ ≟ w₂
+
+● : 𝒱 t
+● _ = 0.0
+
 ∣_⟩ : ⟦ t ⟧ → 𝒱 t
-∣ v ⟩ v' = {!!} -- 1.0 or 0.0
+∣ v ⟩ v' = if v ≟ v' then 1.0 else 0.0
+
+_⟨*⟩_ : 𝒱 t₁ → 𝒱 t₂ → 𝒱 (t₁ ×ᵤ t₂)
+k₁ ⟨*⟩ k₂ = λ (v₁ , v₂) → k₁ v₁ *f k₂ v₂ 
 
 private
   variable
@@ -164,22 +198,45 @@ evalB (c₁ ⊕ c₂) (inj₂ v) = inj₂ (evalB c₂ v)
 evalB (c₁ ⊗ c₂) (v₁ , v₂) = (evalB c₁ v₁ , evalB c₂ v₂)
 evalB (inv c) v = evalF c v
 
-evalAF : Float → (t₁ ⇔ t₂) → 𝒱 t₁ → 𝒱 t₂
-evalAF ϕ (arrZ c) k₁ v₂ = k₁ (evalB c v₂)
-evalAF ϕ (arrϕ c) k₁ v₂ = {!!}
-evalAF ϕ unite⋆ k₁ v₂ = k₁ (v₂ , tt)
-evalAF ϕ uniti⋆ k₁ (v₂ , tt) = k₁ v₂
-evalAF ϕ swap⋆ k₁ (v₁ , v₂) = k₁ (v₂ , v₁)
-evalAF ϕ assocl⋆ k₁ ((v₁ , v₂) , v₃) = k₁ (v₁ , (v₂ , v₃))
-evalAF ϕ assocr⋆ k₁ (v₁ , (v₂ , v₃)) = k₁ ((v₁ , v₂) , v₃) 
-evalAF ϕ id⇔ k₁ v₂ = k₁ v₂
-evalAF ϕ (d₁ >>> d₂) k₁ v₃ = evalAF ϕ d₂ (evalAF ϕ d₁ k₁) v₃
-evalAF ϕ (d₁ *** d₂) k₁ (v₃ , v₄) = evalAF ϕ d₁ (λ v₁ → evalAF ϕ d₂ (λ v₂ → k₁ (v₁ , v₂)) v₄) v₃
+evalAF : Float → (t₁ ⇔ t₂) → ⟦ t₁ ⟧ → 𝒱 t₂
+evalAB : Float → (t₁ ⇔ t₂) → ⟦ t₂ ⟧ → 𝒱 t₁
+evalASF : Float → (t₁ ⇔ t₂) → 𝒱 t₁ → 𝒱 t₂
+evalASB : Float → (t₁ ⇔ t₂) → 𝒱 t₂ → 𝒱 t₁
 
-evalAF ϕ (inv d) k₁ v₂ = {!!}
-evalAF ϕ zero k₁ (inj₁ tt) = k₁ tt
-evalAF ϕ zero k₁ (inj₂ tt) = 0.0
-evalAF ϕ assertZero k₁ tt = k₁ (inj₁ tt)
+evalAF ϕ (arrZ c) v₁ = ∣ evalF c v₁ ⟩
+evalAF ϕ (arrϕ c) v₁ = {!!}
+evalAF ϕ unite⋆ (v₁ , tt) = ∣ v₁ ⟩
+evalAF ϕ uniti⋆ v₁ = ∣ (v₁ , tt) ⟩
+evalAF ϕ swap⋆ (v₁ , v₂) = ∣ (v₂ , v₁) ⟩
+evalAF ϕ assocl⋆ (v₁ , (v₂ , v₃)) = ∣ ((v₁ , v₂) , v₃) ⟩ 
+evalAF ϕ assocr⋆ ((v₁ , v₂) , v₃) = ∣ (v₁ , (v₂ , v₃)) ⟩ 
+evalAF ϕ id⇔ v₁ = ∣ v₁ ⟩
+evalAF ϕ (d₁ >>> d₂) v₁ = evalASF ϕ d₂ (evalAF ϕ d₁ v₁)
+evalAF ϕ (d₁ *** d₂) (v₁ , v₂) = evalAF ϕ d₁ v₁ ⟨*⟩ evalAF ϕ d₂ v₂
+evalAF ϕ (inv d) v₂ = evalAB ϕ d v₂
+evalAF ϕ zero tt = ∣ F ⟩ 
+evalAF ϕ assertZero F = ∣ tt ⟩
+evalAF ϕ assertZero T = ●
+
+evalAB ϕ (arrZ c) v₂ = ∣ evalB c v₂ ⟩
+evalAB ϕ (arrϕ c) v₂ = {!!}
+evalAB ϕ unite⋆ v₂ = ∣ (v₂ , tt) ⟩ 
+evalAB ϕ uniti⋆ (v₂ , tt) = ∣ v₂ ⟩
+evalAB ϕ swap⋆ (v₁ , v₂) = ∣ (v₂ , v₁) ⟩
+evalAB ϕ assocl⋆ ((v₁ , v₂) , v₃) = ∣ (v₁ , (v₂ , v₃)) ⟩
+evalAB ϕ assocr⋆ (v₁ , (v₂ , v₃)) = ∣ ((v₁ , v₂) , v₃) ⟩
+evalAB ϕ id⇔ v₂ = ∣ v₂ ⟩
+evalAB ϕ (d₁ >>> d₂) v₃ = evalASB ϕ d₁ (evalAB ϕ d₂ v₃)
+evalAB ϕ (d₁ *** d₂) (v₃ , v₄) = evalAB ϕ d₁ v₃ ⟨*⟩ evalAB ϕ d₂ v₄
+evalAB ϕ (inv d) v₁ = evalAF ϕ d v₁
+evalAB ϕ zero F = ∣ tt ⟩
+evalAB ϕ zero T = ●
+evalAB ϕ assertZero tt = ∣ F ⟩
+
+evalASF {t₁} {t₂} ϕ c k₁ v₂ = foldr _ _+f_ 0.0 (map (λ v₁ → evalAF ϕ c v₁ v₂) (enum t₁))
+
+evalASB {t₁} {t₂} ϕ c k₂ v₁ = foldr _ _+f_ 0.0 (map (λ v₂ → evalAB ϕ c v₂ v₁ ) (enum t₂))
+
 
 ---------------------------------------------------------------------------
 -- Examples
@@ -192,6 +249,12 @@ cx = ctrl swap₊
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 ccx = ctrl cx
+
+_ : evalF cx (F , F) ≡ (F , F)
+_ = refl
+
+_ : evalF cx (T , F) ≡ (T , T)
+_ = refl
 
 --
 
@@ -210,11 +273,20 @@ cxZ cxϕ : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cxZ = arrZ cx
 cxϕ = arrϕ cx
 
+e1 = show (evalAF 0.0 cxZ (T , F))
+-- ((T , T) , 1) ∷ ((T , F) , 0) ∷ ((F , T) , 0) ∷ ((F , F) , 0) ∷ []
+
+e2 = show (evalAF 0.0 zero tt)
+-- (T , 0) ∷ (F , 1) ∷ []
+
 ccxZ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 ccxZ = arrZ ccx
 
 copyZ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyZ = uniti⋆ >>> (id⇔ *** zero) >>> cxZ
+
+e3 = show (evalAF 0.0 copyZ F)
+e4 = show (evalAF 0.0 copyZ T)
 
 copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyϕ = xϕ >>> copyZ >>> (xϕ *** xϕ)
@@ -270,18 +342,6 @@ postulate
 ---------------------------------------------------------------------------
 
 {--
-
-∣_∣ : U → ℕ
-∣ O ∣  = 0
-∣ I ∣ = 1
-∣  t₁ +ᵤ t₂ ∣ = ∣ t₁ ∣ + ∣ t₂ ∣
-∣ t₁ ×ᵤ t₂ ∣ = ∣ t₁ ∣ * ∣ t₂ ∣
-
-enum : (t : U) → Vec ⟦ t ⟧ ∣ t ∣
-enum O = []
-enum I = tt ∷ []
-enum (t₁ +ᵤ t₂) = map inj₁ (enum t₁) ++ map inj₂ (enum t₂)
-enum (t₁ ×ᵤ t₂) = concat (map (λ v₁ → map (λ v₂ → (v₁ , v₂)) (enum t₂)) (enum t₁))
 
 ⟦_⟧ₐ : U → Set
 ⟦ t ⟧ₐ = Vec ⟦ t ⟧ ∣ t ∣ → Float
