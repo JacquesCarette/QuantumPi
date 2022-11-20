@@ -135,6 +135,12 @@ _≟_ {t₁ ×ᵤ t₂} (v₁ , v₂) (w₁ , w₂) = v₁ ≟ w₁ ∧ v₂ ≟
 ∣_⟩ : ⟦ t ⟧ → 𝒱 t
 ∣ v ⟩ v' = if v ≟ v' then 1.0 else 0.0
 
+_*⟩_ : Float → 𝒱 t → 𝒱 t
+s *⟩ k = λ v → s *f k v
+
+_⟨+⟩_ : 𝒱 t → 𝒱 t → 𝒱 t
+k₁ ⟨+⟩ k₂ = λ v → k₁ v +f k₂ v
+
 _⟨*⟩_ : 𝒱 t₁ → 𝒱 t₂ → 𝒱 (t₁ ×ᵤ t₂)
 k₁ ⟨*⟩ k₂ = λ (v₁ , v₂) → k₁ v₁ *f k₂ v₂ 
 
@@ -233,9 +239,9 @@ evalAB ϕ zero F = ∣ tt ⟩
 evalAB ϕ zero T = ●
 evalAB ϕ assertZero tt = ∣ F ⟩
 
-evalASF {t₁} {t₂} ϕ c k₁ v₂ = foldr _ _+f_ 0.0 (map (λ v₁ → evalAF ϕ c v₁ v₂) (enum t₁))
+evalASF {t₁} {t₂} ϕ c k₁ = foldr _ _⟨+⟩_ ● (map (λ v₁ → k₁ v₁ *⟩ (evalAF ϕ c v₁)) (enum t₁))
 
-evalASB {t₁} {t₂} ϕ c k₂ v₁ = foldr _ _+f_ 0.0 (map (λ v₂ → evalAB ϕ c v₂ v₁ ) (enum t₂))
+evalASB {t₁} {t₂} ϕ c k₂ = foldr _ _⟨+⟩_ ● (map (λ v₂ → k₂ v₂ *⟩ (evalAB ϕ c v₂)) (enum t₂))
 
 
 ---------------------------------------------------------------------------
@@ -273,8 +279,10 @@ cxZ cxϕ : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cxZ = arrZ cx
 cxϕ = arrϕ cx
 
-e1 = show (evalAF 0.0 cxZ (T , F))
--- ((T , T) , 1) ∷ ((T , F) , 0) ∷ ((F , T) , 0) ∷ ((F , F) , 0) ∷ []
+--e1 = show (evalAF 0.0 cxZ (F , F))
+--e1 = show (evalAF 0.0 cxZ (F , T))
+--e1 = show (evalAF 0.0 cxZ (T , F))
+--e1 = show (evalAF 0.0 cxZ (T , T))
 
 e2 = show (evalAF 0.0 zero tt)
 -- (T , 0) ∷ (F , 1) ∷ []
@@ -341,11 +349,3 @@ postulate
 
 ---------------------------------------------------------------------------
 
-{--
-
-⟦_⟧ₐ : U → Set
-⟦ t ⟧ₐ = Vec ⟦ t ⟧ ∣ t ∣ → Float
-
--- \McV
-
--}
