@@ -1,8 +1,11 @@
-{-# OPTIONS --without-K --exact-split #-}
-
-open import Relation.Binary.PropositionalEquality using (_≡_)
-
 module S where
+
+open import Data.Nat using (ℕ; zero; suc)
+open import Data.Empty using (⊥)
+open import Data.Unit using (⊤; tt)
+open import Data.Sum using (_⊎_; inj₁; inj₂)
+open import Data.Product using (_×_; _,_)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 
 infixr 40 _+ᵤ_ _×ᵤ_
 infix 30 _⟷_ _⇔_
@@ -79,17 +82,75 @@ data _⇔_ : U → U → Set where
   assertZero  : 𝟚 ⇔ I
 
 ---------------------------------------------------------------------------
+-- Semantics
+
+⟦_⟧ : U → Set
+⟦ O ⟧ = ⊥
+⟦ I ⟧ = ⊤
+⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
+⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
+
+private
+  variable
+    v v₁ v₂ v₃ v₄ v₅ v₆ : ⟦ t ⟧
+
+evalF : (t₁ ⟷ t₂) → ⟦ t₁ ⟧ → ⟦ t₂ ⟧
+evalB : (t₁ ⟷ t₂) → ⟦ t₂ ⟧ → ⟦ t₁ ⟧ 
+
+evalF unite₊ (inj₁ v) = v
+evalF uniti₊ v = inj₁ v
+evalF swap₊ (inj₁ v) = inj₂ v
+evalF swap₊ (inj₂ v) = inj₁ v
+evalF assocl₊ (inj₁ v) = inj₁ (inj₁ v)
+evalF assocl₊ (inj₂ (inj₁ v)) = inj₁ (inj₂ v)
+evalF assocl₊ (inj₂ (inj₂ v)) = inj₂ v
+evalF assocr₊ (inj₁ (inj₁ v)) = inj₁ v
+evalF assocr₊ (inj₁ (inj₂ v)) = inj₂ (inj₁ v)
+evalF assocr₊ (inj₂ v) = inj₂ (inj₂ v)
+evalF unite⋆ (v , tt) = v
+evalF uniti⋆ v = (v , tt)
+evalF swap⋆ (v₁ , v₂) = (v₂ , v₁)
+evalF assocl⋆ (v₁ , (v₂ , v₃)) = ((v₁ , v₂) , v₃)
+evalF assocr⋆ ((v₁ , v₂) , v₃) = (v₁ , (v₂ , v₃))
+evalF dist (inj₁ v₁ , v) = inj₁ (v₁ , v)
+evalF dist (inj₂ v₂ , v) = inj₂ (v₂ , v)
+evalF factor (inj₁ (v₁ , v)) = (inj₁ v₁ , v)
+evalF factor (inj₂ (v₂ , v)) = (inj₂ v₂ , v)
+evalF id⟷ v = v
+evalF (c₁ ◎ c₂) v = evalF c₂ (evalF c₁ v)
+evalF (c₁ ⊕ c₂) (inj₁ v) = inj₁ (evalF c₁ v)
+evalF (c₁ ⊕ c₂) (inj₂ v) = inj₂ (evalF c₂ v)
+evalF (c₁ ⊗ c₂) (v₁ , v₂) = (evalF c₁ v₁ , evalF c₂ v₂)
+evalF (inv c) v = evalB c v
+
+evalB uniti₊ (inj₁ v) = v 
+evalB unite₊ v = inj₁ v
+evalB swap₊ (inj₂ v) = inj₁ v
+evalB swap₊ (inj₁ v) = inj₂ v
+evalB assocl₊ (inj₁ (inj₁ v)) = inj₁ v
+evalB assocl₊ (inj₁ (inj₂ v)) = inj₂ (inj₁ v)
+evalB assocl₊ (inj₂ v) = inj₂ (inj₂ v)
+evalB assocr₊ (inj₁ v) = inj₁ (inj₁ v)
+evalB assocr₊ (inj₂ (inj₁ v)) = inj₁ (inj₂ v)
+evalB assocr₊ (inj₂ (inj₂ v)) = inj₂ v
+evalB uniti⋆ (v , tt) = v
+evalB unite⋆ v = (v , tt)
+evalB swap⋆ (v₁ , v₂) = (v₂ , v₁)
+evalB assocl⋆ ((v₁ , v₂) , v₃) = (v₁ , (v₂ , v₃))
+evalB assocr⋆ (v₁ , (v₂ , v₃)) = ((v₁ , v₂) , v₃)
+evalB dist (inj₁ (v₁ , v)) = (inj₁ v₁ , v)
+evalB dist(inj₂ (v₂ , v)) = (inj₂ v₂ , v)
+evalB factor (inj₁ v₁ , v) = inj₁ (v₁ , v)
+evalB factor (inj₂ v₂ , v) = inj₂ (v₂ , v)
+evalB id⟷ v = v
+evalB (c₁ ◎ c₂) v = evalB c₁ (evalB c₂ v)
+evalB (c₁ ⊕ c₂) (inj₁ v) = inj₁ (evalB c₁ v)
+evalB (c₁ ⊕ c₂) (inj₂ v) = inj₂ (evalB c₂ v)
+evalB (c₁ ⊗ c₂) (v₁ , v₂) = (evalB c₁ v₁ , evalB c₂ v₂)
+evalB (inv c) v = evalF c v
+
+---------------------------------------------------------------------------
 -- Examples
-
-xZ xϕ : 𝟚 ⇔ 𝟚
-xZ = arrZ swap₊
-xϕ = arrϕ swap₊
-
-one : I ⇔ 𝟚
-one = zero >>> xZ
-
-assertOne : 𝟚 ⇔ I
-assertOne = xZ >>> assertZero
 
 ctrl : (t ⟷ t) → (𝟚 ×ᵤ t) ⟷ (𝟚 ×ᵤ t)
 ctrl c = dist ◎ (id⟷ ⊗ c ⊕ id⟷) ◎ factor
@@ -97,9 +158,28 @@ ctrl c = dist ◎ (id⟷ ⊗ c ⊕ id⟷) ◎ factor
 cx : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
 cx = ctrl swap₊
 
+ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+ccx = ctrl cx
+
+--
+
+xZ xϕ : 𝟚 ⇔ 𝟚
+xZ = arrZ swap₊
+xϕ = arrϕ swap₊
+
+one plus : I ⇔ 𝟚
+one = zero >>> xZ
+plus = zero >>> xϕ
+
+assertOne : 𝟚 ⇔ I
+assertOne = xZ >>> assertZero
+
 cxZ cxϕ : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cxZ = arrZ cx
 cxϕ = arrϕ cx
+
+ccxZ : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+ccxZ = arrZ ccx
 
 copyZ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyZ = uniti⋆ >>> (id⇔ *** zero) >>> cxZ
@@ -107,6 +187,24 @@ copyZ = uniti⋆ >>> (id⇔ *** zero) >>> cxZ
 copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyϕ = xϕ >>> copyZ >>> (xϕ *** xϕ)
 
+-- Grover
+
+repeat : ℕ → (t ⇔ t) → (t ⇔ t)
+repeat 0 c = id⇔
+repeat 1 c = c
+repeat (suc n) c = c >>> repeat n c
+
+amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+amp = xϕ *** xϕ *** xϕ >>>
+      xZ *** xZ *** xZ >>>
+      id⇔ *** id⇔ *** xϕ >>>
+      ccxZ >>>
+      id⇔ *** id⇔ *** xϕ >>>
+      xZ *** xZ *** xZ >>>
+      xϕ *** xϕ *** xϕ
+
+grover3 : I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+grover3 =  plus *** plus *** plus >>> repeat 3 amp 
 
 ---------------------------------------------------------------------------
 -- Equations
