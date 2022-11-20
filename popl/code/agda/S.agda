@@ -1,10 +1,13 @@
 module S where
 
-open import Data.Nat using (ℕ; zero; suc)
+open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
+open import Data.Float using (Float)
 open import Data.Empty using (⊥)
 open import Data.Unit using (⊤; tt)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Product using (_×_; _,_)
+open import Function using (_∘_)
+open import Data.Vec using (Vec; []; _∷_; _++_; map; concat)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
 infixr 40 _+ᵤ_ _×ᵤ_
@@ -70,7 +73,7 @@ data _⇔_ : U → U → Set where
   unite⋆   : t ×ᵤ I ⇔ t
   uniti⋆   : t ⇔ t ×ᵤ I
   swap⋆    : t₁ ×ᵤ t₂ ⇔  t₂ ×ᵤ t₁
-  assocl⋆  : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⇔(t₁ ×ᵤ t₂) ×ᵤ t₃
+  assocl⋆  : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⇔ (t₁ ×ᵤ t₂) ×ᵤ t₃
   assocr⋆  : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⇔ t₁ ×ᵤ (t₂ ×ᵤ t₃)
   -- composition
   id⇔    : t ⇔ t
@@ -81,6 +84,11 @@ data _⇔_ : U → U → Set where
   zero        : I ⇔ 𝟚
   assertZero  : 𝟚 ⇔ I
 
+private
+  variable
+    d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
+
+
 ---------------------------------------------------------------------------
 -- Semantics
 
@@ -90,9 +98,16 @@ data _⇔_ : U → U → Set where
 ⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
 ⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
 
+𝒱 : (t : U) → Set
+𝒱 t = ⟦ t ⟧ → Float
+
+∣_⟩ : ⟦ t ⟧ → 𝒱 t
+∣ v ⟩ v' = {!!} -- 1.0 or 0.0
+
 private
   variable
     v v₁ v₂ v₃ v₄ v₅ v₆ : ⟦ t ⟧
+    k k₁ k₂ k₃ k₄ k₅ k₆ : 𝒱 t
 
 evalF : (t₁ ⟷ t₂) → ⟦ t₁ ⟧ → ⟦ t₂ ⟧
 evalB : (t₁ ⟷ t₂) → ⟦ t₂ ⟧ → ⟦ t₁ ⟧ 
@@ -148,6 +163,23 @@ evalB (c₁ ⊕ c₂) (inj₁ v) = inj₁ (evalB c₁ v)
 evalB (c₁ ⊕ c₂) (inj₂ v) = inj₂ (evalB c₂ v)
 evalB (c₁ ⊗ c₂) (v₁ , v₂) = (evalB c₁ v₁ , evalB c₂ v₂)
 evalB (inv c) v = evalF c v
+
+evalAF : Float → (t₁ ⇔ t₂) → 𝒱 t₁ → 𝒱 t₂
+evalAF ϕ (arrZ c) k₁ v₂ = k₁ (evalB c v₂)
+evalAF ϕ (arrϕ c) k₁ v₂ = {!!}
+evalAF ϕ unite⋆ k₁ v₂ = k₁ (v₂ , tt)
+evalAF ϕ uniti⋆ k₁ (v₂ , tt) = k₁ v₂
+evalAF ϕ swap⋆ k₁ (v₁ , v₂) = k₁ (v₂ , v₁)
+evalAF ϕ assocl⋆ k₁ ((v₁ , v₂) , v₃) = k₁ (v₁ , (v₂ , v₃))
+evalAF ϕ assocr⋆ k₁ (v₁ , (v₂ , v₃)) = k₁ ((v₁ , v₂) , v₃) 
+evalAF ϕ id⇔ k₁ v₂ = k₁ v₂
+evalAF ϕ (d₁ >>> d₂) k₁ v₃ = evalAF ϕ d₂ (evalAF ϕ d₁ k₁) v₃
+evalAF ϕ (d₁ *** d₂) k₁ (v₃ , v₄) = evalAF ϕ d₁ (λ v₁ → evalAF ϕ d₂ (λ v₂ → k₁ (v₁ , v₂)) v₄) v₃
+
+evalAF ϕ (inv d) k₁ v₂ = {!!}
+evalAF ϕ zero k₁ (inj₁ tt) = k₁ tt
+evalAF ϕ zero k₁ (inj₂ tt) = 0.0
+evalAF ϕ assertZero k₁ tt = k₁ (inj₁ tt)
 
 ---------------------------------------------------------------------------
 -- Examples
@@ -237,3 +269,23 @@ postulate
 
 ---------------------------------------------------------------------------
 
+{--
+
+∣_∣ : U → ℕ
+∣ O ∣  = 0
+∣ I ∣ = 1
+∣  t₁ +ᵤ t₂ ∣ = ∣ t₁ ∣ + ∣ t₂ ∣
+∣ t₁ ×ᵤ t₂ ∣ = ∣ t₁ ∣ * ∣ t₂ ∣
+
+enum : (t : U) → Vec ⟦ t ⟧ ∣ t ∣
+enum O = []
+enum I = tt ∷ []
+enum (t₁ +ᵤ t₂) = map inj₁ (enum t₁) ++ map inj₂ (enum t₂)
+enum (t₁ ×ᵤ t₂) = concat (map (λ v₁ → map (λ v₂ → (v₁ , v₂)) (enum t₂)) (enum t₁))
+
+⟦_⟧ₐ : U → Set
+⟦ t ⟧ₐ = Vec ⟦ t ⟧ ∣ t ∣ → Float
+
+-- \McV
+
+-}
