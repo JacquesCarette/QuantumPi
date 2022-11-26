@@ -8,18 +8,16 @@ open import Data.Bool using (Bool; false; true; _∧_; if_then_else_)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Product using (_×_; _,_)
 open import Function using (_∘_)
+open import Data.List using (List; _∷_; []; map)
 open import Data.Vec using (Vec; []; _∷_; _++_; map; concat; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_)
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
   renaming (_⟷₁_ to _⟷_)
-open import PiTagless using (Pi)
-open import GenericPi using (GenericPi)
-open import Amalgamation using (TList; cons₁; cons₂; nil)
-open import StatesAndEffects using (StEffPi; arr; _>>>>_)
+open import Amalgamation using (cons₁; cons₂; nil)
+open import StatesAndEffects using (StEffPi; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
-open import Instances using (Fwd)
-  renaming (evalTL₁ to evalPi; evalSE to evalArr)
+open import Instances using (evalSE)
 open import Tests using (show) 
 
 ---------------------------------------------------------------------------
@@ -33,8 +31,8 @@ private
   variable
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
 
-𝟚 : U
-𝟚 = I +ᵤ I
+pattern 𝕋 = inj₁ tt
+pattern 𝔽 = inj₂ tt
 
 -- Arrow combinators
 
@@ -67,40 +65,71 @@ private
   variable
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
-piz pih : (t₁ ⟷ t₂) → TList t₁ t₂
-piz c = cons₁ c nil
-pih c = cons₂ c nil
-
 pizA pihA : (t₁ ⟷ t₂) → StEffPi t₁ t₂
-pizA = arr ∘ piz
-pihA = arr ∘ pih
+pizA c = arr (cons₁ c nil)
+pihA c = arr (cons₂ c nil)
 
 embed : (t₁ ⇔ t₂) → StEffPi t₁ t₂
 embed (arrZ c) = pizA c
 embed (arrϕ c) = pihA c
-embed unite⋆ = pizA _⟷_.unite⋆
-embed uniti⋆ = pizA _⟷_.uniti⋆
-embed swap⋆ = pizA _⟷_.swap⋆
-embed assocl⋆ = pizA _⟷_.assocl⋆
-embed assocr⋆ = pizA _⟷_.assocr⋆
-embed id⇔ = pizA _⟷_.id⟷₁
+embed unite⋆ = pizA PiSyntax.unite⋆
+embed uniti⋆ = pizA PiSyntax.uniti⋆
+embed swap⋆ = pizA PiSyntax.swap⋆
+embed assocl⋆ = pizA PiSyntax.assocl⋆
+embed assocr⋆ = pizA PiSyntax.assocr⋆
+embed id⇔ = pizA PiSyntax.id⟷₁
 embed (d₁ >>> d₂) = embed d₁ >>>> embed d₂ 
 embed (d₁ *** d₂) = embed d₁ **** embed d₂ 
-embed (inv d) = {!!}
+embed (inv d) = invSE (embed d)
 embed zero = kzero
 embed assertZero = bzero
 
--- Example
+---------------------------------------------------------------------------
+-- Examples
 
 xgate had zgate : 𝟚 ⇔ 𝟚
-xgate = arrZ _⟷_.swap₊ 
-had = arrϕ _⟷_.swap₊
+xgate = arrZ PiSyntax.swap₊ 
+had = arrϕ PiSyntax.swap₊
 zgate = had >>> xgate >>> had
+
+cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
+cx = arrZ PiSyntax.cx
+cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 plus minus : I ⇔ 𝟚 
 plus = zero >>> had
-minus = plus >>> zgate 
+minus = plus >>> zgate
 
-ex1 = show (evalArr (embed minus) (λ tt → 1.0))
+assertPlus assertMinus : 𝟚 ⇔ I
+assertPlus = had >>> assertZero
+assertMinus = zgate >>> assertPlus
 
+--
 
+ex1 = show (evalSE (embed minus) (λ tt → 1.0))
+
+amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
+amp = had *** had *** had >>>
+      xgate *** xgate *** xgate >>>
+      id⇔ *** id⇔ *** had >>>
+      arrZ PiSyntax.ccx >>>
+      id⇔ *** id⇔ *** had >>>
+      xgate *** xgate *** xgate >>>
+      had *** had *** had
+
+u : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+u = id⇔ *** id⇔ *** id⇔
+
+repeat : ℕ → (t ⇔ t) → (t ⇔ t)
+repeat 0 c = id⇔
+repeat 1 c = c
+repeat (suc n) c = c >>> repeat n c
+
+grover₃ : I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
+grover₃ = 
+  plus *** plus *** plus >>>
+  repeat 3 (u >>> amp) 
+  
+
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
