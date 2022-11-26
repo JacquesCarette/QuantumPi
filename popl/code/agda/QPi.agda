@@ -11,10 +11,16 @@ open import Function using (_∘_)
 open import Data.Vec using (Vec; []; _∷_; _++_; map; concat; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_)
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷₁_)
+open import PiTagless using (Pi)
+open import GenericPi using (GenericPi)
+open import Amalgamation using (TList; cons₁; cons₂; nil)
+open import StatesAndEffects using (StEffPi; arr)  
+open import Instances using (Fwd)
+  renaming (evalTL₁ to evalPi; evalSE to evalArr)
 
 ---------------------------------------------------------------------------
--- Combinators for type isomorphisms between finite types
+-- The surface Quantum Pi language
 
 private
   variable
@@ -58,7 +64,7 @@ record QPI (_⟷_ _⇔_ : U → U → Set) : Set where
     assoclA⋆  : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⇔ (t₁ ×ᵤ t₂) ×ᵤ t₃
     assocrA⋆  : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⇔ t₁ ×ᵤ (t₂ ×ᵤ t₃)
     -- composition
-    iAd⇔    : t ⇔ t
+    idA⇔    : t ⇔ t
     _>>>_   : (t₁ ⇔ t₂) → (t₂ ⇔ t₃) → (t₁ ⇔ t₃)
     _***_   : (t₁ ⇔ t₃) → (t₂ ⇔ t₄) → (t₁ ×ᵤ t₂ ⇔ t₃ ×ᵤ t₄)
     invA    : (t₁ ⇔ t₂) → (t₂ ⇔ t₁)
@@ -66,3 +72,44 @@ record QPI (_⟷_ _⇔_ : U → U → Set) : Set where
     zeroA        : I ⇔ 𝟚
     assertZeroA  : 𝟚 ⇔ I
 
+piz : (t₁ ⟷₁ t₂) → StEffPi t₁ t₂
+piz c = arr (cons₁ c nil)
+
+Qpi : QPI Fwd Fwd
+Qpi = record
+  {
+  -- pi layer
+    unite₊   = Pi.unite+ GenericPi
+  ; uniti₊   = Pi.uniti+ GenericPi
+  ; swap₊    = Pi.swap+ GenericPi
+  ; assocl₊  = Pi.assocl+ GenericPi
+  ; assocr₊  = Pi.assocr+ GenericPi
+  ; unite⋆  = Pi.unite* GenericPi
+  ; uniti⋆   = Pi.uniti* GenericPi 
+  ; swap⋆    = Pi.swap× GenericPi 
+  ; assocl⋆  = Pi.assocl* GenericPi 
+  ; assocr⋆  = Pi.assocr* GenericPi 
+  ; absorbr   = Pi.absorbr′ GenericPi 
+  ; factorzl  = Pi.factorzl′ GenericPi 
+  ; dist      = Pi.dist′ GenericPi 
+  ; factor   = Pi.factor′ GenericPi 
+  ; id⟷  = Pi.idp GenericPi
+  ; _◎_  = Pi._⊚_ GenericPi 
+  ; _⊕_   = Pi._⊕′_  GenericPi 
+  ; _⊗_  = Pi._⊛_ GenericPi 
+  ; inv   = {!!}
+  -- arrow layer
+  ; arrZ  = λ c → evalArr {!!}
+  ; arrϕ  = {!!}
+  ; uniteA⋆  = {!!} 
+  ; unitiA⋆  = {!!}
+  ; swapA⋆    = {!!}
+  ; assoclA⋆  = {!!} 
+  ; assocrA⋆  = {!!} 
+  ; idA⇔    = {!!} 
+  ; _>>>_   = {!!} 
+  ; _***_  = {!!} 
+  ; invA    = {!!} 
+  ; zeroA        = {!!} 
+  ; assertZeroA = {!!}
+  }
