@@ -72,40 +72,41 @@ record QPI (_⟷_ _⇔_ : U → U → Set) : Set where
     zeroA        : I ⇔ 𝟚
     assertZeroA  : 𝟚 ⇔ I
 
-piz : (t₁ ⟷₁ t₂) → StEffPi t₁ t₂
+piz pih : (t₁ ⟷₁ t₂) → StEffPi t₁ t₂
 piz c = arr (cons₁ c nil)
+pih c = arr (cons₂ c nil)
 
-Qpi : QPI Fwd Fwd
+Qpi : QPI _⟷₁_ Fwd
 Qpi = record
   {
   -- pi layer
-    unite₊   = Pi.unite+ GenericPi
-  ; uniti₊   = Pi.uniti+ GenericPi
-  ; swap₊    = Pi.swap+ GenericPi
-  ; assocl₊  = Pi.assocl+ GenericPi
-  ; assocr₊  = Pi.assocr+ GenericPi
-  ; unite⋆  = Pi.unite* GenericPi
-  ; uniti⋆   = Pi.uniti* GenericPi 
-  ; swap⋆    = Pi.swap× GenericPi 
-  ; assocl⋆  = Pi.assocl* GenericPi 
-  ; assocr⋆  = Pi.assocr* GenericPi 
-  ; absorbr   = Pi.absorbr′ GenericPi 
-  ; factorzl  = Pi.factorzl′ GenericPi 
-  ; dist      = Pi.dist′ GenericPi 
-  ; factor   = Pi.factor′ GenericPi 
-  ; id⟷  = Pi.idp GenericPi
-  ; _◎_  = Pi._⊚_ GenericPi 
-  ; _⊕_   = Pi._⊕′_  GenericPi 
-  ; _⊗_  = Pi._⊛_ GenericPi 
+    unite₊   = {!!}
+  ; uniti₊   = {!!} 
+  ; swap₊    = {!!}
+  ; assocl₊  = {!!}
+  ; assocr₊  = {!!}
+  ; unite⋆  = {!!}
+  ; uniti⋆   = {!!}
+  ; swap⋆    = {!!}
+  ; assocl⋆  = {!!}
+  ; assocr⋆  = {!!}
+  ; absorbr   = {!!}
+  ; factorzl  = {!!}
+  ; dist      = {!!}
+  ; factor   = {!!}
+  ; id⟷  = {!!}
+  ; _◎_  = {!!}
+  ; _⊕_   = {!!}
+  ; _⊗_  = {!!}
   ; inv   = {!!}
   -- arrow layer
-  ; arrZ  = λ c → evalArr {!!}
-  ; arrϕ  = {!!}
-  ; uniteA⋆  = {!!} 
-  ; unitiA⋆  = {!!}
-  ; swapA⋆    = {!!}
-  ; assoclA⋆  = {!!} 
-  ; assocrA⋆  = {!!} 
+  ; arrZ  = evalArr ∘ piz
+  ; arrϕ  = evalArr ∘ pih
+  ; uniteA⋆  = evalArr (piz _⟷₁_.unite⋆)
+  ; unitiA⋆  = evalArr (piz _⟷₁_.uniti⋆)
+  ; swapA⋆    = evalArr (piz _⟷₁_.swap⋆)
+  ; assoclA⋆  = evalArr (piz _⟷₁_.assocl⋆) 
+  ; assocrA⋆  = evalArr (piz _⟷₁_.assocr⋆) 
   ; idA⇔    = {!!} 
   ; _>>>_   = {!!} 
   ; _***_  = {!!} 
