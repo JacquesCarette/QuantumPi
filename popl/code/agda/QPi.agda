@@ -15,7 +15,8 @@ open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷₁_)
 open import PiTagless using (Pi)
 open import GenericPi using (GenericPi)
 open import Amalgamation using (TList; cons₁; cons₂; nil)
-open import StatesAndEffects using (StEffPi; arr)  
+open import StatesAndEffects using (StEffPi; arr)
+  renaming (zero to kzero; assertZero to bzero)
 open import Instances using (Fwd)
   renaming (evalTL₁ to evalPi; evalSE to evalArr)
 
@@ -111,6 +112,6 @@ Qpi = record
   ; _>>>_   = {!!} 
   ; _***_  = {!!} 
   ; invA    = {!!} 
-  ; zeroA        = {!!} 
-  ; assertZeroA = {!!}
+  ; zeroA        = evalArr kzero 
+  ; assertZeroA = evalArr bzero
   }
