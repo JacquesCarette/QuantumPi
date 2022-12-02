@@ -53,8 +53,8 @@ R O = id
 R I = id
 R (O +ᵤ y) = R O ⊕ R y
 R (I +ᵤ O) = R I ⊕ R O
-R (I +ᵤ I) = λ f v → Sum.[ (λ _ →  cπ/8 * f (inj₁ tt) - sπ/8 * f (inj₂ tt)) ,
-                           (λ _ →  sπ/8 * f (inj₁ tt) + cπ/8 * f (inj₂ tt)) ] v
+R (I +ᵤ I) = λ f v → Sum.[ (λ _ →  cπ/8 * f (inj₂ tt) - sπ/8 * f (inj₁ tt)) ,
+                           (λ _ →  sπ/8 * f (inj₂ tt) + cπ/8 * f (inj₁ tt)) ] v
 R (I +ᵤ z@(y +ᵤ y′)) = R I ⊕ R z
 R (I +ᵤ z@(y ×ᵤ y′)) = R I ⊕ R z
 R (z@(x +ᵤ x′) +ᵤ y) = R z ⊕ R y
