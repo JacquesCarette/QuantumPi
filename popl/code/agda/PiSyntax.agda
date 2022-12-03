@@ -2,6 +2,9 @@
 
 module PiSyntax where
 
+open import Data.Unit using (tt)
+open import Data.Sum using (inj₁; inj₂)
+
 -------------------------------------------------------------------------------------
 -- Types
 
@@ -94,8 +97,11 @@ _∎ t = id⟷₁
 𝟚 : U
 𝟚 = I +ᵤ I
 
+pattern 𝔽 = inj₁ tt
+pattern 𝕋 = inj₂ tt
+
 ctrl : t₃ ⟷₁ t₃ → ((t₁ +ᵤ t₄) ×ᵤ t₃) ⟷₁ ((t₁ +ᵤ t₄) ×ᵤ t₃)
-ctrl c = dist ◎ (id⟷₁ ⊗ c ⊕ id⟷₁) ◎ factor
+ctrl c = dist ◎ (id⟷₁ ⊕ id⟷₁ ⊗ c) ◎ factor
 
 cx : 𝟚 ×ᵤ 𝟚 ⟷₁ 𝟚 ×ᵤ 𝟚
 cx = ctrl swap₊

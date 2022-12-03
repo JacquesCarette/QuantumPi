@@ -12,10 +12,10 @@ open import Function using (_∘_)
 open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚; 𝔽; 𝕋)
   renaming (_⟷₁_ to _⟷_)
 open import PiBij using (⟦_⟧; enum)  
-open import Amalgamation using (cons₁; cons₂; nil)
+open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (StEffPi; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
 open import Instances using (evalSE)
@@ -63,8 +63,8 @@ private
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
 pizA pihA : (t₁ ⟷ t₂) → StEffPi t₁ t₂
-pizA c = arr (cons₁ c nil)
-pihA c = arr (cons₂ c nil)
+pizA c = arr (arr₁ c)
+pihA c = arr (arr₂ c)
 
 embed : (t₁ ⇔ t₂) → StEffPi t₁ t₂
 embed (arrZ c) = pizA c
@@ -83,9 +83,6 @@ embed assertZero = bzero
 
 ---------------------------------------------------------------------------
 -- Examples
-
-pattern 𝕋 = inj₁ tt
-pattern 𝔽 = inj₂ tt
 
 K : U → Set
 K t = ⟦ t ⟧ → Float
@@ -150,6 +147,7 @@ g had
 (𝔽 , (𝕋 , 0.707106781202421) ∷ (𝔽 , -0.7071067811706743) ∷ []) ∷
 []
 
+g cx
 ((𝕋 , 𝕋) , ((𝕋 , 𝔽) , 1) ∷ []) ∷
 ((𝕋 , 𝔽) , ((𝕋 , 𝕋) , 1) ∷ []) ∷
 ((𝔽 , 𝕋) , ((𝔽 , 𝕋) , 1) ∷ []) ∷
@@ -183,22 +181,22 @@ grover₃ = plus *** plus *** plus >>> repeat 3 (u >>> amp)
 -- ctrl S
 
 ctrlS : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ctrlS = arrZ PiSyntax.ccx >>>
-        (id⇔ *** id⇔ *** had) >>>
+ctrlS = (id⇔ *** id⇔ *** had) >>>
         arrZ PiSyntax.ccx >>>
-        (id⇔ *** id⇔ *** had)
-
+        (id⇔ *** id⇔ *** had) >>>
+        arrZ PiSyntax.ccx 
 {--
 
-((𝕋 , 𝕋 , 𝕋) , ((𝕋 , 𝕋 , 𝔽) , 1.0000000000000004) ∷ []) ∷
-((𝕋 , 𝕋 , 𝔽) , ((𝕋 , 𝕋 , 𝕋) , -1.0000000000000002) ∷ []) ∷
-((𝕋 , 𝔽 , 𝕋) , ((𝕋 , 𝔽 , 𝕋) , 1.0000000000000004) ∷ []) ∷
-((𝕋 , 𝔽 , 𝔽) , ((𝕋 , 𝔽 , 𝔽) , 1.0000000000000004) ∷ []) ∷
-((𝔽 , 𝕋 , 𝕋) , ((𝔽 , 𝕋 , 𝕋) , 1.0000000000000004) ∷ []) ∷
-((𝔽 , 𝕋 , 𝔽) , ((𝔽 , 𝕋 , 𝔽) , 1.0000000000000004) ∷ []) ∷
-((𝔽 , 𝔽 , 𝕋) , ((𝔽 , 𝔽 , 𝕋) , 1.0000000000000004) ∷ []) ∷
 ((𝔽 , 𝔽 , 𝔽) , ((𝔽 , 𝔽 , 𝔽) , 1.0000000000000004) ∷ []) ∷
+((𝔽 , 𝔽 , 𝕋) , ((𝔽 , 𝔽 , 𝕋) , 1.0000000000000004) ∷ []) ∷
+((𝔽 , 𝕋 , 𝔽) , ((𝔽 , 𝕋 , 𝔽) , 1.0000000000000004) ∷ []) ∷
+((𝔽 , 𝕋 , 𝕋) , ((𝔽 , 𝕋 , 𝕋) , 1.0000000000000004) ∷ []) ∷
+((𝕋 , 𝔽 , 𝔽) , ((𝕋 , 𝔽 , 𝔽) , 1.0000000000000004) ∷ []) ∷
+((𝕋 , 𝔽 , 𝕋) , ((𝕋 , 𝔽 , 𝕋) , 1.0000000000000004) ∷ []) ∷
+((𝕋 , 𝕋 , 𝔽) , ((𝕋 , 𝕋 , 𝕋) , 1.0000000000000004) ∷ []) ∷
+((𝕋 , 𝕋 , 𝕋) , ((𝕋 , 𝕋 , 𝔽) , -1.0000000000000002) ∷ []) ∷
 []
+
 
 --}
 

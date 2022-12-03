@@ -54,10 +54,10 @@ GenericPi = record
   }
 
 true false : 𝒰 𝟚
-true (inj₁ x) = 1.0
-true (inj₂ y) = 0.0
-false (inj₁ x) = 0.0
-false (inj₂ y) = 1.0
+true (inj₁ y) = 0.0
+true (inj₂ x) = 1.0
+false (inj₁ y) = 1.0
+false (inj₂ x) = 0.0
 
 x : Fwd 𝟚 𝟚
 x = Pi.swap+ GenericPi
