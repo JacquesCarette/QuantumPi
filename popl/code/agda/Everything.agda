@@ -45,3 +45,8 @@ open import StatesAndEffects
 open import Instances
 open import Simon
 open import Tests
+open import TestsSlow
+open import QPi
+open import PiReasoning
+open import Reasoning
+

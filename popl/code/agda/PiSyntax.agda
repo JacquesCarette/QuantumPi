@@ -31,10 +31,6 @@ data _⟷₁_  : U → U → Set where
   uniti₊l : t ⟷₁  O +ᵤ t
   unite⋆l : I ×ᵤ t ⟷₁  t
   uniti⋆l : t ⟷₁  I ×ᵤ t
-  unite₊  : t +ᵤ O ⟷₁  t
-  uniti₊  : t ⟷₁  t +ᵤ O
-  unite⋆  : t ×ᵤ I ⟷₁  t
-  uniti⋆  : t ⟷₁ t ×ᵤ I
   swap₊   : t₁ +ᵤ t₂ ⟷₁  t₂ +ᵤ t₁
   swap⋆   : t₁ ×ᵤ t₂ ⟷₁  t₂ ×ᵤ t₁
   assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) +ᵤ t₃
@@ -46,13 +42,23 @@ data _⟷₁_  : U → U → Set where
   factorzr : O ⟷₁  t ×ᵤ O
   factorzl : O ⟷₁  O ×ᵤ t
   dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷₁ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
-  distl : t₃ ×ᵤ (t₁ +ᵤ t₂) ⟷₁ (t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ t₂)
   factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) ×ᵤ t₃
-  factorl : {t₁ t₂ t₃ : U} → (t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ  t₂) ⟷₁ t₃ ×ᵤ (t₁ +ᵤ t₂)
   id⟷₁  : t ⟷₁  t
   _◎_     : (t₁ ⟷₁ t₂) → (t₂ ⟷₁ t₃) → (t₁ ⟷₁ t₃)
   _⊕_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ +ᵤ t₂ ⟷₁ t₃ +ᵤ t₄)
   _⊗_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ ×ᵤ t₂ ⟷₁ t₃ ×ᵤ t₄)
+
+unite₊r : {t : U} → t +ᵤ O ⟷₁  t
+unite₊r = swap₊ ◎ unite₊l
+
+uniti₊r : {t : U} → t ⟷₁  t +ᵤ O
+uniti₊r = uniti₊l ◎ swap₊
+
+unite⋆r : {t : U} → t ×ᵤ I ⟷₁  t
+unite⋆r = swap⋆ ◎ unite⋆l
+
+uniti⋆r : {t : U} → t ⟷₁ t ×ᵤ I
+uniti⋆r = uniti⋆l ◎ swap⋆
 
 -- Equational reasoning
 
@@ -71,10 +77,6 @@ _∎ t = id⟷₁
 !⟷₁ uniti₊l = unite₊l
 !⟷₁ unite⋆l = uniti⋆l
 !⟷₁ uniti⋆l = unite⋆l
-!⟷₁ unite₊  = uniti₊
-!⟷₁ uniti₊  = unite₊
-!⟷₁ unite⋆  = uniti⋆
-!⟷₁ uniti⋆  = unite⋆
 !⟷₁ swap₊   = swap₊
 !⟷₁ swap⋆   = swap⋆
 !⟷₁ assocl₊ = assocr₊
@@ -86,8 +88,6 @@ _∎ t = id⟷₁
 !⟷₁ factorzr = absorbl
 !⟷₁ factorzl = absorbr
 !⟷₁ dist = factor
-!⟷₁ distl = factorl
-!⟷₁ factorl = distl
 !⟷₁ factor = dist
 !⟷₁ id⟷₁ = id⟷₁
 !⟷₁ (c₁ ◎ c₂) = !⟷₁ c₂ ◎ !⟷₁ c₁

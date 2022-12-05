@@ -2,9 +2,8 @@
 
 module ArrowsOverAmalg where
 
-open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷₁_; id⟷₁;
-  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁; _⊗_; ctrl; 𝟚;
-  uniti⋆; unite⋆)
+open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷₁_; _◎_; id⟷₁;
+  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷₁; _⊗_; ctrl; 𝟚)
 open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------
@@ -40,9 +39,9 @@ unite*l = arr₁ unite⋆l
 uniti*l : TList t (I ×ᵤ t)
 uniti*l = arr₁ uniti⋆l
 unite* : TList (t ×ᵤ I) t
-unite* = arr₁ unite⋆
+unite* = arr₁ (swap⋆ ◎ unite⋆l)
 uniti* : TList t (t ×ᵤ I)
-uniti* = arr₁ uniti⋆
+uniti* = arr₁ (uniti⋆l ◎ swap⋆)
 
 -- And we can make Arrows out of this too:
 first : {t₁ t₂ t₃ : U} → TList t₁ t₂ → TList (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)

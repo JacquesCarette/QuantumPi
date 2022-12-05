@@ -19,10 +19,6 @@ record Pi (rep : U → U → Set) : Set where
     uniti+l : rep t (O +ᵤ t)
     unite*l : rep (I ×ᵤ t) t
     uniti*l : rep t (I ×ᵤ t)
-    unite+  : rep (t +ᵤ O) t
-    uniti+  : rep t (t +ᵤ O)
-    unite*  : rep (t ×ᵤ I) t
-    uniti*  : rep t (t ×ᵤ I)
     swap+ : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
     swap× : rep (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
     assocl+ : rep  (t₁ +ᵤ (t₂ +ᵤ t₃)) ((t₁ +ᵤ t₂) +ᵤ t₃)
@@ -34,9 +30,7 @@ record Pi (rep : U → U → Set) : Set where
     factorzr′ : rep O (t ×ᵤ O)
     factorzl′ : rep O (O ×ᵤ t)
     dist′ : rep ((t₁ +ᵤ t₂) ×ᵤ t₃) ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃))
-    distl′ : rep (t₃ ×ᵤ (t₁ +ᵤ t₂)) ((t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ t₂))
     factor′ : rep ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)) ((t₁ +ᵤ t₂) ×ᵤ t₃)
-    factorl′ : rep ((t₃ ×ᵤ t₁) +ᵤ (t₃ ×ᵤ  t₂)) (t₃ ×ᵤ (t₁ +ᵤ t₂))
     idp : rep t t
     _⊚_ : rep t₁ t₂ → rep t₂ t₃ → rep t₁ t₃
     _⊕′_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ +ᵤ t₂) (t₃ +ᵤ t₄)
@@ -56,10 +50,6 @@ reverse rep p = record
   ; uniti+l = unite+l
   ; unite*l = uniti*l
   ; uniti*l = unite*l
-  ; unite+  = uniti+
-  ; uniti+  = unite+
-  ; unite*  = uniti*
-  ; uniti*  = unite*
   ; swap+ = swap+
   ; swap× = swap×
   ; assocl+ = assocr+
@@ -71,9 +61,7 @@ reverse rep p = record
   ; factorzr′ = absorbl′
   ; factorzl′ = absorbr′
   ; dist′ = factor′
-  ; distl′ = factorl′
   ; factor′ = dist′
-  ; factorl′ = distl′
   ; idp = idp
   ; _⊚_ = λ f g → g ⊚ f
   ; _⊕′_ = _⊕′_

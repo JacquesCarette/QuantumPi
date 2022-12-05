@@ -1,3 +1,5 @@
+{-# OPTIONS --without-K --safe #-}
+
 module QPi where
 
 open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
@@ -69,8 +71,8 @@ pihA c = arr (arr₂ c)
 embed : (t₁ ⇔ t₂) → StEffPi t₁ t₂
 embed (arrZ c) = pizA c
 embed (arrϕ c) = pihA c
-embed unite⋆ = pizA PiSyntax.unite⋆
-embed uniti⋆ = pizA PiSyntax.uniti⋆
+embed unite⋆ = pizA PiSyntax.unite⋆r
+embed uniti⋆ = pizA PiSyntax.uniti⋆r
 embed swap⋆ = pizA PiSyntax.swap⋆
 embed assocl⋆ = pizA PiSyntax.assocl⋆
 embed assocr⋆ = pizA PiSyntax.assocr⋆
