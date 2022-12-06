@@ -1,3 +1,4 @@
+
 {-# OPTIONS --without-K --exact-split --safe #-}
 
 module Simon where
@@ -77,3 +78,5 @@ simon =
   arr (A.arr₂ simon₁ A.>>>
        A.arr₁ simon₂ A.>>>
        A.arr₂ simon₁)
+
+

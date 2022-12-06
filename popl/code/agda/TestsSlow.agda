@@ -11,10 +11,10 @@ open import Data.Unit using (tt)
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
+open import PiSyntax using (𝕋; 𝔽)
 open import Amalgamation using (TList)
 open import Instances using (evalTL₁)
 open import Tests
-open import PiSyntax using (𝕋; 𝔽)
 
 -- takes ~22s on my MacBook Air
 -- indentation used to highlight real values from virtual 0s

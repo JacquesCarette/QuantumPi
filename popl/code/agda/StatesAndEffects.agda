@@ -8,14 +8,12 @@ open import Data.List using (List; []; _∷_)
 open import Data.Maybe using (Maybe; just; nothing)
 open import Data.Product using (_×_; _,_)
 open import Data.Unit using (tt)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax
-open import PiBij using (enum; ⟦_⟧)
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
-
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 -------------------------------------------------------------------------------------
 private
@@ -23,6 +21,7 @@ private
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
 
 -------------------------------------------------------------------------------------
+-- Ancillae
 
 -- This is the type of non-trivial Ancillas
 data Anc : Set where
@@ -112,7 +111,9 @@ xs *** ys = firstSE xs >>>> secondSE ys
 invSE : StEffPi t₁ t₂ → StEffPi t₂ t₁
 invSE (lift m) = lift (A.inv m)
 
+-------------------------------------------------------------------------------------
 -- Some examples where we use all of the above
+
 -- With annotations
 zero : StEffPi I (I +ᵤ I)
 zero = lift (A.arr₁ swap⋆)
@@ -124,23 +125,29 @@ assertZero = lift (A.arr₁ swap⋆)
 inv0 : invSE zero ≡ assertZero
 inv0 = refl
 
----------------------
 -- Additional combinators for complementarity
+
 X : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 X = arr A.X
+
 CX : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CX = arr A.CX
+
 CCX : StEffPi (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 CCX = arr A.CCX
+
 H : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 H = arr A.H
+
 Z : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 Z = arr A.Z
+
 CZ : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CZ = arr A.CZ
 
 copyZ : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
 copyZ = uniti* >>>> idst *** zero >>>> arr A.CX
+
 copyH : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
 copyH = H >>>> copyZ >>>> H *** H
 
@@ -149,7 +156,9 @@ copyH = H >>>> copyZ >>>> H *** H
 
 -- Define this equivalence for display purposes, and hack it to be ≡ for now,
 -- until a proper equivalence can be defined.
+
 infix 4 _≈_
+
 _≈_ : StEffPi t₁ t₂ → StEffPi t₁ t₂ → Set
 _≈_ x y = x ≡ y
 
@@ -169,8 +178,8 @@ eqH₄ = (copyH *** idst) >>>> (idst *** copyH) ≈ (idst *** copyH) >>>> (copyH
 eqZH : Set
 eqZH = (copyZ *** idst) >>>> (idst *** (invSE copyH)) >>>> (idst *** copyH) >>>> ((invSE copyZ) *** idst) ≈ idst
 
----------------------------------------------
 -- Special states and effects
+
 one : StEffPi I 𝟚
 one = zero >>>> X
 plus : StEffPi I 𝟚
@@ -184,3 +193,6 @@ assertPlus : StEffPi 𝟚 I
 assertPlus = H >>>> assertZero
 assertMinus : StEffPi 𝟚 I
 assertMinus = Z >>>> assertZero
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------

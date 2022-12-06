@@ -2,8 +2,12 @@
 
 module PiSyntax where
 
-open import Data.Unit using (tt)
-open import Data.Sum using (inj₁; inj₂)
+open import Data.Empty using (⊥)
+open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
+open import Data.Product as Prod using (_,_; _×_; swap)
+open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
+open import Data.Unit using (⊤; tt)
+open import Function using (id; _∘_; flip)
 
 -------------------------------------------------------------------------------------
 -- Types
@@ -24,42 +28,48 @@ private
   variable
     t t₁ t₂ t₃ t₄ t₅ t₆ : U
 
+-- Intended meaning
+⟦_⟧ : (t : U) → Set
+⟦ O ⟧ = ⊥
+⟦ I ⟧ = ⊤
+⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
+⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
+
+-- we can enumerate our types
+enum : (t : U) → List ⟦ t ⟧
+enum O = []
+enum I = tt ∷ []
+enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
+enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
+
+-------------------------------------------------------------------------------------
 -- 1-combinators
 
 data _⟷₁_  : U → U → Set where
+  id⟷₁  : t ⟷₁  t
+  --
+  swap₊   : t₁ +ᵤ t₂ ⟷₁  t₂ +ᵤ t₁
+  assocr₊ : (t₁ +ᵤ t₂) +ᵤ t₃ ⟷₁ t₁ +ᵤ (t₂ +ᵤ t₃)
+  assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) +ᵤ t₃
   unite₊l : O +ᵤ t ⟷₁  t
   uniti₊l : t ⟷₁  O +ᵤ t
+  ---
+  swap⋆   : t₁ ×ᵤ t₂ ⟷₁  t₂ ×ᵤ t₁
+  assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⟷₁ t₁ ×ᵤ (t₂ ×ᵤ t₃)
+  assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⟷₁ (t₁ ×ᵤ t₂) ×ᵤ t₃
   unite⋆l : I ×ᵤ t ⟷₁  t
   uniti⋆l : t ⟷₁  I ×ᵤ t
-  swap₊   : t₁ +ᵤ t₂ ⟷₁  t₂ +ᵤ t₁
-  swap⋆   : t₁ ×ᵤ t₂ ⟷₁  t₂ ×ᵤ t₁
-  assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) +ᵤ t₃
-  assocr₊ : (t₁ +ᵤ t₂) +ᵤ t₃ ⟷₁ t₁ +ᵤ (t₂ +ᵤ t₃)
-  assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⟷₁ (t₁ ×ᵤ t₂) ×ᵤ t₃
-  assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⟷₁ t₁ ×ᵤ (t₂ ×ᵤ t₃)
-  absorbr : O ×ᵤ t ⟷₁ O
-  absorbl : t ×ᵤ O ⟷₁ O
-  factorzr : O ⟷₁  t ×ᵤ O
-  factorzl : O ⟷₁  O ×ᵤ t
+  --
   dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷₁ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
   factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷₁ (t₁ +ᵤ t₂) ×ᵤ t₃
-  id⟷₁  : t ⟷₁  t
+  absorbl : t ×ᵤ O ⟷₁ O
+  factorzr : O ⟷₁  t ×ᵤ O
+  --
   _◎_     : (t₁ ⟷₁ t₂) → (t₂ ⟷₁ t₃) → (t₁ ⟷₁ t₃)
   _⊕_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ +ᵤ t₂ ⟷₁ t₃ +ᵤ t₄)
   _⊗_     : (t₁ ⟷₁ t₃) → (t₂ ⟷₁ t₄) → (t₁ ×ᵤ t₂ ⟷₁ t₃ ×ᵤ t₄)
 
-unite₊r : {t : U} → t +ᵤ O ⟷₁  t
-unite₊r = swap₊ ◎ unite₊l
-
-uniti₊r : {t : U} → t ⟷₁  t +ᵤ O
-uniti₊r = uniti₊l ◎ swap₊
-
-unite⋆r : {t : U} → t ×ᵤ I ⟷₁  t
-unite⋆r = swap⋆ ◎ unite⋆l
-
-uniti⋆r : {t : U} → t ⟷₁ t ×ᵤ I
-uniti⋆r = uniti⋆l ◎ swap⋆
-
+-------------------------------------------------------------------------------------
 -- Equational reasoning
 
 infixr 10 _⟨_⟩_
@@ -71,6 +81,7 @@ _ ⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
 _∎ : (t : U) → t ⟷₁  t
 _∎ t = id⟷₁
 
+-------------------------------------------------------------------------------------
 -- Inverse
 !⟷₁ : t₁ ⟷₁  t₂ → t₂ ⟷₁  t₁
 !⟷₁ unite₊l = uniti₊l
@@ -83,10 +94,8 @@ _∎ t = id⟷₁
 !⟷₁ assocr₊ = assocl₊
 !⟷₁ assocl⋆ = assocr⋆
 !⟷₁ assocr⋆ = assocl⋆
-!⟷₁ absorbr = factorzl
 !⟷₁ absorbl = factorzr
 !⟷₁ factorzr = absorbl
-!⟷₁ factorzl = absorbr
 !⟷₁ dist = factor
 !⟷₁ factor = dist
 !⟷₁ id⟷₁ = id⟷₁
@@ -94,11 +103,26 @@ _∎ t = id⟷₁
 !⟷₁ (c₁ ⊕ c₂) = !⟷₁ c₁ ⊕ !⟷₁ c₂
 !⟷₁ (c₁ ⊗ c₂) = !⟷₁ c₁ ⊗ !⟷₁ c₂
 
+-------------------------------------------------------------------------------------
+-- Common terms
+
 𝟚 : U
 𝟚 = I +ᵤ I
 
 pattern 𝔽 = inj₁ tt
 pattern 𝕋 = inj₂ tt
+
+unite₊r : {t : U} → t +ᵤ O ⟷₁  t
+unite₊r = swap₊ ◎ unite₊l
+
+uniti₊r : {t : U} → t ⟷₁  t +ᵤ O
+uniti₊r = uniti₊l ◎ swap₊
+
+unite⋆r : {t : U} → t ×ᵤ I ⟷₁  t
+unite⋆r = swap⋆ ◎ unite⋆l
+
+uniti⋆r : {t : U} → t ⟷₁ t ×ᵤ I
+uniti⋆r = uniti⋆l ◎ swap⋆
 
 ctrl : t₃ ⟷₁ t₃ → ((t₁ +ᵤ t₄) ×ᵤ t₃) ⟷₁ ((t₁ +ᵤ t₄) ×ᵤ t₃)
 ctrl c = dist ◎ (id⟷₁ ⊕ id⟷₁ ⊗ c) ◎ factor

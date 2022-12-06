@@ -35,10 +35,8 @@ GenericPi = record
   ; assocr+ = λ f → f ∘ Sum.assocˡ
   ; assocl* = λ f → f ∘ Prod.assocʳ
   ; assocr* = λ f → f ∘ Prod.assocˡ
-  ; absorbr′ = λ { f () }
   ; absorbl′ = λ { f () }
   ; factorzr′ = λ {f ( _ , () )}
-  ; factorzl′ = λ {f ( () , _ ) }
   ; dist′ = λ f → f ∘ Sum.[ Prod.map₁ inj₁ , Prod.map₁ inj₂ ]
   ; factor′ = λ f → f ∘ λ { (a , b) → Sum.map (_, b) (_, b) a }
   ; idp = λ x → x
@@ -53,5 +51,3 @@ true (inj₂ x) = 1.0
 false (inj₁ y) = 1.0
 false (inj₂ x) = 0.0
 
-x : Fwd 𝟚 𝟚
-x = Pi.swap+ GenericPi

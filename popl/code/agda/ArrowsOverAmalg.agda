@@ -1,3 +1,4 @@
+
 {-# OPTIONS --without-K --exact-split --safe #-}
 
 module ArrowsOverAmalg where
@@ -82,16 +83,26 @@ cons₂ x xs *** nil = cons₂ (x ⊗ id⟷₁) (xs *** nil)
 cons₂ x xs *** cons₁ x₁ ys = cons₂ (x ⊗ id⟷₁) (cons₂ (id⟷₁ ⊗ x₁) (xs *** ys))
 cons₂ x xs *** cons₂ x₁ ys = cons₂ (x ⊗ x₁) (xs *** ys)
 
+-------------------------------------------------------------------------------------
 -- Add some definitions from 5.1
+
 X : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 X = arr₁ swap₊
+
 CX : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CX = arr₁ (ctrl swap₊)
+
 CCX : TList (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 CCX = arr₁ (ctrl (ctrl swap₊))
+
 H : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 H = arr₂ swap₊
+
 Z : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 Z = H >>> X >>> H
+
 CZ : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CZ = idzh *** H >>> CX >>> idzh *** H
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------

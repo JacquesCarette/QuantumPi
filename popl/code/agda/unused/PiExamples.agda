@@ -16,13 +16,13 @@ module _ {rep : U → U → Set} (p : Pi rep) where
   x : rep (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
   x = swap+
 
-  -- cx is sometimes called cnot too
-  cx : rep ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃) ) ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃))
-  cx = dist′ ⊚ (idp ⊕′ (idp ⊛ x)) ⊚ factor′
-
   -- note how c has to be an automorphism
   ctrl : rep t₃ t₃ → rep ((t₁ +ᵤ t₄) ×ᵤ t₃) ((t₁ +ᵤ t₄) ×ᵤ t₃)
-  ctrl c = dist′ ⊚ (idp ⊛ c ⊕′ idp) ⊚ factor′
+  ctrl c = dist′ ⊚ (idp  ⊕′ idp ⊛ c) ⊚ factor′
+
+  -- cx is sometimes called cnot too
+  cx : rep ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃) ) ((t₁ +ᵤ t₂) ×ᵤ (t₃ +ᵤ t₃))
+  cx = ctrl x
 
   -- ccx is also known as the Toffoli gate
   ccx : rep ((t₁ +ᵤ t₂) ×ᵤ ((t₃ +ᵤ t₄) ×ᵤ (t₅ +ᵤ t₅)))

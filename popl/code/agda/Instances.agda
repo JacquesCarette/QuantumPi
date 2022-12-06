@@ -13,13 +13,13 @@ open import Data.Unit using (tt)
 open import Function using (_∘_; flip)
 
 open import PiSyntax
+open import Amalgamation using (TList; Categorical; evalTL)
+import ArrowsOverAmalg as A
+open import StatesAndEffects
+
+open import Unitary
 open import PiZ using (evalZ)
 open import PiH using (evalH)
-open import PiBij using (⟦_⟧)
-open import Unitary
-import ArrowsOverAmalg as A
-open import Amalgamation using (TList; Categorical; evalTL)
-open import StatesAndEffects
 
 -- This "Forward" interpreter is in 𝒰 space, which is common to PiZ and PiH
 Fwd : U → U → Set

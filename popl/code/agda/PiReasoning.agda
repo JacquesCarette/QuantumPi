@@ -180,14 +180,6 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     ((c₁ ⊗ id⟷ {O}) ◎ absorbl) ⟷₂ (absorbl ◎ id⟷ {O})
   absorbl⟷₂r : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
     (absorbl ◎ id⟷ {O}) ⟷₂ ((c₁ ⊗ id⟷ {O}) ◎ absorbl)
-  absorbr⟷₂l : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
-    ((id⟷ {O} ⊗ c₁) ◎ absorbr) ⟷₂ (absorbr ◎ id⟷ {O})
-  absorbr⟷₂r : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
-    (absorbr ◎ id⟷ {O}) ⟷₂ ((id⟷ {O} ⊗ c₁) ◎ absorbr)
-  factorzl⟷₂l : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
-    (id⟷ ◎ factorzl) ⟷₂ (factorzl ◎ (id⟷ ⊗ c₁))
-  factorzl⟷₂r : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
-    (factorzl ◎ (id⟷ {O} ⊗ c₁)) ⟷₂ (id⟷ {O} ◎ factorzl)
   factorzr⟷₂l : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
     (id⟷ ◎ factorzr) ⟷₂ (factorzr ◎ (c₁ ⊗ id⟷))
   factorzr⟷₂r : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
@@ -199,19 +191,3 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   assocl₊-dist-dist⟷₂r : {t₁ t₂ t₃ t₄ : U} →
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
-  absorbr0-absorbl0⟷₂ : absorbr {O} ⟷₂ absorbl {O}
-  absorbl0-absorbr0⟷₂ : absorbl {O} ⟷₂ absorbr {O}
-  unite⋆r0-absorbr1⟷₂ : unite⋆r ⟷₂ absorbr
-  absorbr1-unite⋆r-⟷₂ : absorbr ⟷₂ unite⋆r
-  absorbl≡swap⋆◎absorbr : {t₁ : U} → absorbl {t₁} ⟷₂ (swap⋆ ◎ absorbr)
-  swap⋆◎absorbr≡absorbl : {t₁ : U} → (swap⋆ ◎ absorbr) ⟷₂ absorbl {t₁}
-  absorbr⟷₂[assocl⋆◎[absorbr⊗id⟷]]◎absorbr : {t₁ t₂ : U} →
-    absorbr ⟷₂ ((assocl⋆ {O} {t₁} {t₂} ◎ (absorbr ⊗ id⟷)) ◎ absorbr)
-  [assocl⋆◎[absorbr⊗id⟷]]◎absorbr⟷₂absorbr : {t₁ t₂ : U} →
-    ((assocl⋆ {O} {t₁} {t₂} ◎ (absorbr ⊗ id⟷)) ◎ absorbr) ⟷₂ absorbr
-  [id⟷⊗absorbr]◎absorbl⟷₂assocl⋆◎[absorbl⊗id⟷]◎absorbr : {t₁ t₂ : U} →
-    ((id⟷ ⊗ absorbr {t₂}) ◎ absorbl {t₁}) ⟷₂
-    ((assocl⋆ ◎ (absorbl ⊗ id⟷)) ◎ absorbr)
-  assocl⋆◎[absorbl⊗id⟷]◎absorbr⟷₂[id⟷⊗absorbr]◎absorbl : {t₁ t₂ : U} →
-    ((assocl⋆ ◎ (absorbl ⊗ id⟷)) ◎ absorbr) ⟷₂
-    ((id⟷ ⊗ absorbr {t₂}) ◎ absorbl {t₁})

@@ -2,7 +2,7 @@
 
 module PiTagless where
 
-open import PiSyntax using (U; I; O; _+ᵤ_; _×ᵤ_)
+open import PiSyntax 
 
 -------------------------------------------------------------------------------------
 
@@ -11,6 +11,7 @@ private
     t t₁ t₂ t₃ t₄ : U
 
 -- The basic language itself
+
 record Pi (rep : U → U → Set) : Set where
   infixr 50 _⊚_ _⊛_
 
@@ -25,10 +26,8 @@ record Pi (rep : U → U → Set) : Set where
     assocr+ : rep  ((t₁ +ᵤ t₂) +ᵤ t₃) (t₁ +ᵤ (t₂ +ᵤ t₃))
     assocl* : rep  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
     assocr* : rep  ((t₁ ×ᵤ t₂) ×ᵤ t₃) (t₁ ×ᵤ (t₂ ×ᵤ t₃))
-    absorbr′ : rep (O ×ᵤ t) O
     absorbl′ : rep (t ×ᵤ O) O
     factorzr′ : rep O (t ×ᵤ O)
-    factorzl′ : rep O (O ×ᵤ t)
     dist′ : rep ((t₁ +ᵤ t₂) ×ᵤ t₃) ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃))
     factor′ : rep ((t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)) ((t₁ +ᵤ t₂) ×ᵤ t₃)
     idp : rep t t
@@ -37,6 +36,7 @@ record Pi (rep : U → U → Set) : Set where
     _⊛_ : rep t₁ t₃ → rep t₂ t₄ → rep (t₁ ×ᵤ t₂) (t₃ ×ᵤ t₄)
 
 -- And a witness that it's reversible
+
 record PiR (rep : U → U → Set) : Set where
   field
     pi : Pi rep
@@ -44,6 +44,7 @@ record PiR (rep : U → U → Set) : Set where
   open Pi pi public
 
 -- It's reversible
+
 reverse : (rep : U → U → Set) → Pi rep → Pi (λ x y → rep y x)
 reverse rep p = record
   { unite+l = uniti+l
@@ -56,10 +57,8 @@ reverse rep p = record
   ; assocr+ = assocl+
   ; assocl* = assocr*
   ; assocr* = assocl*
-  ; absorbr′ = factorzl′
   ; absorbl′ = factorzr′
   ; factorzr′ = absorbl′
-  ; factorzl′ = absorbr′
   ; dist′ = factor′
   ; factor′ = dist′
   ; idp = idp
@@ -68,3 +67,28 @@ reverse rep p = record
   ; _⊛_ = _⊛_
   }
   where open Pi p
+
+-- Generalize the raw PiSyntax
+
+generalize : {t₁ t₂ : U} {rep : U → U → Set} → Pi rep → (t₁ ⟷₁ t₂) → rep t₁ t₂
+generalize p unite₊l = Pi.unite+l p
+generalize p uniti₊l = Pi.uniti+l p
+generalize p unite⋆l = Pi.unite*l p
+generalize p uniti⋆l = Pi.uniti*l p
+generalize p swap₊ = Pi.swap+ p
+generalize p swap⋆ = Pi.swap× p
+generalize p assocl₊ = Pi.assocl+ p
+generalize p assocr₊ = Pi.assocr+ p
+generalize p assocl⋆ = Pi.assocl* p
+generalize p assocr⋆ = Pi.assocr* p
+generalize p absorbl = Pi.absorbl′ p
+generalize p factorzr = Pi.factorzr′ p
+generalize p dist = Pi.dist′ p
+generalize p factor = Pi.factor′ p
+generalize p id⟷₁ = Pi.idp p
+generalize p (c ◎ c₁) = Pi._⊚_ p (generalize p c) (generalize p c₁)
+generalize p (c ⊕ c₁) = Pi._⊕′_ p (generalize p c) (generalize p c₁)
+generalize p (c ⊗ c₁) = Pi._⊛_ p (generalize p c) (generalize p c₁)
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------

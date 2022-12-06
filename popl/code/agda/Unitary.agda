@@ -13,8 +13,7 @@ open Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
 open import Function using (_∘_; id)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_)
-open import PiBij using (⟦_⟧)
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧)
 
 π : Float
 π = 3.1415926535

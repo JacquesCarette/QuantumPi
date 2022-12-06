@@ -12,17 +12,18 @@ open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax
-open import PiBij using (⟦_⟧; enum; generalize)
-import ArrowsOverAmalg as A
 open import Amalgamation using (TList)
-open import Instances using (evalTL₁; evalSE)
+import ArrowsOverAmalg as A
+open import StatesAndEffects
+open import Unitary
 import PiZ
 import PiH
+open import Instances using (evalTL₁; evalSE)
 open import Simon using (simon₁; simon₂)
-open import Unitary
-open import StatesAndEffects
 
+---------------------------------------------------------------------------------------
 -- Infrastructure for testing
+
 show : {t : U} → (⟦ t ⟧ → Float) → List (⟦ t ⟧ × Float)
 show {t} v = map (λ i → (i , v i)) (enum t)
 
@@ -130,6 +131,7 @@ test-is : show (evalTL₁ inner-simon test-vec4) ≡ ...
 
 ---------------------------------------------------------------------
 -- Tests of effectful language
+
 <0|0> <0|+> <0|-> <0|1> : StEffPi I I
 <0|0> = zero >>>> assertZero
 <0|+> = plus >>>> assertZero
@@ -160,3 +162,6 @@ test-is : show (evalTL₁ inner-simon test-vec4) ≡ ...
 
 <0|1>≡1 : show (evalSE <0|1> (λ tt → 1.0)) ≡ (tt , 0.0) ∷ []
 <0|1>≡1 = refl
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
