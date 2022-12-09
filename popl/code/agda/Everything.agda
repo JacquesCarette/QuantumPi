@@ -72,6 +72,6 @@ open import TestsSlow
 
 open import QPi
 open import PiReasoning
-open import Reasoning
+--open import Reasoning
 
 ------------------------------------------------------------------------------------

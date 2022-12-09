@@ -49,6 +49,8 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   swapr⋆≡ : ((d₂ *** d₁) >>> swapA⋆) ≡ (swapA⋆ >>> (d₁ *** d₂))
   id≡     : d ≡ d
   trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
+  -- add arrow axioms
+  
   -- complementarity
   C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
       (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔)) ≡ id⇔
@@ -67,7 +69,6 @@ _≡∎ t = id≡
 ---------------------------------------------------------------------------
 --
 
-{--
 hadInv : (had >>> had) ≡ id⇔
 hadInv = {!  linv>>>l !} 
 
@@ -84,7 +85,6 @@ minusZ≡plus =
   (plus >>> (had >>> had))
     ≡⟨ {!!} ⟩
   plus ≡∎
---}
 
 ---------------------------------------------------------------------------
 
