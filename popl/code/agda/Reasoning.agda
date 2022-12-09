@@ -13,11 +13,13 @@ open import QPi
 ---------------------------------------------------------------------------
 -- Some of the equations
 
+infix 10 _≡_
+
 private
   variable
-    t₁ t₂ t₃ : U
-    c₁ c₂ c₃ : t₁ ⟷ t₂
-    d d₁ d₂ d₃ : t₁ ⇔ t₂
+    t t₁ t₂ t₃ : U
+    c c₁ c₂ c₃ : t₁ ⟷ t₂
+    d d₁ d₂ d₃ d₄ : t₁ ⇔ t₂
 
 copyZ copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyZ = unitiA⋆ >>> (id⇔ *** zero) >>> (arrZ PiSyntax.cx)
@@ -26,6 +28,15 @@ copyϕ = arrϕ swap₊ >>> copyZ >>> (arrϕ swap₊ *** arrϕ swap₊)
 data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set where
   classicalZ  : (c₁ ⟷₂ c₂) → (arrZ c₁ ≡ arrZ c₂)
   classicalH  : (c₁ ⟷₂ c₂) → (arrϕ c₁ ≡ arrϕ c₂)
+  -- arrow axioms
+  arrZidL   : arrZ (id⟷ {t}) ≡ id⇔ 
+  arrZidR   : id⇔  ≡ arrZ (id⟷ {t})
+  arrϕidL   : arrϕ (id⟷ {t}) ≡ id⇔ 
+  arrϕidR   : id⇔  ≡ arrϕ (id⟷ {t})
+  arrZL    : (arrZ (c₁ ◎ c₂)) ≡ (arrZ c₁ >>> arrZ c₂)
+  arrZR    : (arrZ c₁ >>> arrZ c₂) ≡ (arrZ (c₁ ◎ c₂))
+  arrϕL    : (arrϕ (c₁ ◎ c₂)) ≡ (arrϕ c₁ >>> arrϕ c₂)
+  arrϕR    : (arrϕ c₁ >>> arrϕ c₂) ≡ (arrϕ (c₁ ◎ c₂))
   -- 
   assoc>>>l : (d₁ >>> (d₂ >>> d₃)) ≡ ((d₁ >>> d₂) >>> d₃)
   assoc>>>r : ((d₁ >>> d₂) >>> d₃) ≡ (d₁ >>> (d₂ >>> d₃))
@@ -49,8 +60,8 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   swapr⋆≡ : ((d₂ *** d₁) >>> swapA⋆) ≡ (swapA⋆ >>> (d₁ *** d₂))
   id≡     : d ≡ d
   trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
-  -- add arrow axioms
-  
+  -- congruence
+  cong≡  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ >>> d₂) ≡ (d₃ >>> d₄))
   -- complementarity
   C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
       (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔)) ≡ id⇔
@@ -69,21 +80,26 @@ _≡∎ t = id≡
 ---------------------------------------------------------------------------
 --
 
+xInv : (xgate >>> xgate) ≡ id⇔
+xInv = trans≡ arrZR (trans≡ (classicalZ linv◎l) arrZidL)  
+
 hadInv : (had >>> had) ≡ id⇔
-hadInv = {!  linv>>>l !} 
+hadInv = trans≡ arrϕR (trans≡ (classicalH linv◎l) arrϕidL)  
 
 minusZ≡plus : (minus >>> zgate) ≡ plus
 minusZ≡plus =
   (minus >>> zgate)
     ≡⟨ id≡ ⟩
-  ((plus >>> (had >>> xgate >>> had)) >>> (had >>> xgate >>> had))
-    ≡⟨ {!!} ⟩
-  (plus >>> (had >>> xgate >>> (had >>> had) >>> (xgate >>> had)))
-    ≡⟨ {!!} ⟩
-  (plus >>> (had >>> (xgate >>> xgate) >>> had))
-    ≡⟨ {!!} ⟩
-  (plus >>> (had >>> had))
-    ≡⟨ {!!} ⟩
+  ((plus >>> had >>> xgate >>> had) >>> had >>> xgate >>> had)
+    ≡⟨ trans≡ (trans≡ (cong≡ (trans≡ assoc>>>l assoc>>>l) id≡) assoc>>>r) (cong≡ id≡ assoc>>>l) ⟩ 
+  (((plus >>> had) >>> xgate) >>> (had >>> had) >>> xgate >>> had)
+    ≡⟨ cong≡ id≡ (trans≡ (cong≡ hadInv id≡) idl>>>l) ⟩
+  (((plus >>> had) >>> xgate) >>> xgate >>> had)
+    ≡⟨ trans≡ assoc>>>r (cong≡ id≡ assoc>>>l) ⟩
+  ((plus >>> had) >>> (xgate >>> xgate) >>> had)
+    ≡⟨ cong≡ id≡ (trans≡ (cong≡ xInv id≡) idl>>>l) ⟩
+  ((plus >>> had) >>> had)
+    ≡⟨ trans≡ (trans≡ assoc>>>r (cong≡ id≡ hadInv)) idr>>>l ⟩ 
   plus ≡∎
 
 ---------------------------------------------------------------------------
