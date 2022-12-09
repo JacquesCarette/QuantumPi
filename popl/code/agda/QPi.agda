@@ -128,11 +128,13 @@ cx = arrZ PiSyntax.cx
 
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
-plus minus : I ⇔ 𝟚 
+one plus minus : I ⇔ 𝟚 
+one = zero >>> xgate
 plus = zero >>> had
 minus = plus >>> zgate
 
-assertPlus assertMinus : 𝟚 ⇔ I
+assertOne assertPlus assertMinus : 𝟚 ⇔ I
+assertOne = xgate >>> assertZero
 assertPlus = had >>> assertZero
 assertMinus = zgate >>> assertPlus
 

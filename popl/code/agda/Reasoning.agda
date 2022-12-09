@@ -4,6 +4,7 @@ module Reasoning where
 
 open import PiSyntax
   renaming (_⟷₁_ to _⟷_; id⟷₁ to id⟷; !⟷₁ to !⟷)
+  hiding (cx)
 open import PiReasoning
 open import QPi
   renaming (assocl⋆ to assoclA⋆; assocr⋆ to assocrA⋆;
@@ -60,8 +61,9 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   swapr⋆≡ : ((d₂ *** d₁) >>> swapA⋆) ≡ (swapA⋆ >>> (d₁ *** d₂))
   id≡     : d ≡ d
   trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
-  -- congruence
+  -- congruence; functor
   cong≡  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ >>> d₂) ≡ (d₃ >>> d₄))
+  hom*** : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
   -- complementarity
   C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
       (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔)) ≡ id⇔
@@ -101,6 +103,19 @@ minusZ≡plus =
   ((plus >>> had) >>> had)
     ≡⟨ trans≡ (trans≡ assoc>>>r (cong≡ id≡ hadInv)) idr>>>l ⟩ 
   plus ≡∎
+
+
+
+
+oneMinusPlus : ((one *** minus) >>> cz) ≡ (one *** plus)
+oneMinusPlus =
+  ((one *** minus) >>> cz)
+    ≡⟨ id≡ ⟩ 
+  ((one *** minus) >>> (id⇔ *** had) >>> arrZ PiSyntax.cx >>> (id⇔ *** had))
+    ≡⟨ trans≡ assoc>>>l (cong≡ hom*** id≡) ⟩ 
+  (((one >>> id⇔) *** (minus >>> had)) >>> cx >>> (id⇔ *** had))
+    ≡⟨ {!!} ⟩ 
+  (one *** plus) ≡∎
 
 ---------------------------------------------------------------------------
 
