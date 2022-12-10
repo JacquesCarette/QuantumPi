@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --safe #-}
+{-# OPTIONS --without-K #-}
 
 module QPi where
 
@@ -83,7 +83,7 @@ embed zero = kzero
 embed assertZero = bzero
 
 ---------------------------------------------------------------------------
--- Examples
+-- Infrstructure for examples
 
 K : U → Set
 K t = ⟦ t ⟧ → Float
@@ -116,6 +116,22 @@ run c v = show (evalSE (embed c) v)
 g : {t₁ t₂ : U} → (t₁ ⇔ t₂) → List (⟦ t₁ ⟧ × List (⟦ t₂ ⟧ × Float))
 g {t₁} {t₂} c = map (λ v → (v , run c (ket v))) (enum t₁)
 
+--
+
+repeat : ℕ → (t ⇔ t) → (t ⇔ t)
+repeat 0 c = id⇔
+repeat 1 c = c
+repeat (suc n) c = c >>> repeat n c
+
+map3*** : (t₁ ⇔ t₂) → ((t₁ ×ᵤ t₁ ×ᵤ t₁) ⇔ (t₂ ×ᵤ t₂ ×ᵤ t₂))
+map3*** f = f *** f *** f
+
+map4*** : (t₁ ⇔ t₂) → ((t₁ ×ᵤ t₁ ×ᵤ t₁ ×ᵤ t₁) ⇔ (t₂ ×ᵤ t₂ ×ᵤ t₂  ×ᵤ t₂))
+map4*** f = f *** f *** f *** f
+
+---------------------------------------------------------------------------
+-- Examples
+
 -- Basic gates, states, and effects
 
 xgate had zgate : 𝟚 ⇔ 𝟚
@@ -125,7 +141,6 @@ zgate = had >>> xgate >>> had
   
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cx = arrZ PiSyntax.cx
-
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 one plus minus : I ⇔ 𝟚 
@@ -159,28 +174,42 @@ g cx
 
 --}
 
+-- Simon
+
+cxGroup : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+cxGroup = PiSyntax.id⟷₁
+
+simon : I ×ᵤ I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+simon = map4*** zero >>>
+        had *** had *** id⇔ *** id⇔ >>>
+        arrZ cxGroup >>>
+        had *** had *** id⇔ *** id⇔ 
+
 -- Grover
 
+-- postulate measurement
+postulate
+  measureZ : 𝟚 ⇔ I
+  measureH : 𝟚 ⇔ I
+
 amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
-amp = had *** had *** had >>>
-      xgate *** xgate *** xgate >>>
+amp = map3*** had >>>
+      map3*** xgate >>>
       id⇔ *** id⇔ *** had >>>
       arrZ PiSyntax.ccx >>>
       id⇔ *** id⇔ *** had >>>
-      xgate *** xgate *** xgate >>>
-      had *** had *** had
+      map3*** xgate >>>
+      map3*** had
 
 u : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 u = id⇔ *** id⇔ *** id⇔
 
-repeat : ℕ → (t ⇔ t) → (t ⇔ t)
-repeat 0 c = id⇔
-repeat 1 c = c
-repeat (suc n) c = c >>> repeat n c
-
-grover₃ : I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
-grover₃ = plus *** plus *** plus >>> repeat 3 (u >>> amp) 
+grover₃ : I ×ᵤ I ×ᵤ I ⇔ I ×ᵤ I ×ᵤ I
+grover₃ = map3*** plus >>>
+          repeat 3 (u >>> amp) >>>
+          map3*** measureZ
   
+-- Complex numbers
 -- ctrl S
 
 ctrlS : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
@@ -188,6 +217,7 @@ ctrlS = (id⇔ *** id⇔ *** had) >>>
         arrZ PiSyntax.ccx >>>
         (id⇔ *** id⇔ *** had) >>>
         arrZ PiSyntax.ccx 
+
 {--
 
 ((𝔽 , 𝔽 , 𝔽) , ((𝔽 , 𝔽 , 𝔽) , 1.0000000000000004) ∷ []) ∷
