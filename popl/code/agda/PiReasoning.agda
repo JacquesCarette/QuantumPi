@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --safe #-}
+{-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module PiReasoning where
 
@@ -191,3 +191,7 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   assocl₊-dist-dist⟷₂r : {t₁ t₂ t₃ t₄ : U} →
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
+
+xcx : ((id⟷ ⊗ swap₊) ◎ cx) ⟷₂ (cx ◎ (id⟷ ⊗ swap₊))
+xcx = {!!} 
+

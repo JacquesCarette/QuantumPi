@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Reasoning where
 
@@ -108,23 +108,45 @@ minusZ≡plus =
 oneMinusPlus : ((one *** minus) >>> cz) ≡ (one *** plus)
 oneMinusPlus =
   (one *** minus) >>> (id⇔ *** had) >>> cx >>> (id⇔ *** had)
-    ≡⟨ {!!} ⟩ 
+    ≡⟨ trans≡ assoc>>>l (cong≡ homL*** id≡) ⟩ 
   ((one >>> id⇔) *** (minus >>> had)) >>> cx >>> (id⇔ *** had)
-    ≡⟨ {!!} ⟩ 
+    ≡⟨ cong≡ (cong*** idr>>>l id≡) id≡ ⟩ 
+  (one *** (minus >>> had))>>> cx >>> (id⇔ *** had)
+    ≡⟨ cong≡ (cong*** idl>>>r idr>>>r) id≡ ⟩ 
+  ((id⇔ >>> one) *** ((minus >>> had) >>> id⇔)) >>> cx >>> (id⇔ *** had)
+    ≡⟨ trans≡ (cong≡ homR*** id≡) assoc>>>r ⟩ 
   (id⇔ *** (minus >>> had)) >>> (one *** id⇔) >>> cx >>> (id⇔ *** had)
-    ≡⟨ {!!} ⟩ 
+    ≡⟨ cong≡ id≡ (trans≡ assoc>>>l (cong≡ e3L id≡)) ⟩ 
   (id⇔ *** (minus >>> had)) >>> (one *** xgate) >>> (id⇔ *** had)
-    ≡⟨ {!!} ⟩ 
+    ≡⟨ cong≡ id≡ (trans≡ homL*** (cong*** idr>>>l id≡)) ⟩ 
+  (id⇔ *** (minus >>> had)) >>> (one *** (xgate >>> had))
+    ≡⟨ trans≡ homL*** (cong*** idl>>>l assoc>>>r ) ⟩ 
   one *** (minus >>> had >>> xgate >>> had)
-    ≡⟨ {!!} ⟩ 
+    ≡⟨ cong*** id≡ minusZ≡plus  ⟩ 
   (one *** plus) ≡∎
 
+
+xcxA : id⇔ *** xgate >>> cx ≡ cx >>> id⇔ *** xgate
+xcxA =
+  id⇔ *** xgate >>> cx
+    ≡⟨ {!!} ⟩ 
+  arrZ ((PiSyntax.id⟷₁ PiSyntax.⊗ PiSyntax.swap₊) PiSyntax.◎ PiSyntax.cx)
+    ≡⟨ classicalZ xcx ⟩
+  arrZ (PiSyntax.cx PiSyntax.◎ (PiSyntax.id⟷₁ PiSyntax.⊗ PiSyntax.swap₊))
+    ≡⟨ {!!} ⟩
+  cx >>> id⇔ *** xgate ≡∎
+
+
 zhcx : ((id⇔ *** zgate) >>> (id⇔ *** had) >>> cx) ≡
-       (cx >>> (id⇔ *** had) >>> cx)
+       (cz >>> (id⇔ *** had) >>> (id⇔ *** xgate))
 zhcx =
   ((id⇔ *** zgate) >>> (id⇔ *** had) >>> cx)
-    ≡⟨ {!!} ⟩ 
-  (cx >>> (id⇔ *** had) >>> cx) ≡∎
+    ≡⟨ trans≡ assoc>>>l (cong≡ (trans≡ homL*** (cong*** idl>>>l id≡)) id≡) ⟩
+  (id⇔ *** ((had >>> xgate >>> had) >>> had)) >>> cx
+    ≡⟨ {!!} ⟩
+  id⇔ *** (had >>> xgate) >>> cx
+    ≡⟨ {!!} ⟩
+  (cz >>> (id⇔ *** had) >>> (id⇔ *** xgate)) ≡∎
 
 
 measure : measureϕ ≡ (had >>> measureZ >>> had)
