@@ -57,10 +57,17 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
   -- congruence; functor
   cong≡  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ >>> d₂) ≡ (d₃ >>> d₄))
-  hom*** : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
+  cong***  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ *** d₂) ≡ (d₃ *** d₄))
+  homL*** : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
+  homR*** : ((d₁ >>> d₃) *** (d₂ >>> d₄)) ≡ ((d₁ *** d₂) >>> (d₃ *** d₄))
+  -- execution equations
+  e1L : zero >>> assertZero ≡ id⇔
+  e2L : (zero *** id⇔) >>> ctrlZ c ≡ zero *** id⇔
+  e3L : (one *** id⇔) >>> ctrlZ c ≡ one *** arrZ c
   -- complementarity
   C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
-      (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔)) ≡ id⇔
+        (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
+      ≡ id⇔
 
 -- Equational reasoning
 
@@ -100,11 +107,15 @@ minusZ≡plus =
 
 oneMinusPlus : ((one *** minus) >>> cz) ≡ (one *** plus)
 oneMinusPlus =
-  ((one *** minus) >>> cz)
-    ≡⟨ id≡ ⟩ 
-  ((one *** minus) >>> (id⇔ *** had) >>> arrZ PiSyntax.cx >>> (id⇔ *** had))
-    ≡⟨ trans≡ assoc>>>l (cong≡ hom*** id≡) ⟩ 
-  (((one >>> id⇔) *** (minus >>> had)) >>> cx >>> (id⇔ *** had))
+  (one *** minus) >>> (id⇔ *** had) >>> cx >>> (id⇔ *** had)
+    ≡⟨ {!!} ⟩ 
+  ((one >>> id⇔) *** (minus >>> had)) >>> cx >>> (id⇔ *** had)
+    ≡⟨ {!!} ⟩ 
+  (id⇔ *** (minus >>> had)) >>> (one *** id⇔) >>> cx >>> (id⇔ *** had)
+    ≡⟨ {!!} ⟩ 
+  (id⇔ *** (minus >>> had)) >>> (one *** xgate) >>> (id⇔ *** had)
+    ≡⟨ {!!} ⟩ 
+  one *** (minus >>> had >>> xgate >>> had)
     ≡⟨ {!!} ⟩ 
   (one *** plus) ≡∎
 

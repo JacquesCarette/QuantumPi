@@ -138,9 +138,12 @@ xgate had zgate : 𝟚 ⇔ 𝟚
 xgate = arrZ PiSyntax.swap₊ 
 had = arrϕ PiSyntax.swap₊
 zgate = had >>> xgate >>> had
-  
+
+ctrlZ : (t ⟷ t) → 𝟚 ×ᵤ t ⇔ 𝟚 ×ᵤ t
+ctrlZ c = arrZ (PiSyntax.ctrl c)
+
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-cx = arrZ PiSyntax.cx
+cx = ctrlZ PiSyntax.swap₊ 
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
