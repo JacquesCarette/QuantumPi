@@ -1,15 +1,12 @@
-{-# OPTIONS --without-K --safe #-}
+{-# OPTIONS --without-K #-}
 
 module Reasoning where
 
 open import PiSyntax
+  using (U; _◎_) 
   renaming (_⟷₁_ to _⟷_; id⟷₁ to id⟷; !⟷₁ to !⟷)
-  hiding (cx)
 open import PiReasoning
 open import QPi
-  renaming (assocl⋆ to assoclA⋆; assocr⋆ to assocrA⋆;
-            unite⋆ to uniteA⋆; uniti⋆ to unitiA⋆;
-            swap⋆ to swapA⋆)
 
 ---------------------------------------------------------------------------
 -- Some of the equations
@@ -22,13 +19,10 @@ private
     c c₁ c₂ c₃ : t₁ ⟷ t₂
     d d₁ d₂ d₃ d₄ : t₁ ⇔ t₂
 
-copyZ copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-copyZ = unitiA⋆ >>> (id⇔ *** zero) >>> (arrZ PiSyntax.cx)
-copyϕ = arrϕ swap₊ >>> copyZ >>> (arrϕ swap₊ *** arrϕ swap₊)
 
 data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set where
   classicalZ  : (c₁ ⟷₂ c₂) → (arrZ c₁ ≡ arrZ c₂)
-  classicalH  : (c₁ ⟷₂ c₂) → (arrϕ c₁ ≡ arrϕ c₂)
+  classicalϕ  : (c₁ ⟷₂ c₂) → (arrϕ c₁ ≡ arrϕ c₂)
   -- arrow axioms
   arrZidL   : arrZ (id⟷ {t}) ≡ id⇔ 
   arrZidR   : id⇔  ≡ arrZ (id⟷ {t})
@@ -41,10 +35,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   -- 
   assoc>>>l : (d₁ >>> (d₂ >>> d₃)) ≡ ((d₁ >>> d₂) >>> d₃)
   assoc>>>r : ((d₁ >>> d₂) >>> d₃) ≡ (d₁ >>> (d₂ >>> d₃))
-  assocl***l : ((d₁ *** (d₂ *** d₃)) >>> assoclA⋆) ≡ (assoclA⋆ >>> ((d₁ *** d₂) *** d₃))
-  assocl***r : (assoclA⋆ >>> ((d₁ *** d₂) *** d₃)) ≡ ((d₁ *** (d₂ *** d₃)) >>> assoclA⋆)
-  assocr***l : (assocrA⋆ >>> (d₁ *** (d₂ *** d₃))) ≡ (((d₁ *** d₂) *** d₃) >>> assocrA⋆)
-  assocr***r : (((d₁ *** d₂) *** d₃) >>> assocrA⋆) ≡ (assocrA⋆ >>> (d₁ *** (d₂ *** d₃)))
+  assocl***l : ((d₁ *** (d₂ *** d₃)) >>> assocl⋆) ≡ (assocl⋆ >>> ((d₁ *** d₂) *** d₃))
+  assocl***r : (assocl⋆ >>> ((d₁ *** d₂) *** d₃)) ≡ ((d₁ *** (d₂ *** d₃)) >>> assocl⋆)
+  assocr***l : (assocr⋆ >>> (d₁ *** (d₂ *** d₃))) ≡ (((d₁ *** d₂) *** d₃) >>> assocr⋆)
+  assocr***r : (((d₁ *** d₂) *** d₃) >>> assocr⋆) ≡ (assocr⋆ >>> (d₁ *** (d₂ *** d₃)))
   idl>>>l   : (id⇔ >>> d) ≡ d
   idl>>>r   : d ≡ (id⇔ >>> d)
   idr>>>l   : (d >>> id⇔) ≡ d
@@ -53,12 +47,12 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   linv>>>r  : id⇔ ≡ (d >>> inv d)
   rinv>>>l  : (inv d >>> d) ≡ id⇔
   rinv>>>r  : id⇔ ≡ (inv d >>> d)
-  unitel⋆≡r : (uniteA⋆ >>> d₂) ≡ ((d₂ *** d₁) >>> uniteA⋆)
-  uniter⋆≡r : ((d₂ *** d₁) >>> uniteA⋆) ≡ (uniteA⋆ >>> d₂)
-  unitil⋆≡r : (unitiA⋆ >>> (d₂ *** d₁)) ≡ (d₂ >>> unitiA⋆)
-  unitir⋆≡r : (d₂ >>> unitiA⋆) ≡ (unitiA⋆ >>> (d₂ *** d₁))
-  swapl⋆≡ : (swapA⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swapA⋆)
-  swapr⋆≡ : ((d₂ *** d₁) >>> swapA⋆) ≡ (swapA⋆ >>> (d₁ *** d₂))
+  unitel⋆≡r : (unite⋆ >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆)
+  uniter⋆≡r : ((d₂ *** d₁) >>> unite⋆) ≡ (unite⋆ >>> d₂)
+  unitil⋆≡r : (uniti⋆ >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆)
+  unitir⋆≡r : (d₂ >>> uniti⋆) ≡ (uniti⋆ >>> (d₂ *** d₁))
+  swapl⋆≡ : (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
+  swapr⋆≡ : ((d₂ *** d₁) >>> swap⋆) ≡ (swap⋆ >>> (d₁ *** d₂))
   id≡     : d ≡ d
   trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
   -- congruence; functor
@@ -80,13 +74,13 @@ _≡∎ : (d : t₁ ⇔ t₂) → d ≡ d
 _≡∎ t = id≡
 
 ---------------------------------------------------------------------------
---
+-- Example proofs
 
 xInv : (xgate >>> xgate) ≡ id⇔
 xInv = trans≡ arrZR (trans≡ (classicalZ linv◎l) arrZidL)  
 
 hadInv : (had >>> had) ≡ id⇔
-hadInv = trans≡ arrϕR (trans≡ (classicalH linv◎l) arrϕidL)  
+hadInv = trans≡ arrϕR (trans≡ (classicalϕ linv◎l) arrϕidL)  
 
 minusZ≡plus : (minus >>> zgate) ≡ plus
 minusZ≡plus =
@@ -104,9 +98,6 @@ minusZ≡plus =
     ≡⟨ trans≡ (trans≡ assoc>>>r (cong≡ id≡ hadInv)) idr>>>l ⟩ 
   plus ≡∎
 
-
-
-
 oneMinusPlus : ((one *** minus) >>> cz) ≡ (one *** plus)
 oneMinusPlus =
   ((one *** minus) >>> cz)
@@ -116,6 +107,20 @@ oneMinusPlus =
   (((one >>> id⇔) *** (minus >>> had)) >>> cx >>> (id⇔ *** had))
     ≡⟨ {!!} ⟩ 
   (one *** plus) ≡∎
+
+zhcx : ((id⇔ *** zgate) >>> (id⇔ *** had) >>> cx) ≡
+       (cx >>> (id⇔ *** had) >>> cx)
+zhcx =
+  ((id⇔ *** zgate) >>> (id⇔ *** had) >>> cx)
+    ≡⟨ {!!} ⟩ 
+  (cx >>> (id⇔ *** had) >>> cx) ≡∎
+
+
+measure : measureϕ ≡ (had >>> measureZ >>> had)
+measure =
+  measureϕ
+    ≡⟨ {!!} ⟩
+  (had >>> measureZ >>> had) ≡∎
 
 ---------------------------------------------------------------------------
 

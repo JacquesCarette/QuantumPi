@@ -24,9 +24,9 @@ open import Instances using (evalSE)
 ---------------------------------------------------------------------------
 -- The surface Quantum Pi language
 
-infix  30 _⇔_
-infixr 10 _>>>_
-infixr 30 _***_
+infix  10 _⇔_
+infixr 30 _>>>_
+infixr 40 _***_
 
 private
   variable
@@ -63,13 +63,13 @@ private
   variable
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
-pizA pihA : (t₁ ⟷ t₂) → StEffPi t₁ t₂
+pizA piϕA : (t₁ ⟷ t₂) → StEffPi t₁ t₂
 pizA c = arr (arr₁ c)
-pihA c = arr (arr₂ c)
+piϕA c = arr (arr₂ c)
 
 embed : (t₁ ⇔ t₂) → StEffPi t₁ t₂
 embed (arrZ c) = pizA c
-embed (arrϕ c) = pihA c
+embed (arrϕ c) = piϕA c
 embed unite⋆ = pizA PiSyntax.unite⋆r
 embed uniti⋆ = pizA PiSyntax.uniti⋆r
 embed swap⋆ = pizA PiSyntax.swap⋆
@@ -143,6 +143,9 @@ cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cx = arrZ PiSyntax.cx
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
+ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
+ccx = arrZ PiSyntax.ccx
+
 one plus minus : I ⇔ 𝟚 
 one = zero >>> xgate
 plus = zero >>> had
@@ -174,6 +177,12 @@ g cx
 
 --}
 
+-- Classical structures
+
+copyZ copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
+copyZ = uniti⋆ >>> (id⇔ *** zero) >>> cx
+copyϕ = had >>> copyZ >>> (had *** had)
+
 -- Simon
 
 cxGroup : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
@@ -185,18 +194,28 @@ simon = map4*** zero >>>
         arrZ cxGroup >>>
         had *** had *** id⇔ *** id⇔ 
 
--- Grover
-
 -- postulate measurement
+
 postulate
-  measureZ : 𝟚 ⇔ I
-  measureH : 𝟚 ⇔ I
+  discard : t ⇔ I
+
+fst : (t₁ ×ᵤ t₂) ⇔ t₁
+fst = (id⇔ *** discard) >>> unite⋆
+
+snd : (t₁ ×ᵤ t₂) ⇔ t₂
+snd = swap⋆ >>> fst
+
+measureZ measureϕ : 𝟚 ⇔ 𝟚
+measureZ = copyZ >>> fst
+measureϕ = copyϕ >>> fst
+
+-- Grover
 
 amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
 amp = map3*** had >>>
       map3*** xgate >>>
       id⇔ *** id⇔ *** had >>>
-      arrZ PiSyntax.ccx >>>
+      ccx >>>
       id⇔ *** id⇔ *** had >>>
       map3*** xgate >>>
       map3*** had
@@ -204,7 +223,7 @@ amp = map3*** had >>>
 u : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 u = id⇔ *** id⇔ *** id⇔
 
-grover₃ : I ×ᵤ I ×ᵤ I ⇔ I ×ᵤ I ×ᵤ I
+grover₃ : I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 grover₃ = map3*** plus >>>
           repeat 3 (u >>> amp) >>>
           map3*** measureZ
@@ -214,9 +233,9 @@ grover₃ = map3*** plus >>>
 
 ctrlS : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 ctrlS = (id⇔ *** id⇔ *** had) >>>
-        arrZ PiSyntax.ccx >>>
+        ccx >>>
         (id⇔ *** id⇔ *** had) >>>
-        arrZ PiSyntax.ccx 
+        ccx
 
 {--
 
