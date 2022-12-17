@@ -2,9 +2,7 @@
 
 module Reasoning where
 
-open import PiSyntax
-  using (U; _◎_) 
-  renaming (_⟷₁_ to _⟷_; id⟷₁ to id⟷; !⟷₁ to !⟷)
+open import PiSyntax using (U; _◎_; _⟷_; id⟷; !⟷) 
 open import PiReasoning
 open import QPi
 
@@ -130,9 +128,9 @@ xcxA : id⇔ *** xgate >>> cx ≡ cx >>> id⇔ *** xgate
 xcxA =
   id⇔ *** xgate >>> cx
     ≡⟨ {!!} ⟩ 
-  arrZ ((PiSyntax.id⟷₁ PiSyntax.⊗ PiSyntax.swap₊) PiSyntax.◎ PiSyntax.cx)
+  arrZ ((PiSyntax.id⟷ PiSyntax.⊗ PiSyntax.swap₊) PiSyntax.◎ PiSyntax.cx)
     ≡⟨ classicalZ xcx ⟩
-  arrZ (PiSyntax.cx PiSyntax.◎ (PiSyntax.id⟷₁ PiSyntax.⊗ PiSyntax.swap₊))
+  arrZ (PiSyntax.cx PiSyntax.◎ (PiSyntax.id⟷ PiSyntax.⊗ PiSyntax.swap₊))
     ≡⟨ {!!} ⟩
   cx >>> id⇔ *** xgate ≡∎
 

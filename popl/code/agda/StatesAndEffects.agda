@@ -75,8 +75,8 @@ a* nothing (just x) = just x
 a* nothing nothing = nothing
 
 -- "unpack" a product of ancillas (including none) into a proper product
-unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷₁ N⇒U n₁ ×ᵤ N⇒U n₂
-unpack (just x) (just y) = id⟷₁
+unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷ N⇒U n₁ ×ᵤ N⇒U n₂
+unpack (just x) (just y) = id⟷
 unpack (just x) nothing = uniti⋆r
 unpack nothing (just x) = uniti⋆l
 unpack nothing nothing = uniti⋆l
@@ -89,7 +89,7 @@ _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
   lift {n₁ = a* n₁ n₃} {a* n₄ n₂} (A.second (A.arr₁ (unpack n₁ n₃)) >>>
     A.assocl× >>> A.first m >>> A.assocr× >>> A.second A.swap× >>> A.assocl× >>> A.first p >>> A.assocr×
-    >>> A.second (A.arr₁ (!⟷₁ (unpack n₄ n₂)))
+    >>> A.second (A.arr₁ (!⟷ (unpack n₄ n₂)))
     )
 
 -- first

@@ -59,14 +59,14 @@ test-cxZ = refl
 test-SE-cxZ =
   show (evalSE StatesAndEffects.CX test-vec2)
 
-test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PiZ.evalZ (id⟷₁ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
+test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PiZ.evalZ (id⟷ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
   ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
   ((𝔽 , 𝕋) , 0.0) ∷
   ((𝕋 , 𝔽) , 0.707106781202421) ∷
   ((𝕋 , 𝕋) , -0.7071067811706743) ∷ []
 test-Had2-00 = refl
 
-test-Had2-0 : show (PiH.evalH (id⟷₁ ⊗ swap₊) test-vec2) ≡
+test-Had2-0 : show (PiH.evalH (id⟷ ⊗ swap₊) test-vec2) ≡
       ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
       ((𝔽 , 𝕋) , 0.0) ∷
       ((𝕋 , 𝔽) , 0.707106781202421) ∷

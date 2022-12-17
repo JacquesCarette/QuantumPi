@@ -4,7 +4,7 @@ module Amalgamation where
 
 -- Sequencing of 2 copies of Pi
 
-open import PiSyntax using (U; _×ᵤ_; _⟷₁_; !⟷₁; _⊗_; id⟷₁)
+open import PiSyntax using (U; _×ᵤ_; _⟷_; !⟷; _⊗_; id⟷)
 
 -------------------------------------------------------------------------------------
 private
@@ -14,8 +14,8 @@ private
 
 data TList : U → U → Set where
   nil : TList a a
-  cons₁ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
-  cons₂ : t₁ ⟷₁ t₂ → TList t₂ t₃ → TList t₁ t₃
+  cons₁ : t₁ ⟷ t₂ → TList t₂ t₃ → TList t₁ t₃
+  cons₂ : t₁ ⟷ t₂ → TList t₂ t₃ → TList t₁ t₃
 
 record Categorical (rep : U → U → Set) : Set where
   field
@@ -25,7 +25,7 @@ record Categorical (rep : U → U → Set) : Set where
 open Categorical
 
 -- We have 2 different evaluators for the same interpretation, we can combine them
-evalTL : {rep : U → U → Set} → Categorical rep → (∀ {t₁ t₂} → t₁ ⟷₁ t₂ → rep t₁ t₂) → (∀ {t₁ t₂} → t₁ ⟷₁ t₂ → rep t₁ t₂) → TList t₃ t₄ → rep t₃ t₄
+evalTL : {rep : U → U → Set} → Categorical rep → (∀ {t₁ t₂} → t₁ ⟷ t₂ → rep t₁ t₂) → (∀ {t₁ t₂} → t₁ ⟷ t₂ → rep t₁ t₂) → TList t₃ t₄ → rep t₃ t₄
 evalTL c i₁ i₂ nil         = idr c
 evalTL c i₁ i₂ (cons₁ x l) = comp c (i₁ x) (evalTL c i₁ i₂ l)
 evalTL c i₁ i₂ (cons₂ x l) = comp c (i₂ x) (evalTL c i₁ i₂ l)

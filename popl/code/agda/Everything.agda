@@ -1,4 +1,5 @@
-{-# OPTIONS --without-K --exact-split --safe #-}
+{-# OPTIONS --without-K --exact-split #-}
+-- Can't use --safe as QPi isn't.
 
 module Everything where
 

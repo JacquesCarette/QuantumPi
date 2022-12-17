@@ -14,8 +14,7 @@ open import Function using (_∘_)
 open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum)  
-  renaming (_⟷₁_ to _⟷_)
+open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum)
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (StEffPi; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
@@ -75,7 +74,7 @@ embed uniti⋆ = pizA PiSyntax.uniti⋆r
 embed swap⋆ = pizA PiSyntax.swap⋆
 embed assocl⋆ = pizA PiSyntax.assocl⋆
 embed assocr⋆ = pizA PiSyntax.assocr⋆
-embed id⇔ = pizA PiSyntax.id⟷₁
+embed id⇔ = pizA PiSyntax.id⟷
 embed (d₁ >>> d₂) = embed d₁ >>>> embed d₂ 
 embed (d₁ *** d₂) = embed d₁ **** embed d₂ 
 embed (inv d) = invSE (embed d)
@@ -189,7 +188,7 @@ copyϕ = had >>> copyZ >>> (had *** had)
 -- Simon
 
 cxGroup : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-cxGroup = PiSyntax.id⟷₁
+cxGroup = PiSyntax.id⟷
 
 simon : I ×ᵤ I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon = map4*** zero >>>

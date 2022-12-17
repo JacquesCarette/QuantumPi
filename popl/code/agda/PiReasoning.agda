@@ -3,7 +3,6 @@
 module PiReasoning where
 
 open import PiSyntax
-  renaming (_⟷₁_ to _⟷_; id⟷₁ to id⟷; !⟷₁ to !⟷)
 
 infix  30 _⟷₂_
 
