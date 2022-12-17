@@ -26,7 +26,7 @@ infixr 30 _⊗_
 
 private
   variable
-    t t₁ t₂ t₃ t₄ t₅ t₆ : U
+    t t₁ t₂ t₃ t₄ : U
 
 -- Intended meaning
 ⟦_⟧ : (t : U) → Set
@@ -39,8 +39,8 @@ private
 enum : (t : U) → List ⟦ t ⟧
 enum O = []
 enum I = tt ∷ []
-enum (t +ᵤ t₁) = map inj₁ (enum t) ++ map inj₂ (enum t₁)
-enum (t ×ᵤ t₁) = cartesianProduct (enum t) (enum t₁)
+enum (t₁ +ᵤ t₂) = map inj₁ (enum t₁) ++ map inj₂ (enum t₂)
+enum (t₁ ×ᵤ t₂) = cartesianProduct (enum t₁) (enum t₂)
 
 -------------------------------------------------------------------------------------
 -- 1-combinators
