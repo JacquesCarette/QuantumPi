@@ -10,7 +10,8 @@ open import Data.Product using (_×_; _,_)
 open import Data.Unit using (tt)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax
+open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; _⟷_;
+ id⟷; uniti⋆l; uniti⋆r; assocr⋆; !⟷; 𝟚)
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
@@ -18,7 +19,7 @@ open A using (_>>>_)
 -------------------------------------------------------------------------------------
 private
   variable
-    t t₁ t₂ t₃ t₄ t₅ t₆ : U
+    t t₁ t₂ t₃ t₄ : U
 
 -------------------------------------------------------------------------------------
 -- Ancillae
@@ -87,15 +88,29 @@ unpack nothing nothing = uniti⋆l
 infixr 10 _>>>>_
 _>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
-  lift {n₁ = a* n₁ n₃} {a* n₄ n₂} (A.second (A.arr₁ (unpack n₁ n₃)) >>>
-    A.assocl× >>> A.first m >>> A.assocr× >>> A.second A.swap× >>> A.assocl× >>> A.first p >>> A.assocr×
-    >>> A.second (A.arr₁ (!⟷ (unpack n₄ n₂)))
-    )
+  lift {n₁ = a* n₁ n₃} {a* n₄ n₂}
+   (A.second (A.arr₁ (unpack n₁ n₃)) >>>
+    A.assocl× >>>
+    A.first m >>>
+    A.assocr× >>>
+    A.second A.swap× >>>
+    A.assocl× >>>
+    A.first p >>>
+    A.assocr× >>>
+    A.second (A.arr₁ (!⟷ (unpack n₄ n₂)))
+   )
 
 -- first
 -- Note how we don't use >>> twice, as that would do 2 full traversals
 firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-firstSE (lift m) = lift (cons₁ assocr⋆ (A.second A.swap× >>> A.assocl× >>> A.first m >>> A.assocr× >>> A.second A.swap× >>> A.assocl×))
+firstSE (lift m) = lift (cons₁ assocr⋆
+   (A.second A.swap× >>>
+    A.assocl× >>>
+    A.first m >>>
+    A.assocr× >>>
+    A.second A.swap× >>>
+    A.assocl×)
+   )
 
 -- second and ***
 secondSE : StEffPi t₁ t₂ → StEffPi (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
@@ -116,10 +131,10 @@ invSE (lift m) = lift (A.inv m)
 
 -- With annotations
 zero : StEffPi I (I +ᵤ I)
-zero = lift (A.arr₁ swap⋆)
+zero = lift A.swap×
 
 assertZero : StEffPi (I +ᵤ I) I
-assertZero = lift (A.arr₁ swap⋆)
+assertZero = lift A.swap×
 
 -- Sanity check
 inv0 : invSE zero ≡ assertZero
@@ -146,7 +161,7 @@ CZ : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CZ = arr A.CZ
 
 copyZ : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
-copyZ = uniti* >>>> idst *** zero >>>> arr A.CX
+copyZ = uniti* >>>> idst *** zero >>>> CX
 
 copyH : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
 copyH = H >>>> copyZ >>>> H *** H
