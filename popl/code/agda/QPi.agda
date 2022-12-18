@@ -14,42 +14,37 @@ open import Function using (_∘_)
 open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum)
+open import PiSyntax as Π using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum; _≟_)
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
 open import Instances using (evalSE)
+open import Unitary renaming (𝒰 to K)
 
 open import QPi.Syntax
-
-private
-  variable
-    t t₁ t₂ : U
 
 ---------------------------------------------------------------------------
 -- Semantics
 
 private
   variable
+    t t₁ t₂ : U
     c c₁ c₂ c₃ c₄ c₅ c₆ : t₁ ⟷ t₂
-
-private
-  variable
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
-pizA piϕA : (t₁ ⟷ t₂) → t₁ ↭ t₂
-pizA c = arr (arr₁ c)
-piϕA c = arr (arr₂ c)
+private
+  pizA : (t₁ ⟷ t₂) → t₁ ↭ t₂
+  pizA c = arr (arr₁ c)
 
 embed : (t₁ ⇔ t₂) → t₁ ↭ t₂
 embed (arrZ c) = pizA c
-embed (arrϕ c) = piϕA c
-embed unite⋆ = pizA PiSyntax.unite⋆r
-embed uniti⋆ = pizA PiSyntax.uniti⋆r
-embed swap⋆ = pizA PiSyntax.swap⋆
-embed assocl⋆ = pizA PiSyntax.assocl⋆
-embed assocr⋆ = pizA PiSyntax.assocr⋆
-embed id⇔ = pizA PiSyntax.id⟷
+embed (arrϕ c) = arr (arr₂ c)
+embed unite⋆ = pizA Π.unite⋆r
+embed uniti⋆ = pizA Π.uniti⋆r
+embed swap⋆ = pizA Π.swap⋆
+embed assocl⋆ = pizA Π.assocl⋆
+embed assocr⋆ = pizA Π.assocr⋆
+embed id⇔ = pizA Π.id⟷
 embed (d₁ >>> d₂) = embed d₁ >>>> embed d₂ 
 embed (d₁ *** d₂) = embed d₁ **** embed d₂ 
 embed (inv d) = invSE (embed d)
@@ -59,9 +54,6 @@ embed assertZero = bzero
 ---------------------------------------------------------------------------
 -- Infrastructure for examples
 
-K : U → Set
-K t = ⟦ t ⟧ → Float
-
 tooSmall : Float → Bool
 tooSmall a = ((0.0 ≤ᵇ a) ∧ (a <ᵇ 0.01)) ∨ ((a ≤ᵇ 0.0) ∧ (-0.01 <ᵇ a))
 
@@ -70,14 +62,6 @@ show {t} v =
   foldr (λ i r → let a = v i in if tooSmall a then r else (i , a) ∷ r)
         [] 
         (enum t)
-
-_≟_ : {t : U} → ⟦ t ⟧ → ⟦ t ⟧ → Bool
-_≟_ {I} tt tt = true
-_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₁ w) = v ≟ w
-_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₂ w) = false
-_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₁ w) = false
-_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₂ w) = v ≟ w
-_≟_ {t₁ ×ᵤ t₂} (v₁ , w₁) (v₂ , w₂) = v₁ ≟ v₂ ∧ w₁ ≟ w₂
 
 ket : ⟦ t ⟧ → K t
 ket v w = if v ≟ w then 1.0 else 0.0
@@ -109,19 +93,19 @@ map4*** f = f *** f *** f *** f
 -- Basic gates, states, and effects
 
 xgate had zgate : 𝟚 ⇔ 𝟚
-xgate = arrZ PiSyntax.swap₊ 
-had = arrϕ PiSyntax.swap₊
+xgate = arrZ Π.swap₊ 
+had = arrϕ Π.swap₊
 zgate = had >>> xgate >>> had
 
 ctrlZ : (t ⟷ t) → 𝟚 ×ᵤ t ⇔ 𝟚 ×ᵤ t
-ctrlZ c = arrZ (PiSyntax.ctrl c)
+ctrlZ c = arrZ (Π.ctrl c)
 
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-cx = ctrlZ PiSyntax.swap₊ 
+cx = ctrlZ Π.swap₊ 
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ccx = arrZ PiSyntax.ccx
+ccx = arrZ Π.ccx
 
 one plus minus : I ⇔ 𝟚 
 one = zero >>> xgate
@@ -163,7 +147,7 @@ copyϕ = had >>> copyZ >>> (had *** had)
 -- Simon
 
 cxGroup : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-cxGroup = PiSyntax.id⟷
+cxGroup = Π.id⟷
 
 simon : I ×ᵤ I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon = map4*** zero >>>

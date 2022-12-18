@@ -2,6 +2,7 @@
 
 module PiSyntax where
 
+open import Data.Bool using (Bool; true; false; _∧_)
 open import Data.Empty using (⊥)
 open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
 open import Data.Product as Prod using (_,_; _×_; swap)
@@ -34,6 +35,15 @@ private
 ⟦ I ⟧ = ⊤
 ⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
 ⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
+
+-- inhabitants of U have decidable equality
+_≟_ : {t : U} → ⟦ t ⟧ → ⟦ t ⟧ → Bool
+_≟_ {I} tt tt = true
+_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₁ w) = v ≟ w
+_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₂ w) = false
+_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₁ w) = false
+_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₂ w) = v ≟ w
+_≟_ {t₁ ×ᵤ t₂} (v₁ , w₁) (v₂ , w₂) = v₁ ≟ v₂ ∧ w₁ ≟ w₂
 
 -- we can enumerate our types
 enum : (t : U) → List ⟦ t ⟧
