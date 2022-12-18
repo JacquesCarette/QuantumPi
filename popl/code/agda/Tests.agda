@@ -30,16 +30,16 @@ show {t} v = map (λ i → (i , v i)) (enum t)
 -- Note: these tests are EVIL because they use the most brutal equality possible on the worst thing imaginable, i.e. Floats.
 
 -- Test things in Amalgamated language
-test-notH : show (evalTL₁ (A.arr₂ swap₊) PiH.trueH) ≡ (𝔽 , 0.9238795325155821) ∷ (𝕋 , -0.38268343235472) ∷ []
+test-notH : show (evalTL₁ A.H PiH.trueH) ≡ (𝔽 , 0.9238795325155821) ∷ (𝕋 , -0.38268343235472) ∷ []
 test-notH = refl
 
 test-id : show (evalTL₁ (A.id) PiH.trueH) ≡ (𝔽 , 0.38268343235472) ∷ (𝕋 , 0.9238795325155821) ∷ []
 test-id = refl
 
-test-Had-true : show (evalTL₁ (A.arr₂ swap₊) PiZ.trueZ) ≡ (𝔽 , 0.707106781202421) ∷ (𝕋 , -0.7071067811706743) ∷ []
+test-Had-true : show (evalTL₁ A.H PiZ.trueZ) ≡ (𝔽 , 0.707106781202421) ∷ (𝕋 , -0.7071067811706743) ∷ []
 test-Had-true = refl
 
-test-Had-false : show (evalTL₁ (A.arr₂ swap₊) PiZ.falseZ) ≡ (𝔽 , 0.7071067811706743) ∷ (𝕋 , 0.707106781202421) ∷ []
+test-Had-false : show (evalTL₁ A.H PiZ.falseZ) ≡ (𝔽 , 0.7071067811706743) ∷ (𝕋 , 0.707106781202421) ∷ []
 test-Had-false = refl
 
 test-vec2 : ⟦ 𝟚 ×ᵤ 𝟚 ⟧ → Float
@@ -48,7 +48,7 @@ test-vec2 (𝕋 , 𝔽) = 0.0
 test-vec2 (𝔽 , 𝕋) = 0.0
 test-vec2 (𝔽 , 𝔽) = 0.0
 
-test-cxZ : show (evalTL₁ (A.arr₁ (ctrl swap₊)) test-vec2) ≡
+test-cxZ : show (evalTL₁ A.CX test-vec2) ≡
    ((𝔽 , 𝔽) , 0.0) ∷
    ((𝔽 , 𝕋) , 0.0) ∷
    ((𝕋 , 𝔽) , 1.0) ∷
@@ -74,7 +74,7 @@ test-Had2-0 : show (PiH.evalH (id⟷ ⊗ swap₊) test-vec2) ≡
       []
 test-Had2-0 = refl
 
-test-Had2-1 : show (evalTL₁ (A.id A.*** A.arr₂ swap₊) test-vec2) ≡
+test-Had2-1 : show (evalTL₁ (A.id A.*** A.H) test-vec2) ≡
       ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
       ((𝔽 , 𝕋) , 0.0) ∷
       ((𝕋 , 𝔽) , 0.707106781202421) ∷
@@ -82,12 +82,12 @@ test-Had2-1 : show (evalTL₁ (A.id A.*** A.arr₂ swap₊) test-vec2) ≡
       []
 test-Had2-1 = refl
 
-test-Had2-2 : show (evalTL₁ (A.arr₁ swap₊ A.*** A.id) test-vec2) ≡
+test-Had2-2 : show (evalTL₁ (A.X A.*** A.id) test-vec2) ≡
   ((𝔽 , 𝔽) , 0.0) ∷   ((𝔽 , 𝕋) , 1.0) ∷
   ((𝕋 , 𝔽) , 0.0) ∷ ((𝕋 , 𝕋) , 0.0) ∷ []
 test-Had2-2 = refl
 
-test-Had2-3 : show (evalTL₁ (A.arr₂ swap₊ A.*** A.id) test-vec2) ≡
+test-Had2-3 : show (evalTL₁ (A.H A.*** A.id) test-vec2) ≡
       ((𝔽 , 𝔽) , 0.0) ∷
       ((𝔽 , 𝕋) , 0.7071067812024212) ∷
       ((𝕋 , 𝔽) , 0.0) ∷
@@ -143,7 +143,6 @@ test-s₁ = refl
 <0| : show (evalSE assertZero λ {(inj₁ _) → 0.4; (inj₂ _) → 0.916}) ≡ (tt , 0.4) ∷ []
 <0| = refl
 
--- This first one is good
 <0|0>≡1 : show (evalSE <0|0> (λ tt → 1.0)) ≡ (tt , 1.0) ∷ []
 <0|0>≡1 = refl
 
