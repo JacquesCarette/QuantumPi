@@ -33,6 +33,7 @@ open import PiTagless
 -- Syntactic arrow constructions parameterized by evaluators in the tagless style
 open import Amalgamation
 open import ArrowsOverAmalg
+open import Ancillae -- Defined PiSyntax sub-language for ancillaes
 open import StatesAndEffects
 
 -- Example written in the syntax (before any explicit rotation or unitaries)
