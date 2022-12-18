@@ -57,7 +57,7 @@ private
   state n f (x , i) = delta n i F.* f ( x , tt )
 
 -- re-expand out to test each part
-evalSE : ∀ {t₁ t₂ : U} → StEffPi t₁ t₂ → Fwd t₁ t₂
+evalSE : ∀ {t₁ t₂ : U} → t₁ ↭ t₂ → Fwd t₁ t₂
 evalSE (lift {n₁ = nothing} {nothing}   z) = evalTL₁ A.uniti* ○           evalTL₁ z ○            evalTL₁ A.unite*
 evalSE (lift {n₁ = nothing} y@{just _}  z) = evalTL₁ A.uniti* ○           evalTL₁ z ○ effect y ○ evalTL₁ A.unite*
 evalSE (lift x@{n₁ = just _} {nothing}  z) = evalTL₁ A.uniti* ○ state x ○ evalTL₁ z ○  evalTL₁ A.unite*

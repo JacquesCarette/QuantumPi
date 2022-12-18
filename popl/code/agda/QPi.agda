@@ -16,7 +16,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum)
 open import ArrowsOverAmalg using (arr₁; arr₂)
-open import StatesAndEffects using (StEffPi; arr; _>>>>_; invSE)
+open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
 open import Instances using (evalSE)
 
@@ -62,11 +62,11 @@ private
   variable
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
-pizA piϕA : (t₁ ⟷ t₂) → StEffPi t₁ t₂
+pizA piϕA : (t₁ ⟷ t₂) → t₁ ↭ t₂
 pizA c = arr (arr₁ c)
 piϕA c = arr (arr₂ c)
 
-embed : (t₁ ⇔ t₂) → StEffPi t₁ t₂
+embed : (t₁ ⇔ t₂) → t₁ ↭ t₂
 embed (arrZ c) = pizA c
 embed (arrϕ c) = piϕA c
 embed unite⋆ = pizA PiSyntax.unite⋆r

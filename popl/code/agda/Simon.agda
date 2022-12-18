@@ -69,7 +69,7 @@ simon₂ =
 
 --}
 
-simon : StEffPi I (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
+simon : I ↭ (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 simon =
   arr (A.uniti*l              A.>>>
        A.id A.*** A.uniti*l A.>>>

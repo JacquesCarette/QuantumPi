@@ -122,17 +122,10 @@ test-s₁ : show (evalTL₁ (A.arr₂ simon₁) test-vec4) ≡
   ((𝕋 , 𝕋 , 𝕋 , 𝕋) , -3.3059056140334115e-17) ∷ []
 test-s₁ = refl
 
-{-
--- takes ~22s on my MacBook Air - moved to TestsSlow
--- use columns to highly values from virtual 0s
-test-is : show (evalTL₁ inner-simon test-vec4) ≡ ...
-
--}
-
 ---------------------------------------------------------------------
 -- Tests of effectful language
 
-<0|0> <0|+> <0|-> <0|1> : StEffPi I I
+<0|0> <0|+> <0|-> <0|1> : I ↭ I
 <0|0> = zero >>>> assertZero
 <0|+> = plus >>>> assertZero
 <0|-> = minus >>>> assertZero

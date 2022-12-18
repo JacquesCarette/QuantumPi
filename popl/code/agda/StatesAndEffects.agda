@@ -18,38 +18,40 @@ private
   variable
     t t₁ t₂ t₃ t₄ : U
 
+infixr 30 _↭_
+
 -- Lifting an abstract pair
-data StEffPi : U → U → Set where
-  lift : {n₁ n₂ : N} → TList (t₁ ×ᵤ N⇒U n₁) (t₂ ×ᵤ N⇒U n₂) → StEffPi t₁ t₂
+data _↭_ : U → U → Set where
+  lift : {n₁ n₂ : N} → TList (t₁ ×ᵤ N⇒U n₁) (t₂ ×ᵤ N⇒U n₂) → t₁ ↭ t₂
 
 -- And now define the rest of the language
 -- lifting:
-arr : TList t₁ t₂ → StEffPi t₁ t₂
+arr : TList t₁ t₂ → t₁ ↭ t₂
 arr c = lift {n₁ = nothing} {nothing} (A.unite* >>> c >>> A.uniti*)
 
 -- Then use that to lift id, swap, assoc and unit
-id : StEffPi t t
+id : t ↭ t
 id = arr A.id
-swap : StEffPi (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
+swap : (t₁ ×ᵤ t₂) ↭ (t₂ ×ᵤ t₁)
 swap = arr A.swap×
-assocl× : StEffPi  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
+assocl× :  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ↭ ((t₁ ×ᵤ t₂) ×ᵤ t₃)
 assocl× = arr A.assocl×
-assocr× : StEffPi  ((t₁ ×ᵤ t₂) ×ᵤ t₃) (t₁ ×ᵤ (t₂ ×ᵤ t₃))
+assocr× :  ((t₁ ×ᵤ t₂) ×ᵤ t₃) ↭ (t₁ ×ᵤ (t₂ ×ᵤ t₃))
 assocr× = arr A.assocr×
-unite*l : StEffPi (I ×ᵤ t) t
+unite*l : (I ×ᵤ t) ↭ t
 unite*l = arr A.unite*l
-uniti*l : StEffPi t (I ×ᵤ t)
+uniti*l : t ↭ (I ×ᵤ t)
 uniti*l = arr A.uniti*l
-unite*  : StEffPi (t ×ᵤ I) t
+unite*  : (t ×ᵤ I) ↭ t
 unite*  = arr A.unite*
-uniti*  : StEffPi t (t ×ᵤ I)
+uniti*  : t ↭ (t ×ᵤ I)
 uniti*  = arr A.uniti*
 
 -- >>>> composition.
 -- Note how we have to unpack & pack up the ancillas
 -- This is needed to move between the types (and elided in the paper version)
 infixr 10 _>>>>_
-_>>>>_ : StEffPi t₁ t₂ → StEffPi t₂ t₃ → StEffPi t₁ t₃
+_>>>>_ : t₁ ↭ t₂ → t₂ ↭ t₃ → t₁ ↭ t₃
 lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
   lift {n₁ = a* n₁ n₃} {a* n₄ n₂}
    (A.second (A.arr₁ (unpack n₁ n₃)) >>>
@@ -65,7 +67,7 @@ lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
 
 -- first
 -- Note how we don't use >>> twice, as that would do 2 full traversals
-firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
+firstSE : t₁ ↭ t₂ → (t₁ ×ᵤ t₃) ↭ (t₂ ×ᵤ t₃)
 firstSE (lift m) = lift
    (A.assocr× >>>
     A.second A.swap× >>>
@@ -77,27 +79,27 @@ firstSE (lift m) = lift
    )
 
 -- second and ***
-secondSE : StEffPi t₁ t₂ → StEffPi (t₃ ×ᵤ t₁) (t₃ ×ᵤ t₂)
+secondSE : t₁ ↭ t₂ → (t₃ ×ᵤ t₁) ↭ (t₃ ×ᵤ t₂)
 -- it is inefficient to do 3 passes, but quite difficult to do otherwise
 -- as the swaps are needed.
 secondSE c = swap >>>> firstSE c >>>> swap
 
 -- This is likewise inefficient
-_***_ : StEffPi t₁ t₂ → StEffPi t₃ t₄ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₄)
+_***_ : t₁ ↭ t₂ → t₃ ↭ t₄ → (t₁ ×ᵤ t₃) ↭ (t₂ ×ᵤ t₄)
 xs *** ys = firstSE xs >>>> secondSE ys
 
 -- inverse
-invSE : StEffPi t₁ t₂ → StEffPi t₂ t₁
+invSE : t₁ ↭ t₂ → t₂ ↭ t₁
 invSE (lift m) = lift (A.inv m)
 
 -------------------------------------------------------------------------------------
 -- Some examples where we use all of the above
 
 -- With annotations
-zero : StEffPi I (I +ᵤ I)
+zero : I ↭ (I +ᵤ I)
 zero = lift A.swap×
 
-assertZero : StEffPi (I +ᵤ I) I
+assertZero : (I +ᵤ I) ↭ I
 assertZero = lift A.swap×
 
 -- Sanity check
@@ -106,28 +108,28 @@ inv0 = refl
 
 -- Additional combinators for complementarity
 
-X : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+X : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
 X = arr A.X
 
-CX : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CX : (𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚)
 CX = arr A.CX
 
-CCX : StEffPi (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
+CCX : (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 CCX = arr A.CCX
 
-H : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+H : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
 H = arr A.H
 
-Z : StEffPi (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
+Z : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
 Z = arr A.Z
 
-CZ : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
+CZ : (𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚)
 CZ = arr A.CZ
 
-copyZ : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
+copyZ : 𝟚 ↭ (𝟚 ×ᵤ 𝟚)
 copyZ = uniti* >>>> id *** zero >>>> CX
 
-copyH : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
+copyH : 𝟚 ↭ (𝟚 ×ᵤ 𝟚)
 copyH = H >>>> copyZ >>>> H *** H
 
 --------------------------------------------
@@ -138,7 +140,7 @@ copyH = H >>>> copyZ >>>> H *** H
 
 infix 4 _≈_
 
-_≈_ : StEffPi t₁ t₂ → StEffPi t₁ t₂ → Set
+_≈_ : t₁ ↭ t₂ → t₁ ↭ t₂ → Set
 _≈_ x y = x ≡ y
 
 -- Just typecheck them
@@ -159,18 +161,18 @@ eqZH = (copyZ *** id) >>>> (id *** (invSE copyH)) >>>> (id *** copyH) >>>> ((inv
 
 -- Special states and effects
 
-one : StEffPi I 𝟚
+one : I ↭ 𝟚
 one = zero >>>> X
-plus : StEffPi I 𝟚
+plus : I ↭ 𝟚
 plus = zero >>>> H
-minus : StEffPi I 𝟚
+minus : I ↭ 𝟚
 minus = plus >>>> Z
 
-assertOne : StEffPi 𝟚 I
+assertOne : 𝟚 ↭ I
 assertOne = X >>>> assertZero
-assertPlus : StEffPi 𝟚 I
+assertPlus : 𝟚 ↭ I
 assertPlus = H >>>> assertZero
-assertMinus : StEffPi 𝟚 I
+assertMinus : 𝟚 ↭ I
 assertMinus = Z >>>> assertZero
 
 -------------------------------------------------------------------------------------
