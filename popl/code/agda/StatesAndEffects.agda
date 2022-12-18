@@ -4,14 +4,11 @@
 
 module StatesAndEffects where
 
-open import Data.List using (List; []; _∷_)
-open import Data.Maybe using (Maybe; just; nothing)
-open import Data.Product using (_×_; _,_)
-open import Data.Unit using (tt)
+open import Data.Maybe using (nothing)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; _⟷_;
- id⟷; uniti⋆l; uniti⋆r; assocr⋆; !⟷; 𝟚)
+open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷_; !⟷; 𝟚)
+open import Ancillae
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
@@ -20,26 +17,6 @@ open A using (_>>>_)
 private
   variable
     t t₁ t₂ t₃ t₄ : U
-
--------------------------------------------------------------------------------------
--- Ancillae
-
--- This is the type of non-trivial Ancillas
-data Anc : Set where
-  Two : Anc
-  _×ₙ_ : Anc → Anc → Anc
-
-N : Set
-N = Maybe Anc
-
--- Inject N into U
-N⇒U : N → U
-N⇒U nothing = I
-N⇒U (just Two) = I +ᵤ I
-N⇒U (just (x ×ₙ y)) = N⇒U (just x) ×ᵤ N⇒U (just y)
-
-enumN : (n : N) → List ⟦ N⇒U n ⟧
-enumN n = enum (N⇒U n)
 
 -- Lifting an abstract pair
 data StEffPi : U → U → Set where
@@ -51,8 +28,8 @@ arr : TList t₁ t₂ → StEffPi t₁ t₂
 arr c = lift {n₁ = nothing} {nothing} (A.unite* >>> c >>> A.uniti*)
 
 -- Then use that to lift id, swap, assoc and unit
-idst : StEffPi t t
-idst = arr A.id
+id : StEffPi t t
+id = arr A.id
 swap : StEffPi (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
 swap = arr A.swap×
 assocl× : StEffPi  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)
@@ -67,20 +44,6 @@ unite*  : StEffPi (t ×ᵤ I) t
 unite*  = arr A.unite*
 uniti*  : StEffPi t (t ×ᵤ I)
 uniti*  = arr A.uniti*
-
--- Combining ancillas, i.e. product of ancillas
-a* : N → N → N
-a* (just x) (just y) = just (x ×ₙ y)
-a* (just x) nothing = just x
-a* nothing (just x) = just x
-a* nothing nothing = nothing
-
--- "unpack" a product of ancillas (including none) into a proper product
-unpack : (n₁ n₂ : N) → N⇒U (a* n₁ n₂) ⟷ N⇒U n₁ ×ᵤ N⇒U n₂
-unpack (just x) (just y) = id⟷
-unpack (just x) nothing = uniti⋆r
-unpack nothing (just x) = uniti⋆l
-unpack nothing nothing = uniti⋆l
 
 -- >>>> composition.
 -- Note how we have to unpack & pack up the ancillas
@@ -103,13 +66,14 @@ lift {n₁ = n₁} {n₂} m >>>> lift {n₁ = n₃} {n₄} p =
 -- first
 -- Note how we don't use >>> twice, as that would do 2 full traversals
 firstSE : StEffPi t₁ t₂ → StEffPi (t₁ ×ᵤ t₃) (t₂ ×ᵤ t₃)
-firstSE (lift m) = lift (cons₁ assocr⋆
-   (A.second A.swap× >>>
+firstSE (lift m) = lift
+   (A.assocr× >>>
+    A.second A.swap× >>>
     A.assocl× >>>
     A.first m >>>
     A.assocr× >>>
     A.second A.swap× >>>
-    A.assocl×)
+    A.assocl×
    )
 
 -- second and ***
@@ -161,7 +125,7 @@ CZ : StEffPi (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
 CZ = arr A.CZ
 
 copyZ : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
-copyZ = uniti* >>>> idst *** zero >>>> CX
+copyZ = uniti* >>>> id *** zero >>>> CX
 
 copyH : StEffPi 𝟚 (𝟚 ×ᵤ 𝟚)
 copyH = H >>>> copyZ >>>> H *** H
@@ -179,19 +143,19 @@ _≈_ x y = x ≡ y
 
 -- Just typecheck them
 eqZ₁ eqZ₂ eqZ₃ eqZ₄ : Set
-eqZ₁ = copyZ >>>> (idst *** copyZ) ≈ copyZ >>>> (copyZ *** idst) >>>> assocr×
+eqZ₁ = copyZ >>>> (id *** copyZ) ≈ copyZ >>>> (copyZ *** id) >>>> assocr×
 eqZ₂ = copyZ >>>> swap ≈ copyZ
-eqZ₃ = copyZ >>>> invSE copyZ ≈ idst
-eqZ₄ = (copyZ *** idst) >>>> (idst *** copyZ) ≈ (idst *** copyZ) >>>> (copyZ *** idst)
+eqZ₃ = copyZ >>>> invSE copyZ ≈ id
+eqZ₄ = (copyZ *** id) >>>> (id *** copyZ) ≈ (id *** copyZ) >>>> (copyZ *** id)
 
 eqH₁ eqH₂ eqH₃ eqH₄ : Set
-eqH₁ = copyH >>>> (idst *** copyH) ≈ copyH >>>> (copyH *** idst) >>>> assocr×
+eqH₁ = copyH >>>> (id *** copyH) ≈ copyH >>>> (copyH *** id) >>>> assocr×
 eqH₂ = copyH >>>> swap ≈ copyH
-eqH₃ = copyH >>>> invSE copyH ≈ idst
-eqH₄ = (copyH *** idst) >>>> (idst *** copyH) ≈ (idst *** copyH) >>>> (copyH *** idst)
+eqH₃ = copyH >>>> invSE copyH ≈ id
+eqH₄ = (copyH *** id) >>>> (id *** copyH) ≈ (id *** copyH) >>>> (copyH *** id)
 
 eqZH : Set
-eqZH = (copyZ *** idst) >>>> (idst *** (invSE copyH)) >>>> (idst *** copyH) >>>> ((invSE copyZ) *** idst) ≈ idst
+eqZH = (copyZ *** id) >>>> (id *** (invSE copyH)) >>>> (id *** copyH) >>>> ((invSE copyZ) *** id) ≈ id
 
 -- Special states and effects
 

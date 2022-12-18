@@ -15,6 +15,7 @@ open import Function using (_∘_; flip)
 open import PiSyntax
 open import Amalgamation using (TList; Categorical; evalTL)
 import ArrowsOverAmalg as A
+open import Ancillae using (N; N⇒U; enumN; Anc; Two; _×ₙ_)
 open import StatesAndEffects
 
 open import Unitary
