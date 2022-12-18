@@ -71,12 +71,14 @@ simon₂ =
 
 simon : I ↭ (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 simon =
-  arr (A.uniti*l              A.>>>
+  arr (A.uniti*l            A.>>>
        A.id A.*** A.uniti*l A.>>>
        A.id A.*** (A.id A.*** A.uniti*l)) >>>>
-  (zero *** (zero *** (zero *** zero)))       >>>>
-  arr (A.arr₂ simon₁ A.>>>
-       A.arr₁ simon₂ A.>>>
+       
+  (zero *** (zero *** (zero *** zero)))   >>>>
+  
+  arr (A.arr₂ simon₁        A.>>>
+       A.arr₁ simon₂        A.>>>
        A.arr₂ simon₁)
 
 
