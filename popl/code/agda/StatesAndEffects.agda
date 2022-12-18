@@ -51,7 +51,7 @@ arr c = lift {n₁ = nothing} {nothing} (A.unite* >>> c >>> A.uniti*)
 
 -- Then use that to lift id, swap, assoc and unit
 idst : StEffPi t t
-idst = arr A.idzh
+idst = arr A.id
 swap : StEffPi (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
 swap = arr A.swap×
 assocl× : StEffPi  (t₁ ×ᵤ (t₂ ×ᵤ t₃)) ((t₁ ×ᵤ t₂) ×ᵤ t₃)

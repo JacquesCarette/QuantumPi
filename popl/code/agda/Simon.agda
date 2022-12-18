@@ -72,8 +72,8 @@ simon₂ =
 simon : StEffPi I (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
 simon =
   arr (A.uniti*l              A.>>>
-       A.idzh A.*** A.uniti*l A.>>>
-       A.idzh A.*** (A.idzh A.*** A.uniti*l)) >>>>
+       A.id A.*** A.uniti*l A.>>>
+       A.id A.*** (A.id A.*** A.uniti*l)) >>>>
   (zero *** (zero *** (zero *** zero)))       >>>>
   arr (A.arr₂ simon₁ A.>>>
        A.arr₁ simon₂ A.>>>

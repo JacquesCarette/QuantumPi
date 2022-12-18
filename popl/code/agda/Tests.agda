@@ -33,7 +33,7 @@ show {t} v = map (λ i → (i , v i)) (enum t)
 test-notH : show (evalTL₁ (A.arr₂ swap₊) PiH.trueH) ≡ (𝔽 , 0.9238795325155821) ∷ (𝕋 , -0.38268343235472) ∷ []
 test-notH = refl
 
-test-id : show (evalTL₁ (A.idzh) PiH.trueH) ≡ (𝔽 , 0.38268343235472) ∷ (𝕋 , 0.9238795325155821) ∷ []
+test-id : show (evalTL₁ (A.id) PiH.trueH) ≡ (𝔽 , 0.38268343235472) ∷ (𝕋 , 0.9238795325155821) ∷ []
 test-id = refl
 
 test-Had-true : show (evalTL₁ (A.arr₂ swap₊) PiZ.trueZ) ≡ (𝔽 , 0.707106781202421) ∷ (𝕋 , -0.7071067811706743) ∷ []
@@ -74,7 +74,7 @@ test-Had2-0 : show (PiH.evalH (id⟷ ⊗ swap₊) test-vec2) ≡
       []
 test-Had2-0 = refl
 
-test-Had2-1 : show (evalTL₁ (A.idzh A.*** A.arr₂ swap₊) test-vec2) ≡
+test-Had2-1 : show (evalTL₁ (A.id A.*** A.arr₂ swap₊) test-vec2) ≡
       ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
       ((𝔽 , 𝕋) , 0.0) ∷
       ((𝕋 , 𝔽) , 0.707106781202421) ∷
@@ -82,12 +82,12 @@ test-Had2-1 : show (evalTL₁ (A.idzh A.*** A.arr₂ swap₊) test-vec2) ≡
       []
 test-Had2-1 = refl
 
-test-Had2-2 : show (evalTL₁ (A.arr₁ swap₊ A.*** A.idzh) test-vec2) ≡
+test-Had2-2 : show (evalTL₁ (A.arr₁ swap₊ A.*** A.id) test-vec2) ≡
   ((𝔽 , 𝔽) , 0.0) ∷   ((𝔽 , 𝕋) , 1.0) ∷
   ((𝕋 , 𝔽) , 0.0) ∷ ((𝕋 , 𝕋) , 0.0) ∷ []
 test-Had2-2 = refl
 
-test-Had2-3 : show (evalTL₁ (A.arr₂ swap₊ A.*** A.idzh) test-vec2) ≡
+test-Had2-3 : show (evalTL₁ (A.arr₂ swap₊ A.*** A.id) test-vec2) ≡
       ((𝔽 , 𝔽) , 0.0) ∷
       ((𝔽 , 𝕋) , 0.7071067812024212) ∷
       ((𝕋 , 𝔽) , 0.0) ∷

@@ -4,7 +4,8 @@
 module ArrowsOverAmalg where
 
 open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷_; _◎_; id⟷;
-  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_; ctrl; 𝟚)
+  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_; ctrl; 𝟚;
+  cx; ccx)
 open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------
@@ -26,8 +27,8 @@ arr₂ : t₁ ⟷ t₂ -> TList t₁ t₂
 arr₂ c = cons₂ c nil
 
 -- We can then lift a lot of things to this level:
-idzh : TList t t
-idzh = arr₁ id⟷
+id : TList t t
+id = arr₁ id⟷
 
 swap× : TList (t₁ ×ᵤ t₂) (t₂ ×ᵤ t₁)
 swap× = arr₁ swap⋆
@@ -76,12 +77,11 @@ nil *** nil = nil
 nil *** cons₁ x ys = cons₁ (id⟷ ⊗ x) (nil *** ys)
 nil *** cons₂ x ys = cons₂ (id⟷ ⊗ x) (nil *** ys)
 cons₁ x xs *** nil = cons₁ (x ⊗ id⟷) (xs *** nil)
-cons₁ x xs *** cons₁ x₁ ys = cons₁ (x ⊗ x₁) (xs *** ys)
--- Note how this makes the list longer.
-cons₁ x xs *** cons₂ x₁ ys = cons₁ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ x₁) (xs *** ys))
+cons₁ x xs *** cons₁ y ys = cons₁ (x ⊗ y) (xs *** ys)
+cons₁ x xs *** cons₂ y ys = cons₁ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ y) (xs *** ys))
 cons₂ x xs *** nil = cons₂ (x ⊗ id⟷) (xs *** nil)
-cons₂ x xs *** cons₁ x₁ ys = cons₂ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ x₁) (xs *** ys))
-cons₂ x xs *** cons₂ x₁ ys = cons₂ (x ⊗ x₁) (xs *** ys)
+cons₂ x xs *** cons₁ y ys = cons₂ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ y) (xs *** ys))
+cons₂ x xs *** cons₂ y ys = cons₂ (x ⊗ y) (xs *** ys)
 
 -------------------------------------------------------------------------------------
 -- Add some definitions from 5.1
@@ -90,10 +90,10 @@ X : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 X = arr₁ swap₊
 
 CX : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
-CX = arr₁ (ctrl swap₊)
+CX = arr₁ cx
 
 CCX : TList (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
-CCX = arr₁ (ctrl (ctrl swap₊))
+CCX = arr₁ ccx
 
 H : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 H = arr₂ swap₊
@@ -102,7 +102,7 @@ Z : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
 Z = H >>> X >>> H
 
 CZ : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
-CZ = idzh *** H >>> CX >>> idzh *** H
+CZ = id *** H >>> CX >>> id *** H
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
