@@ -20,6 +20,7 @@ open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
 open import Instances using (evalSE)
 open import Unitary renaming (𝒰 to K)
+open import FloatUtils using (mat; tooSmall)
 
 open import QPi.Syntax
 
@@ -53,9 +54,6 @@ embed assertZero = bzero
 
 ---------------------------------------------------------------------------
 -- Infrastructure for examples
-
-tooSmall : Float → Bool
-tooSmall a = ((0.0 ≤ᵇ a) ∧ (a <ᵇ 0.01)) ∨ ((a ≤ᵇ 0.0) ∧ (-0.01 <ᵇ a))
 
 show : {t : U} → K t → List (⟦ t ⟧ × Float)
 show {t} v =

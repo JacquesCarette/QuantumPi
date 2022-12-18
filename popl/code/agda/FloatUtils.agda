@@ -4,10 +4,10 @@
 
 module FloatUtils where
 
-open import Data.Float as F using (Float; cos; sin; _÷_; _*_; _+_; -_; _-_)
-import Data.Sum as Sum
-open Sum using (inj₁; inj₂; _⊎_)
+open import Data.Float using (Float; cos; sin; _÷_; _*_; _+_; -_; _-_; _≤ᵇ_; _<ᵇ_)
+open import Data.Sum as Sum using (inj₁; inj₂; _⊎_)
 open import Data.Unit using (⊤; tt)
+open import Data.Bool using (Bool; _∧_; _∨_)
 
 π : Float
 π = 3.1415926535
@@ -31,3 +31,5 @@ Rω⁻¹ : mat (⊤ ⊎ ⊤)
 Rω⁻¹ f = Sum.[ (λ _ →    cπ/8 * f (inj₁ tt)  + sπ/8 * f (inj₂ tt)) ,
                (λ _ → - (sπ/8 * f (inj₁ tt)) + cπ/8 * f (inj₂ tt)) ]
 
+tooSmall : Float → Bool
+tooSmall a = ((0.0 ≤ᵇ a) ∧ (a <ᵇ 0.01)) ∨ ((a ≤ᵇ 0.0) ∧ (-0.01 <ᵇ a))
