@@ -19,10 +19,8 @@ open import Unitary using (𝒰)
 Fwd : U → U → Set
 Fwd t₁ t₂ = 𝒰 t₁ → 𝒰 t₂
 
--- Note how the interpretation is λ f → f ∘ g where g is the opposite of the Fwd interpretation for the
--- evaluator for PiBij
--- The interpretations pretty much follow the types. The only tricky one is for product, which implements
--- the Kronecker product.
+-- The interpretations pretty much follow the types. The only tricky one is for product,
+-- which implements the Kronecker product.
 GenericPi : Pi Fwd
 GenericPi = record
   { unite+l = λ f → f ∘ inj₂
@@ -35,8 +33,8 @@ GenericPi = record
   ; assocr+ = λ f → f ∘ Sum.assocˡ
   ; assocl* = λ f → f ∘ Prod.assocʳ
   ; assocr* = λ f → f ∘ Prod.assocˡ
-  ; absorbl′ = λ { f () }
-  ; factorzr′ = λ {f ( _ , () )}
+  ; absorbl′ = λ { _ () }
+  ; factorzr′ = λ {_ ( _ , () )}
   ; dist′ = λ f → f ∘ Sum.[ Prod.map₁ inj₁ , Prod.map₁ inj₂ ]
   ; factor′ = λ f → f ∘ λ { (a , b) → Sum.map (_, b) (_, b) a }
   ; idp = λ x → x
@@ -45,6 +43,7 @@ GenericPi = record
   ; _⊛_ = λ A₁₃ B₂₄ v (i , j) → A₁₃ (λ a → B₂₄ (λ b → v (a , b)) j) i
   }
 
+-- Note that this definition has to be coherent with 𝕋 and 𝔽 in PiSyntax
 true false : 𝒰 𝟚
 true (inj₁ y) = 0.0
 true (inj₂ x) = 1.0
