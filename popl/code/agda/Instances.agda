@@ -27,8 +27,8 @@ Fwd t₁ t₂ = 𝒰 t₁ → 𝒰 t₂
 
 FC : Categorical Fwd
 FC = record
-  { idr = λ x → x
-  ; comp = λ f g h x → g (f h) x
+  { id = λ x → x
+  ; _∘_ = λ f g h x → g (f h) x
   }
 
 evalTL₁ : ∀ {t₁ t₂ : U} → TList t₁ t₂ → Fwd t₁ t₂
