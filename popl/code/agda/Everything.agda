@@ -59,6 +59,10 @@ open import PiZ
 open import PiH
 
 ------------------------------------------------------------------------------------
+-- Utilities useful in various places below
+open import FloatUtils
+
+------------------------------------------------------------------------------------
 -- Instantiate generic semantics for full language
 
 open import Instances

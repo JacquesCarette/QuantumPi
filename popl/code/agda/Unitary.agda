@@ -4,30 +4,15 @@
 
 module Unitary where
 
-open import Data.Float as F using (Float; cos; sin; _÷_; _*_; _+_; -_; _-_)
-open import Data.List using (List; foldr)
-import Data.Product as Prod
-open Prod using (_,_; Σ)
-import Data.Sum as Sum
-open Sum using (inj₁; inj₂)
-open import Data.Unit using (tt)
+open import Data.Product using (_,_)
+open import Data.Sum using (inj₁; inj₂)
 open import Function using (_∘_; id)
 
+open import FloatUtils using (π; cπ/8; sπ/8; vec; Rω; Rω⁻¹)
 open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧)
 
-π : Float
-π = 3.1415926535
-
-cπ/8 : Float
-cπ/8 = cos (π ÷ 8.0)
-sπ/8 : Float
-sπ/8 = sin (π ÷ 8.0)
-
-sumf : List Float → Float
-sumf = foldr F._+_ (F.fromℕ 0)
-
 𝒰 : (t : U) → Set
-𝒰 t = ⟦ t ⟧ → Float
+𝒰 t = vec ⟦ t ⟧
 
 Aut : Set → Set
 Aut X = X → X
@@ -54,8 +39,7 @@ R O = id
 R I = id
 R (O +ᵤ y) = R O ⊕ R y
 R (I +ᵤ O) = R I ⊕ R O
-R (I +ᵤ I) = λ f v → Sum.[ (λ _ → cπ/8 * f (inj₁ tt) - sπ/8 * f (inj₂ tt)) ,
-                           (λ _ → sπ/8 * f (inj₁ tt) + cπ/8 * f (inj₂ tt)) ] v
+R (I +ᵤ I) = Rω
 R (I +ᵤ z@(y +ᵤ y′)) = R I ⊕ R z
 R (I +ᵤ z@(y ×ᵤ y′)) = R I ⊕ R z
 R (z@(x +ᵤ x′) +ᵤ y) = R z ⊕ R y
@@ -68,8 +52,7 @@ R⁻¹ O = id
 R⁻¹ I = id
 R⁻¹ (O +ᵤ y) = R⁻¹ O ⊕ R⁻¹ y
 R⁻¹ (I +ᵤ O) = R⁻¹ I ⊕ R⁻¹ O
-R⁻¹ (I +ᵤ I) = λ f v → Sum.[ (λ _ →    cπ/8 * f (inj₁ tt)  + sπ/8 * f (inj₂ tt)) , 
-                             (λ _ → - (sπ/8 * f (inj₁ tt)) + cπ/8 * f (inj₂ tt)) ] v
+R⁻¹ (I +ᵤ I) = Rω⁻¹
 R⁻¹ (I +ᵤ z@(y +ᵤ y′)) = R⁻¹ I ⊕ R⁻¹ z
 R⁻¹ (I +ᵤ z@(y ×ᵤ y′)) = R⁻¹ I ⊕ R⁻¹ z
 R⁻¹ (z@(x +ᵤ x′) +ᵤ y) = R⁻¹ z ⊕ R⁻¹ y
