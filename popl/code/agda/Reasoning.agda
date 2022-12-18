@@ -4,7 +4,9 @@ module Reasoning where
 
 open import PiSyntax using (U; _◎_; _⟷_; id⟷; !⟷) 
 open import PiReasoning
-open import QPi
+open import QPi.Syntax
+open import QPi using (ctrlZ; one; copyZ; copyϕ; xgate; zgate;
+  had; minus; plus; cx; cz; measureϕ; measureZ)
 
 ---------------------------------------------------------------------------
 -- Some of the equations
