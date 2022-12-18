@@ -77,3 +77,6 @@ open import PiReasoning
 open import Reasoning
 
 ------------------------------------------------------------------------------------
+-- Not currently used, but maybe should be
+open import IAmalgamation
+------------------------------------------------------------------------------------
