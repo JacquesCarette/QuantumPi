@@ -72,6 +72,7 @@ open import TestsSlow
 ------------------------------------------------------------------------------------
 -- Qpi and reasoning
 
+open import QPi.Syntax
 open import QPi
 open import PiReasoning
 open import Reasoning
