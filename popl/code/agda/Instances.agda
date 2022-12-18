@@ -1,30 +1,26 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
--- Show that Unitary(?) has states and effects
+-- Show that Unitary has states and effects
 
 module Instances where
 
 import Data.Float as F
-open import Data.List using (map; length; head)
+open import Data.List using (head)
 open import Data.Maybe using (Maybe; just; nothing)
 open import Data.Product using (_×_; _,_; proj₁; proj₂)
 open import Data.Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
-open import Function using (_∘_; flip)
 
-open import PiSyntax
+open import PiSyntax using (U; I; _×ᵤ_; ⟦_⟧)
 open import Amalgamation using (TList; Categorical; evalTL)
 import ArrowsOverAmalg as A
 open import Ancillae using (N; N⇒U; enumN; Anc; Two; _×ₙ_)
-open import StatesAndEffects
+open import StatesAndEffects using (_↭_; lift)
 
-open import Unitary
+open import Unitary using (𝒰)
 open import PiZ using (evalZ)
 open import PiH using (evalH)
-
--- This "Forward" interpreter is in 𝒰 space, which is common to PiZ and PiH
-Fwd : U → U → Set
-Fwd t₁ t₂ = 𝒰 t₁ → 𝒰 t₂
+open import GenericPi using (Fwd)
 
 FC : Categorical Fwd
 FC = record
