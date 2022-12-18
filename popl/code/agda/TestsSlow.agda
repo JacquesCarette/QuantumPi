@@ -4,17 +4,13 @@
 module TestsSlow where
 
 open import Data.Float using (Float)
-open import Data.List using (List; _∷_; []; map)
-open import Data.Product using (_×_; _,_)
-open import Data.Sum using (inj₁; inj₂)
-open import Data.Unit using (tt)
-open import Function using (_∘_)
+open import Data.List using (_∷_; [])
+open import Data.Product using (_,_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import PiSyntax using (𝕋; 𝔽)
-open import Amalgamation using (TList)
 open import Instances using (evalTL₁)
-open import Tests
+open import Tests using (inner-simon; test-vec4; show)
 
 -- takes ~22s on my MacBook Air
 -- indentation used to highlight real values from virtual 0s
