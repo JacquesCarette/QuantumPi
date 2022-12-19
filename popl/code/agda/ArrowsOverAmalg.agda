@@ -6,7 +6,6 @@ module ArrowsOverAmalg where
 open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_; 𝟚)
 open import Pi.Language using (_⟷_; _◎_; id⟷;
   swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_)
-open import Pi.Terms using (ctrl; cx; ccx)
 open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------
@@ -83,27 +82,6 @@ cons₁ x xs *** cons₂ y ys = cons₁ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ y) (xs
 cons₂ x xs *** nil = cons₂ (x ⊗ id⟷) (xs *** nil)
 cons₂ x xs *** cons₁ y ys = cons₂ (x ⊗ id⟷) (cons₂ (id⟷ ⊗ y) (xs *** ys))
 cons₂ x xs *** cons₂ y ys = cons₂ (x ⊗ y) (xs *** ys)
-
--------------------------------------------------------------------------------------
--- Add some definitions from 5.1
-
-X : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
-X = arr₁ swap₊
-
-CX : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
-CX = arr₁ cx
-
-CCX : TList (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
-CCX = arr₁ ccx
-
-H : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
-H = arr₂ swap₊
-
-Z : TList (t₁ +ᵤ t₂) (t₂ +ᵤ t₁)
-Z = H >>> X >>> H
-
-CZ : TList (𝟚 ×ᵤ 𝟚) (𝟚 ×ᵤ 𝟚)
-CZ = id *** H >>> CX >>> id *** H
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

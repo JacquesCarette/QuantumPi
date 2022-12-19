@@ -36,6 +36,7 @@ open import PiTagless
 -- Syntactic arrow constructions parameterized by evaluators in the tagless style
 open import Amalgamation
 open import ArrowsOverAmalg
+open import Arrows.Terms -- some examples
 open import Ancillae -- Defined PiSyntax sub-language for ancillaes
 open import StatesAndEffects
 

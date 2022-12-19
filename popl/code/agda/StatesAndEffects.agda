@@ -13,6 +13,7 @@ open import Ancillae
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
+import Arrows.Terms as AT
 
 -------------------------------------------------------------------------------------
 private
@@ -110,22 +111,22 @@ inv0 = refl
 -- Additional combinators for complementarity
 
 X : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
-X = arr A.X
+X = arr AT.X
 
 CX : (𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚)
-CX = arr A.CX
+CX = arr AT.CX
 
 CCX : (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚)
-CCX = arr A.CCX
+CCX = arr AT.CCX
 
 H : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
-H = arr A.H
+H = arr AT.H
 
 Z : (t₁ +ᵤ t₂) ↭ (t₂ +ᵤ t₁)
-Z = arr A.Z
+Z = arr AT.Z
 
 CZ : (𝟚 ×ᵤ 𝟚) ↭ (𝟚 ×ᵤ 𝟚)
-CZ = arr A.CZ
+CZ = arr AT.CZ
 
 copyZ : 𝟚 ↭ (𝟚 ×ᵤ 𝟚)
 copyZ = uniti* >>>> id *** zero >>>> CX
