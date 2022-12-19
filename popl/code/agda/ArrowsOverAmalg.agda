@@ -3,10 +3,9 @@
 
 module ArrowsOverAmalg where
 
-open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_)
+open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_; 𝟚)
 open import PiSyntax using (_⟷_; _◎_; id⟷;
-  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_; ctrl; 𝟚;
-  cx; ccx)
+  swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_; ctrl; cx; ccx)
 open import Amalgamation using (TList; nil; cons₁; cons₂)
 
 -------------------------------------------------------------------------------------

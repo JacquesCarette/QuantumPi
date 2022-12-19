@@ -5,7 +5,7 @@ module PiSyntax where
 open import Data.Sum as Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
 
-open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_)
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
 
 -------------------------------------------------------------------------------------
 -- 1-combinators
@@ -79,12 +79,6 @@ _∎ t = id⟷
 
 -------------------------------------------------------------------------------------
 -- Common terms
-
-𝟚 : U
-𝟚 = I +ᵤ I
-
-pattern 𝔽 = inj₁ tt
-pattern 𝕋 = inj₂ tt
 
 unite₊r : {t : U} → t +ᵤ O ⟷  t
 unite₊r = swap₊ ◎ unite₊l

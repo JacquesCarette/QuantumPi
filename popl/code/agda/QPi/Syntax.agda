@@ -2,8 +2,8 @@
 
 module QPi.Syntax where
 
-open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_)
-open import PiSyntax using (_⟷_; 𝟚)
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
+open import PiSyntax using (_⟷_)
 
 ---------------------------------------------------------------------------
 -- The surface Quantum Pi language

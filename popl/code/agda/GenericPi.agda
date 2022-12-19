@@ -8,8 +8,7 @@ open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
 open import Data.Unit using (tt)
 open import Function using (_∘_)
 
-open import Pi.Types using (U; I; O; _+ᵤ_; _×ᵤ_)
-open import PiSyntax using (𝟚)
+open import Pi.Types using (U; I; O; _+ᵤ_; _×ᵤ_; 𝟚)
 open import PiTagless using (Pi)
 open import Unitary using (𝒰)
 
