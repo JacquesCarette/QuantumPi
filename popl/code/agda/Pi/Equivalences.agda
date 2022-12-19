@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module PiReasoning where
+module Pi.Equivalences where
 
 open import Pi.Types
 open import Pi.Language
@@ -193,6 +193,35 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
 
+-------------------------------------------------------------------------------------
+-- Equational reasoning
+
+-- the precedences are all wrong...
+infix  60  _▤       
+infixr 50  _⟨_⟩_   
+
+_⟨_⟩_ : {t₁ t₂ : U} (c₁ : t₁ ⟷ t₂) {c₂ : t₁ ⟷ t₂} {c₃ : t₁ ⟷ t₂} → 
+         (c₁ ⟷₂ c₂) → (c₂ ⟷₂ c₃) → (c₁ ⟷₂ c₃)
+_ ⟨ α ⟩ β = trans⟷₂ α β
+
+_▤ : {t₁ t₂ : U} → (c : t₁ ⟷ t₂) → (c ⟷₂ c)
+_▤ c = id⟷₂
+
+-------------------------------------------------------------------------------------
+
 -- Definable term
 xcx : ((id⟷ ⊗ swap₊) ◎ cx) ⟷₂ (cx ◎ (id⟷ ⊗ swap₊))
-xcx = {!!} 
+xcx = 
+  ((id⟷ ⊗ swap₊) ◎ cx)                                            ⟨ id⟷₂ ⟩
+  ((id⟷ ⊗ swap₊) ◎ dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)           ⟨ {!!} ⟩
+  (((id⟷ ⊕ id⟷) ⊗ swap₊) ◎ dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)   ⟨ {!!} ⟩
+  ((((id⟷ ⊕ id⟷) ⊗ swap₊) ◎ dist) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)  ⟨ {!!} ⟩
+  (((dist ◎ ((id⟷ ⊗ swap₊) ⊕ (id⟷ ⊗ swap₊)))) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor) ⟨ {!!} ⟩
+  (dist ◎ (((id⟷ ⊗ swap₊) ⊕ (id⟷ ⊗ swap₊)) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊)) ◎ factor)   ⟨ {!!} ⟩
+  -- (dist ◎ (((id⟷ ⊗ swap₊) ◎ id⟷) ⊕ ((id⟷ ⊗ swap₊) ◎ (id⟷ ⊗ swap₊))) ◎ factor) ⟨ {!!} ⟩
+  ((dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor) ◎ (id⟷ ⊗ swap₊))         ⟨ id⟷₂ ⟩
+  (cx ◎ (id⟷ ⊗ swap₊)) ▤   
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+

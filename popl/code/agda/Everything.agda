@@ -17,14 +17,14 @@ module Everything where
 --     and the proof of reversibility of the syntax
 -- - Pi.Reasoning gives some reasoning combinators
 -- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
--- - PiReasoning (to be renamed) gives the Level 2 language
+-- - Pi.Equivalences gives a (syntactic) language of Pi term equivalences
 
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
 open import Pi.Language
 open import Pi.Reasoning
 open import Pi.Terms
-open import PiReasoning
+open import Pi.Equivalences
 
 -- PiTagless gives a representation independent version of PiSyntax.
 -- So rather than providing different evaluators for the syntax, one can instead provide
