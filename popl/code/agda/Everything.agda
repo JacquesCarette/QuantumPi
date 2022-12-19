@@ -41,6 +41,8 @@ open import ArrowsOverAmalg
 open import Arrows.Terms -- some examples
 open import Ancillae -- Defined PiSyntax sub-language for ancillaes
 open import StatesAndEffects
+open import SPi.Terms
+open import SPi.Complementarity
 
 -- Example written in the syntax (before any explicit rotation or unitaries)
 open import Simon

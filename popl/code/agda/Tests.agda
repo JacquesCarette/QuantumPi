@@ -16,7 +16,8 @@ open import Pi.Language using (id⟷; swap₊; _⊗_)
 open import Amalgamation using (TList)
 import ArrowsOverAmalg as A
 import Arrows.Terms as AT
-open import StatesAndEffects
+open import StatesAndEffects using (_↭_; _>>>>_)
+open import SPi.Terms using (CX; zero; plus; minus; one; assertZero)
 open import Unitary
 import PiZ
 import PiH
@@ -59,7 +60,7 @@ test-cxZ : show (evalTL₁ AT.CX test-vec2) ≡
 test-cxZ = refl
 
 test-SE-cxZ =
-  show (evalSE StatesAndEffects.CX test-vec2)
+  show (evalSE CX test-vec2)
 
 test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PiZ.evalZ (id⟷ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
   ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷

@@ -9,10 +9,11 @@ open import Pi.Reasoning
 open import Pi.Terms
 import ArrowsOverAmalg as A
 open import StatesAndEffects
+open import SPi.Terms
 
 private
   variable
-    t t₁ t₂ t₃ t₄ t₅ t₆ : U
+    t t₁ t₂ t₃ t₄ : U
 
 -- Simon fragments
 

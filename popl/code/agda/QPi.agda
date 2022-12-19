@@ -19,7 +19,8 @@ open import Pi.Language as Π using (_⟷_)
 import Pi.Terms as ΠT
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
-  renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
+  renaming (_***_ to _****_)
+open import SPi.Terms using () renaming (zero to kzero; assertZero to bzero)
 open import Instances using (evalSE)
 open import FloatUtils using (vec; mat; tooSmall)
 
