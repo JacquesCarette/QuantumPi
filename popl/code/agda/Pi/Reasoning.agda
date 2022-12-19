@@ -3,7 +3,7 @@
 module Pi.Reasoning where
 
 open import Pi.Types using (U)
-open import PiSyntax using (_⟷_; _◎_; id⟷)
+open import Pi.Language using (_⟷_; _◎_; id⟷)
 
 private
   variable

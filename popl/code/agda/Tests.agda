@@ -12,7 +12,7 @@ open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types
-open import PiSyntax
+open import Pi.Language using (id⟷; swap₊; _⊗_)
 open import Amalgamation using (TList)
 import ArrowsOverAmalg as A
 open import StatesAndEffects

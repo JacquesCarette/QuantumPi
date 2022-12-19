@@ -3,7 +3,8 @@
 module Reasoning where
 
 open import Pi.Types using (U)
-open import PiSyntax using (_◎_; _⟷_; id⟷; !⟷) 
+open import Pi.Language as Π using (_◎_; _⟷_; id⟷; !⟷)
+import Pi.Terms as ΠT
 open import PiReasoning
 open import QPi.Syntax
 open import QPi using (ctrlZ; one; copyZ; copyϕ; xgate; zgate;
@@ -131,9 +132,9 @@ xcxA : id⇔ *** xgate >>> cx ≡ cx >>> id⇔ *** xgate
 xcxA =
   id⇔ *** xgate >>> cx
     ≡⟨ {!!} ⟩ 
-  arrZ ((PiSyntax.id⟷ PiSyntax.⊗ PiSyntax.swap₊) PiSyntax.◎ PiSyntax.cx)
+  arrZ ((id⟷ Π.⊗ Π.swap₊) Π.◎ ΠT.cx)
     ≡⟨ classicalZ xcx ⟩
-  arrZ (PiSyntax.cx PiSyntax.◎ (PiSyntax.id⟷ PiSyntax.⊗ PiSyntax.swap₊))
+  arrZ (ΠT.cx Π.◎ (id⟷ Π.⊗ Π.swap₊))
     ≡⟨ {!!} ⟩
   cx >>> id⇔ *** xgate ≡∎
 

@@ -15,7 +15,8 @@ open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; _≟_; 𝟚; 𝔽; 𝕋)
-open import PiSyntax as Π using (_⟷_)
+open import Pi.Language as Π using (_⟷_)
+import Pi.Terms as ΠT
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
   renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
@@ -99,14 +100,14 @@ had = arrϕ Π.swap₊
 zgate = had >>> xgate >>> had
 
 ctrlZ : (t ⟷ t) → 𝟚 ×ᵤ t ⇔ 𝟚 ×ᵤ t
-ctrlZ c = arrZ (Π.ctrl c)
+ctrlZ c = arrZ (ΠT.ctrl c)
 
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cx = ctrlZ Π.swap₊ 
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ccx = arrZ Π.ccx
+ccx = arrZ ΠT.ccx
 
 one plus minus : I ⇔ 𝟚 
 one = zero >>> xgate

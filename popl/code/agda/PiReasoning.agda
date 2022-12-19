@@ -1,9 +1,10 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
 module PiReasoning where
 
 open import Pi.Types
-open import PiSyntax
+open import Pi.Language
+open import Pi.Terms using (cx)
 
 infix  30 _⟷₂_
 
@@ -192,6 +193,6 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
 
+-- Definable term
 xcx : ((id⟷ ⊗ swap₊) ◎ cx) ⟷₂ (cx ◎ (id⟷ ⊗ swap₊))
 xcx = {!!} 
-

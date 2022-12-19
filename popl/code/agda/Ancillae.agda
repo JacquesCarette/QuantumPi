@@ -9,7 +9,7 @@ open import Data.List using (List)
 open import Data.Maybe using (Maybe; just; nothing)
 
 open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; 𝟚)
-open import PiSyntax using (_⟷_; id⟷; uniti⋆l; uniti⋆r; assocr⋆; !⟷)
+open import Pi.Language using (_⟷_; id⟷; uniti⋆l; uniti⋆r; assocr⋆; !⟷)
 
 -------------------------------------------------------------------------------------
 private

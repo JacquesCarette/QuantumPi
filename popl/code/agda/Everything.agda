@@ -22,8 +22,10 @@ module Everything where
 
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
-open import PiSyntax
+open import Pi.Language
 open import Pi.Reasoning
+open import Pi.Terms
+open import PiReasoning
 
 -- PiTagless gives a representation independent version of PiSyntax.
 -- So rather than providing different evaluators for the syntax, one can instead provide
@@ -80,7 +82,6 @@ open import TestsSlow
 
 open import QPi.Syntax
 open import QPi
-open import PiReasoning
 open import Reasoning
 
 ------------------------------------------------------------------------------------

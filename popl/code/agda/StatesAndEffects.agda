@@ -8,7 +8,7 @@ open import Data.Maybe using (nothing)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_; 𝟚)
-open import PiSyntax using (_⟷_; !⟷)
+open import Pi.Language using (_⟷_; !⟷)
 open import Ancillae
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A

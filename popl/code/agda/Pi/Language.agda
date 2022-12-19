@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module PiSyntax where
+module Pi.Language where
 
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
 
@@ -63,7 +63,7 @@ data _⟷_  : U → U → Set where
 !⟷ (c₁ ⊗ c₂) = !⟷ c₁ ⊗ !⟷ c₂
 
 -------------------------------------------------------------------------------------
--- Common terms
+-- Definitional extension of the language; these are often terms in the language.
 
 unite₊r : {t : U} → t +ᵤ O ⟷  t
 unite₊r = swap₊ ◎ unite₊l
@@ -76,15 +76,6 @@ unite⋆r = swap⋆ ◎ unite⋆l
 
 uniti⋆r : {t : U} → t ⟷ t ×ᵤ I
 uniti⋆r = uniti⋆l ◎ swap⋆
-
-ctrl : t ⟷ t → (𝟚 ×ᵤ t) ⟷ (𝟚 ×ᵤ t)
-ctrl c = dist ◎ (id⟷ ⊕ id⟷ ⊗ c) ◎ factor
-
-cx : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
-cx = ctrl swap₊
-
-ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ccx = ctrl cx
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

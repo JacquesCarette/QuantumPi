@@ -5,7 +5,7 @@ module Amalgamation where
 -- Sequencing of 2 copies of Pi
 
 open import Pi.Types using (U)
-open import PiSyntax using (_⟷_)
+open import Pi.Language using (_⟷_)
 
 -------------------------------------------------------------------------------------
 private

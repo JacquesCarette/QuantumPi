@@ -6,7 +6,7 @@ module IAmalgamation where
 open import Level using (Level)
 
 open import Pi.Types using (U)
-open import PiSyntax using (_⟷_)
+open import Pi.Language using (_⟷_)
 open import Amalgamation using (Categorical)
 
 -------------------------------------------------------------------------------------
