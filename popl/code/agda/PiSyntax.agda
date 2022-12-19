@@ -2,9 +2,6 @@
 
 module PiSyntax where
 
-open import Data.Sum as Sum using (inj₁; inj₂)
-open import Data.Unit using (tt)
-
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
 
 -------------------------------------------------------------------------------------

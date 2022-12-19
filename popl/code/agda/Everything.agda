@@ -23,6 +23,7 @@ module Everything where
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
 open import PiSyntax
+open import Pi.Reasoning
 
 -- PiTagless gives a representation independent version of PiSyntax.
 -- So rather than providing different evaluators for the syntax, one can instead provide
