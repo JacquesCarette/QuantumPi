@@ -18,6 +18,7 @@ module Everything where
 -- - Pi.Reasoning gives some reasoning combinators
 -- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
 -- - Pi.Equivalences gives a (syntactic) language of Pi term equivalences
+-- - Pi.DefinedEquiv defines some extra equivalences (on items from Pi.Terms)
 
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
@@ -25,6 +26,7 @@ open import Pi.Language
 open import Pi.Reasoning
 open import Pi.Terms
 open import Pi.Equivalences
+open import Pi.DefinedEquiv
 
 -- PiTagless gives a representation independent version of PiSyntax.
 -- So rather than providing different evaluators for the syntax, one can instead provide

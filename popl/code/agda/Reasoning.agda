@@ -6,6 +6,7 @@ open import Pi.Types using (U)
 open import Pi.Language as Π using (_◎_; _⟷_; id⟷; !⟷)
 import Pi.Terms as ΠT
 open import Pi.Equivalences
+open import Pi.DefinedEquiv using (xcx)
 open import QPi.Syntax
 open import QPi using (ctrlZ; one; copyZ; copyϕ; xgate; zgate;
   had; minus; plus; cx; cz; measureϕ; measureZ)

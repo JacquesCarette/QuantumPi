@@ -1,10 +1,9 @@
-{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module Pi.Equivalences where
 
 open import Pi.Types
 open import Pi.Language
-open import Pi.Terms using (cx)
 
 infix  30 _⟷₂_
 
@@ -206,21 +205,6 @@ _ ⟨ α ⟩ β = trans⟷₂ α β
 
 _▤ : {t₁ t₂ : U} → (c : t₁ ⟷ t₂) → (c ⟷₂ c)
 _▤ c = id⟷₂
-
--------------------------------------------------------------------------------------
-
--- Definable term
-xcx : ((id⟷ ⊗ swap₊) ◎ cx) ⟷₂ (cx ◎ (id⟷ ⊗ swap₊))
-xcx = 
-  ((id⟷ ⊗ swap₊) ◎ cx)                                            ⟨ id⟷₂ ⟩
-  ((id⟷ ⊗ swap₊) ◎ dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)           ⟨ {!!} ⟩
-  (((id⟷ ⊕ id⟷) ⊗ swap₊) ◎ dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)   ⟨ {!!} ⟩
-  ((((id⟷ ⊕ id⟷) ⊗ swap₊) ◎ dist) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor)  ⟨ {!!} ⟩
-  (((dist ◎ ((id⟷ ⊗ swap₊) ⊕ (id⟷ ⊗ swap₊)))) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor) ⟨ {!!} ⟩
-  (dist ◎ (((id⟷ ⊗ swap₊) ⊕ (id⟷ ⊗ swap₊)) ◎ (id⟷ ⊕ id⟷ ⊗ swap₊)) ◎ factor)   ⟨ {!!} ⟩
-  -- (dist ◎ (((id⟷ ⊗ swap₊) ◎ id⟷) ⊕ ((id⟷ ⊗ swap₊) ◎ (id⟷ ⊗ swap₊))) ◎ factor) ⟨ {!!} ⟩
-  ((dist ◎ (id⟷ ⊕ id⟷ ⊗ swap₊) ◎ factor) ◎ (id⟷ ⊗ swap₊))         ⟨ id⟷₂ ⟩
-  (cx ◎ (id⟷ ⊗ swap₊)) ▤   
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
