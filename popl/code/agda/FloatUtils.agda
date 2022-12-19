@@ -21,13 +21,17 @@ vec : Set → Set
 vec t = t → Float
 
 mat : Set → Set
-mat t = vec t → vec t
+mat t = t → t → Float
 
-Rω : mat (⊤ ⊎ ⊤)
+-- a linear operator maps vectors to vectors
+linop : Set → Set
+linop t = vec t → vec t
+
+Rω : linop (⊤ ⊎ ⊤)
 Rω f = Sum.[ (λ _ → cπ/8 * f (inj₁ tt) - sπ/8 * f (inj₂ tt)) ,
              (λ _ → sπ/8 * f (inj₁ tt) + cπ/8 * f (inj₂ tt)) ]
 
-Rω⁻¹ : mat (⊤ ⊎ ⊤)
+Rω⁻¹ : linop (⊤ ⊎ ⊤)
 Rω⁻¹ f = Sum.[ (λ _ →    cπ/8 * f (inj₁ tt)  + sπ/8 * f (inj₂ tt)) ,
                (λ _ → - (sπ/8 * f (inj₁ tt)) + cπ/8 * f (inj₂ tt)) ]
 

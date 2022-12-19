@@ -5,7 +5,8 @@ module IAmalgamation where
 -- Sequencing of I-many copies of Pi, where I is a type
 open import Level using (Level)
 
-open import PiSyntax using (U; _⟷_)
+open import Pi.Types using (U)
+open import PiSyntax using (_⟷_)
 open import Amalgamation using (Categorical)
 
 -------------------------------------------------------------------------------------

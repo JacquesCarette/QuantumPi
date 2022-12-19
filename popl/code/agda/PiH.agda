@@ -4,7 +4,8 @@ module PiH where
 
 open import Function using (_∘_)
 
-open import PiSyntax using (U; _⟷_; 𝟚)
+open import Pi.Types using (U)
+open import PiSyntax using (_⟷_; 𝟚)
 open import PiTagless using (generalize)
 open import GenericPi using (Fwd; GenericPi; true; false)
 open import Unitary using (𝒰; R; R⁻¹)

@@ -11,6 +11,7 @@ open import Data.Unit using (tt)
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
+open import Pi.Types
 open import PiSyntax
 open import Amalgamation using (TList)
 import ArrowsOverAmalg as A

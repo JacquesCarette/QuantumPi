@@ -7,7 +7,8 @@ module StatesAndEffects where
 open import Data.Maybe using (nothing)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷_; !⟷; 𝟚)
+open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_)
+open import PiSyntax using (_⟷_; !⟷; 𝟚)
 open import Ancillae
 open import Amalgamation using (TList; cons₁)
 import ArrowsOverAmalg as A

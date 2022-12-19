@@ -3,6 +3,7 @@
 
 module Simon where
 
+open import Pi.Types
 open import PiSyntax
 import ArrowsOverAmalg as A
 open import StatesAndEffects

@@ -2,7 +2,8 @@
 
 module Reasoning where
 
-open import PiSyntax using (U; _◎_; _⟷_; id⟷; !⟷) 
+open import Pi.Types using (U)
+open import PiSyntax using (_◎_; _⟷_; id⟷; !⟷) 
 open import PiReasoning
 open import QPi.Syntax
 open import QPi using (ctrlZ; one; copyZ; copyϕ; xgate; zgate;

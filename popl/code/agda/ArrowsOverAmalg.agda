@@ -3,7 +3,8 @@
 
 module ArrowsOverAmalg where
 
-open import PiSyntax using (U; I; _+ᵤ_; _×ᵤ_; _⟷_; _◎_; id⟷;
+open import Pi.Types using (U; I; _+ᵤ_; _×ᵤ_)
+open import PiSyntax using (_⟷_; _◎_; id⟷;
   swap⋆; swap₊; assocl⋆; assocr⋆; unite⋆l; uniti⋆l; !⟷; _⊗_; ctrl; 𝟚;
   cx; ccx)
 open import Amalgamation using (TList; nil; cons₁; cons₂)

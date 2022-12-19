@@ -2,6 +2,7 @@
 
 module PiReasoning where
 
+open import Pi.Types
 open import PiSyntax
 
 infix  30 _⟷₂_

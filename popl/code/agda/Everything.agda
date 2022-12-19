@@ -21,6 +21,7 @@ module Everything where
 --
 
 -- Basically: the contents of 3.1 up to the semantics
+open import Pi.Types
 open import PiSyntax
 
 -- PiTagless gives a representation independent version of PiSyntax.
@@ -74,7 +75,7 @@ open import Tests
 open import TestsSlow
 
 ------------------------------------------------------------------------------------
--- Qpi and reasoning
+-- QPi and reasoning
 
 open import QPi.Syntax
 open import QPi

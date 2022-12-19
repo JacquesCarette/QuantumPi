@@ -11,7 +11,7 @@ open import Data.Product using (_×_; _,_; proj₁; proj₂)
 open import Data.Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
 
-open import PiSyntax using (U; I; _×ᵤ_; ⟦_⟧)
+open import Pi.Types using (U; I; _×ᵤ_; ⟦_⟧)
 open import Amalgamation using (TList; Categorical; evalTL)
 import ArrowsOverAmalg as A
 open import Ancillae using (N; N⇒U; enumN; Anc; Two; _×ₙ_)
