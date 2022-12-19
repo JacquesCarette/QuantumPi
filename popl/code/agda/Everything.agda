@@ -43,6 +43,10 @@ open import StatesAndEffects
 open import Simon
 
 ------------------------------------------------------------------------------------
+-- Utilities useful in various places below
+open import FloatUtils
+
+------------------------------------------------------------------------------------
 -- Two semantics for Pi rotated with respect to each other 
 
 -- Unitary implements (most of?) Definition 6 of Section 4.2
@@ -60,10 +64,6 @@ open import PiZ
 --  [an enumeration of] a type (t : U). But this time the action is conjugated by R, i.e.
 -- "rotated". The result is still matrices, but in a different basis.
 open import PiH
-
-------------------------------------------------------------------------------------
--- Utilities useful in various places below
-open import FloatUtils
 
 ------------------------------------------------------------------------------------
 -- Instantiate generic semantics for full language
