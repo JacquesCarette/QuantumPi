@@ -11,14 +11,13 @@ module Everything where
 ------------------------------------------------------------------------------------
 -- Syntactic constructions
 
--- PiSyntax gives:
--- - the representation of types (as a data-structure)
--- - the representation of combinators (ditto, i.e. as syntax)
--- - some reasoning combinators
--- - (currently) some extra combinators for Simon's problem
--- - some additional combinators (that could be in the syntax) expressible using swap
--- - proof of reversibility of the syntax
---
+-- - Pi.Types gives the representation of types (as a data-structure)
+-- - Pi.Language gives the representation of combinators (ditto, i.e. as syntax)
+--     and some additional combinators (that could be in the syntax) expressible using swap
+--     and the proof of reversibility of the syntax
+-- - Pi.Reasoning gives some reasoning combinators
+-- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
+-- - PiReasoning (to be renamed) gives the Level 2 language
 
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
