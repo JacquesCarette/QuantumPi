@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module QPi where
 
@@ -98,21 +98,6 @@ simon = map4*** zero >>>
         arrZ cxGroup >>>
         had *** had *** id⇔ *** id⇔ 
 
--- postulate measurement
-
-postulate
-  discard : t ⇔ I
-
-fst : (t₁ ×ᵤ t₂) ⇔ t₁
-fst = (id⇔ *** discard) >>> unite⋆r
-
-snd : (t₁ ×ᵤ t₂) ⇔ t₂
-snd = swap⋆ >>> fst
-
-measureZ measureϕ : 𝟚 ⇔ 𝟚
-measureZ = copyZ >>> fst
-measureϕ = copyϕ >>> fst
-
 -- Grover
 
 amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
@@ -127,11 +112,6 @@ amp = map3*** had >>>
 u : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 u = id⇔ *** id⇔ *** id⇔
 
-grover₃ : I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-grover₃ = map3*** plus >>>
-          repeat 3 (u >>> amp) >>>
-          map3*** measureZ
-  
 -- Complex numbers
 -- ctrl S
 

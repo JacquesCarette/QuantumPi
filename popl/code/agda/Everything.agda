@@ -89,12 +89,13 @@ open import Tests
 open import TestsSlow
 
 ------------------------------------------------------------------------------------
--- QPi and reasoning
+-- QPi: Syntax, semantics, execution, terms, measurement and reasoning
 
 open import QPi.Syntax
 open import QPi.Semantics
 open import QPi.Execute
 open import QPi
+open import QPi.Measurement
 open import Reasoning
 
 ------------------------------------------------------------------------------------

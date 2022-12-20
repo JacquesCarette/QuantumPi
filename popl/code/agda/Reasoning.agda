@@ -9,7 +9,8 @@ open import Pi.Equivalences
 open import Pi.DefinedEquiv using (xcx)
 open import QPi.Syntax
 open import QPi using (ctrlZ; one; copyZ; copyϕ; xgate; zgate;
-  had; minus; plus; cx; cz; measureϕ; measureZ)
+  had; minus; plus; cx; cz)
+open import QPi.Measurement using (measureϕ; measureZ)
 
 ---------------------------------------------------------------------------
 -- Some of the equations
