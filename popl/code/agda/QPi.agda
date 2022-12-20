@@ -3,25 +3,13 @@
 module QPi where
 
 open import Data.Nat using (ℕ; zero; suc)
-open import Data.Float using (Float)
-open import Data.Bool using (Bool; false; true; _∧_; _∨_; if_then_else_)
-open import Data.Product using (_×_; _,_)
--- open import Function using (_∘_)
-open import Data.List using (List; _∷_; []; map; foldr)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; _≟_; 𝟚; 𝔽; 𝕋)
+open import Pi.Types using (U; I; _×ᵤ_; 𝟚)
 open import Pi.Language as Π using (_⟷_)
 import Pi.Terms as ΠT
-open import ArrowsOverAmalg using (arr₁; arr₂)
-open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
-  renaming (_***_ to _****_; zero to kzero; assertZero to bzero)
--- open import SPi.Terms using () renaming ()
 open import Instances using (evalSE)
-open import FloatUtils using (vec; mat; tooSmall)
 
 open import QPi.Syntax
-open import QPi.Semantics using (embed)
 
 ---------------------------------------------------------------------------
 
@@ -31,28 +19,6 @@ private
 
 ---------------------------------------------------------------------------
 -- Infrastructure for examples
-
-K : U → Set
-K t = vec ⟦ t ⟧
-
-show : {t : U} → K t → List (⟦ t ⟧ × Float)
-show {t} v =
-  foldr (λ i r → let a = v i in if tooSmall a then r else (i , a) ∷ r)
-        [] 
-        (enum t)
-
-ket : mat ⟦ t ⟧
-ket v w = if v ≟ w then 1.0 else 0.0
-
--- show {𝟚 ×ᵤ 𝟚} (ket (𝕋 , 𝔽))
-
-run : (t₁ ⇔ t₂) → K t₁ → List (⟦ t₂ ⟧ × Float)
-run c v = show (evalSE (embed c) v)
-
-g : {t₁ t₂ : U} → (t₁ ⇔ t₂) → List (⟦ t₁ ⟧ × List (⟦ t₂ ⟧ × Float))
-g {t₁} {t₂} c = map (λ v → (v , run c (ket v))) (enum t₁)
-
---
 
 repeat : ℕ → (t ⇔ t) → (t ⇔ t)
 repeat 0 c = id⇔
@@ -97,17 +63,17 @@ assertMinus = zgate >>> assertPlus
 
 {--
 
-g xgate
+showAll xgate
 (𝕋 , (𝔽 , 1) ∷ []) ∷
 (𝔽 , (𝕋 , 1) ∷ []) ∷
 []
 
-g had
+showAll had
 (𝕋 , (𝕋 , 0.7071067811706743) ∷ (𝔽 , 0.707106781202421) ∷ []) ∷
 (𝔽 , (𝕋 , 0.707106781202421) ∷ (𝔽 , -0.7071067811706743) ∷ []) ∷
 []
 
-g cx
+showAll cx
 ((𝕋 , 𝕋) , ((𝕋 , 𝔽) , 1) ∷ []) ∷
 ((𝕋 , 𝔽) , ((𝕋 , 𝕋) , 1) ∷ []) ∷
 ((𝔽 , 𝕋) , ((𝔽 , 𝕋) , 1) ∷ []) ∷
@@ -177,7 +143,7 @@ ctrlS = (id⇔ *** id⇔ *** had) >>>
         ccx
 
 {--
-
+showAll ctrlS
 ((𝔽 , 𝔽 , 𝔽) , ((𝔽 , 𝔽 , 𝔽) , 1.0000000000000004) ∷ []) ∷
 ((𝔽 , 𝔽 , 𝕋) , ((𝔽 , 𝔽 , 𝕋) , 1.0000000000000004) ∷ []) ∷
 ((𝔽 , 𝕋 , 𝔽) , ((𝔽 , 𝕋 , 𝔽) , 1.0000000000000004) ∷ []) ∷
@@ -187,7 +153,6 @@ ctrlS = (id⇔ *** id⇔ *** had) >>>
 ((𝕋 , 𝕋 , 𝔽) , ((𝕋 , 𝕋 , 𝕋) , 1.0000000000000004) ∷ []) ∷
 ((𝕋 , 𝕋 , 𝕋) , ((𝕋 , 𝕋 , 𝔽) , -1.0000000000000002) ∷ []) ∷
 []
-
 
 --}
 
