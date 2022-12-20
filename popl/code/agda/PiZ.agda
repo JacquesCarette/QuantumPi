@@ -2,7 +2,8 @@
 
 module PiZ where
 
-open import PiSyntax using (U; _⟷_; 𝟚)
+open import Pi.Types using (U; 𝟚)
+open import Pi.Language using (_⟷_)
 open import PiTagless using (generalize)
 open import GenericPi using (Fwd; GenericPi; true; false)
 open import Unitary using (𝒰)

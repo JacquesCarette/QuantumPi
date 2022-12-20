@@ -3,7 +3,7 @@
 module QPi where
 
 open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
-open import Data.Float using (Float; _≤ᵇ_; _<ᵇ_)
+open import Data.Float using (Float)
   renaming (_+_ to _+f_; _*_ to _*f_)
 open import Data.Empty using (⊥)
 open import Data.Unit using (⊤; tt)
@@ -14,13 +14,15 @@ open import Function using (_∘_)
 open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax as Π using (U; O; I; _+ᵤ_; _×ᵤ_; _⟷_; 𝟚; 𝔽; 𝕋; ⟦_⟧; enum; _≟_)
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧; enum; _≟_; 𝟚; 𝔽; 𝕋)
+open import Pi.Language as Π using (_⟷_)
+import Pi.Terms as ΠT
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
-  renaming (zero to kzero; assertZero to bzero; _***_ to _****_)
+  renaming (_***_ to _****_)
+open import SPi.Terms using () renaming (zero to kzero; assertZero to bzero)
 open import Instances using (evalSE)
-open import Unitary renaming (𝒰 to K)
-open import FloatUtils using (mat; tooSmall)
+open import FloatUtils using (vec; mat; tooSmall)
 
 open import QPi.Syntax
 
@@ -55,13 +57,16 @@ embed assertZero = bzero
 ---------------------------------------------------------------------------
 -- Infrastructure for examples
 
+K : U → Set
+K t = vec ⟦ t ⟧
+
 show : {t : U} → K t → List (⟦ t ⟧ × Float)
 show {t} v =
   foldr (λ i r → let a = v i in if tooSmall a then r else (i , a) ∷ r)
         [] 
         (enum t)
 
-ket : ⟦ t ⟧ → K t
+ket : mat ⟦ t ⟧
 ket v w = if v ≟ w then 1.0 else 0.0
 
 -- show {𝟚 ×ᵤ 𝟚} (ket (𝕋 , 𝔽))
@@ -96,14 +101,14 @@ had = arrϕ Π.swap₊
 zgate = had >>> xgate >>> had
 
 ctrlZ : (t ⟷ t) → 𝟚 ×ᵤ t ⇔ 𝟚 ×ᵤ t
-ctrlZ c = arrZ (Π.ctrl c)
+ctrlZ c = arrZ (ΠT.ctrl c)
 
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cx = ctrlZ Π.swap₊ 
 cz = id⇔ *** had >>> cx >>> id⇔ *** had
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ccx = arrZ Π.ccx
+ccx = arrZ ΠT.ccx
 
 one plus minus : I ⇔ 𝟚 
 one = zero >>> xgate

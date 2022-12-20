@@ -11,17 +11,22 @@ module Everything where
 ------------------------------------------------------------------------------------
 -- Syntactic constructions
 
--- PiSyntax gives:
--- - the representation of types (as a data-structure)
--- - the representation of combinators (ditto, i.e. as syntax)
--- - some reasoning combinators
--- - (currently) some extra combinators for Simon's problem
--- - some additional combinators (that could be in the syntax) expressible using swap
--- - proof of reversibility of the syntax
---
+-- - Pi.Types gives the representation of types (as a data-structure)
+-- - Pi.Language gives the representation of combinators (ditto, i.e. as syntax)
+--     and some additional combinators (that could be in the syntax) expressible using swap
+--     and the proof of reversibility of the syntax
+-- - Pi.Reasoning gives some reasoning combinators
+-- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
+-- - Pi.Equivalences gives a (syntactic) language of Pi term equivalences
+-- - Pi.DefinedEquiv defines some extra equivalences (on items from Pi.Terms)
 
 -- Basically: the contents of 3.1 up to the semantics
-open import PiSyntax
+open import Pi.Types
+open import Pi.Language
+open import Pi.Reasoning
+open import Pi.Terms
+open import Pi.Equivalences
+open import Pi.DefinedEquiv
 
 -- PiTagless gives a representation independent version of PiSyntax.
 -- So rather than providing different evaluators for the syntax, one can instead provide
@@ -33,11 +38,18 @@ open import PiTagless
 -- Syntactic arrow constructions parameterized by evaluators in the tagless style
 open import Amalgamation
 open import ArrowsOverAmalg
+open import Arrows.Terms -- some examples
 open import Ancillae -- Defined PiSyntax sub-language for ancillaes
 open import StatesAndEffects
+open import SPi.Terms
+open import SPi.Complementarity
 
 -- Example written in the syntax (before any explicit rotation or unitaries)
 open import Simon
+
+------------------------------------------------------------------------------------
+-- Utilities useful in various places below
+open import FloatUtils
 
 ------------------------------------------------------------------------------------
 -- Two semantics for Pi rotated with respect to each other 
@@ -59,10 +71,6 @@ open import PiZ
 open import PiH
 
 ------------------------------------------------------------------------------------
--- Utilities useful in various places below
-open import FloatUtils
-
-------------------------------------------------------------------------------------
 -- Instantiate generic semantics for full language
 
 open import Instances
@@ -74,11 +82,10 @@ open import Tests
 open import TestsSlow
 
 ------------------------------------------------------------------------------------
--- Qpi and reasoning
+-- QPi and reasoning
 
 open import QPi.Syntax
 open import QPi
-open import PiReasoning
 open import Reasoning
 
 ------------------------------------------------------------------------------------

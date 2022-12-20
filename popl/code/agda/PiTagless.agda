@@ -2,7 +2,8 @@
 
 module PiTagless where
 
-open import PiSyntax 
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_)
+open import Pi.Language -- all of it
 
 -------------------------------------------------------------------------------------
 

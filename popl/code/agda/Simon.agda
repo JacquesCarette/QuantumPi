@@ -3,13 +3,17 @@
 
 module Simon where
 
-open import PiSyntax
+open import Pi.Types
+open import Pi.Language
+open import Pi.Reasoning
+open import Pi.Terms
 import ArrowsOverAmalg as A
 open import StatesAndEffects
+open import SPi.Terms using (zero)
 
 private
   variable
-    t t₁ t₂ t₃ t₄ t₅ t₆ : U
+    t t₁ t₂ t₃ t₄ : U
 
 -- Simon fragments
 

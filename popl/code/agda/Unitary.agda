@@ -9,7 +9,7 @@ open import Data.Sum using (inj₁; inj₂)
 open import Function using (_∘_; id)
 
 open import FloatUtils using (π; cπ/8; sπ/8; vec; Rω; Rω⁻¹)
-open import PiSyntax using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧)
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧)
 
 𝒰 : (t : U) → Set
 𝒰 t = vec ⟦ t ⟧

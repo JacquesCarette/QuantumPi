@@ -1,59 +1,20 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module PiSyntax where
+module Pi.Language where
 
-open import Data.Bool using (Bool; true; false; _∧_)
-open import Data.Empty using (⊥)
-open import Data.List using (List; []; _∷_; _++_; map; cartesianProduct)
-open import Data.Product as Prod using (_,_; _×_; swap)
-open import Data.Sum as Sum using (_⊎_; inj₁; inj₂)
-open import Data.Unit using (⊤; tt)
-open import Function using (id; _∘_; flip)
+open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
 
 -------------------------------------------------------------------------------------
--- Types
-
-data U : Set where
-  O : U
-  I : U
-  _+ᵤ_ : U → U → U
-  _×ᵤ_ : U → U → U
-
-infixr 40 _+ᵤ_ _×ᵤ_
-infix 30 _⟷_
-infixr 10 _◎_
-infixr 20 _⊕_
-infixr 30 _⊗_
+-- 1-combinators
 
 private
   variable
     t t₁ t₂ t₃ t₄ : U
 
--- Intended meaning
-⟦_⟧ : (t : U) → Set
-⟦ O ⟧ = ⊥
-⟦ I ⟧ = ⊤
-⟦ t₁ +ᵤ t₂ ⟧ = ⟦ t₁ ⟧ ⊎ ⟦ t₂ ⟧
-⟦ t₁ ×ᵤ t₂ ⟧ = ⟦ t₁ ⟧ × ⟦ t₂ ⟧
-
--- inhabitants of U have decidable equality
-_≟_ : {t : U} → ⟦ t ⟧ → ⟦ t ⟧ → Bool
-_≟_ {I} tt tt = true
-_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₁ w) = v ≟ w
-_≟_ {t₁ +ᵤ t₂} (inj₁ v) (inj₂ w) = false
-_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₁ w) = false
-_≟_ {t₁ +ᵤ t₂} (inj₂ v) (inj₂ w) = v ≟ w
-_≟_ {t₁ ×ᵤ t₂} (v₁ , w₁) (v₂ , w₂) = v₁ ≟ v₂ ∧ w₁ ≟ w₂
-
--- we can enumerate our types
-enum : (t : U) → List ⟦ t ⟧
-enum O = []
-enum I = tt ∷ []
-enum (t₁ +ᵤ t₂) = map inj₁ (enum t₁) ++ map inj₂ (enum t₂)
-enum (t₁ ×ᵤ t₂) = cartesianProduct (enum t₁) (enum t₂)
-
--------------------------------------------------------------------------------------
--- 1-combinators
+infix 30 _⟷_
+infixr 10 _◎_
+infixr 20 _⊕_
+infixr 30 _⊗_
 
 data _⟷_  : U → U → Set where
   id⟷  : t ⟷  t
@@ -80,18 +41,6 @@ data _⟷_  : U → U → Set where
   _⊗_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
 
 -------------------------------------------------------------------------------------
--- Equational reasoning
-
-infixr 10 _⟨_⟩_
-infix  15 _∎
-
-_⟨_⟩_ : (t₁ : U) → (t₁ ⟷  t₂) → (t₂ ⟷  t₃) → (t₁ ⟷  t₃)
-_ ⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
-
-_∎ : (t : U) → t ⟷  t
-_∎ t = id⟷
-
--------------------------------------------------------------------------------------
 -- Inverse
 !⟷ : t₁ ⟷  t₂ → t₂ ⟷  t₁
 !⟷ unite₊l = uniti₊l
@@ -114,13 +63,7 @@ _∎ t = id⟷
 !⟷ (c₁ ⊗ c₂) = !⟷ c₁ ⊗ !⟷ c₂
 
 -------------------------------------------------------------------------------------
--- Common terms
-
-𝟚 : U
-𝟚 = I +ᵤ I
-
-pattern 𝔽 = inj₁ tt
-pattern 𝕋 = inj₂ tt
+-- Definitional extension of the language; these are often terms in the language.
 
 unite₊r : {t : U} → t +ᵤ O ⟷  t
 unite₊r = swap₊ ◎ unite₊l
@@ -133,15 +76,6 @@ unite⋆r = swap⋆ ◎ unite⋆l
 
 uniti⋆r : {t : U} → t ⟷ t ×ᵤ I
 uniti⋆r = uniti⋆l ◎ swap⋆
-
-ctrl : t ⟷ t → (𝟚 ×ᵤ t) ⟷ (𝟚 ×ᵤ t)
-ctrl c = dist ◎ (id⟷ ⊕ id⟷ ⊗ c) ◎ factor
-
-cx : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
-cx = ctrl swap₊
-
-ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ccx = ctrl cx
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ open import Data.List using (_∷_; [])
 open import Data.Product using (_,_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import PiSyntax using (𝕋; 𝔽)
+open import Pi.Types using (𝕋; 𝔽)
 open import Instances using (evalTL₁)
 open import Tests using (inner-simon; test-vec4; show)
 

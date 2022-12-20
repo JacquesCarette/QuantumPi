@@ -1,8 +1,9 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
-module PiReasoning where
+module Pi.Equivalences where
 
-open import PiSyntax
+open import Pi.Types
+open import Pi.Language
 
 infix  30 _⟷₂_
 
@@ -191,6 +192,20 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
 
-xcx : ((id⟷ ⊗ swap₊) ◎ cx) ⟷₂ (cx ◎ (id⟷ ⊗ swap₊))
-xcx = {!!} 
+-------------------------------------------------------------------------------------
+-- Equational reasoning
+
+-- the precedences are all wrong...
+infix  60  _▤       
+infixr 50  _⟨_⟩_   
+
+_⟨_⟩_ : {t₁ t₂ : U} (c₁ : t₁ ⟷ t₂) {c₂ : t₁ ⟷ t₂} {c₃ : t₁ ⟷ t₂} → 
+         (c₁ ⟷₂ c₂) → (c₂ ⟷₂ c₃) → (c₁ ⟷₂ c₃)
+_ ⟨ α ⟩ β = trans⟷₂ α β
+
+_▤ : {t₁ t₂ : U} → (c : t₁ ⟷ t₂) → (c ⟷₂ c)
+_▤ c = id⟷₂
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
 
