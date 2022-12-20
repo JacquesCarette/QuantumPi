@@ -5,7 +5,7 @@ module QPi.Syntax where
 open import Pi.Types using (U; I; _×ᵤ_; 𝟚)
 open import Pi.Language using (_⟷_)
 
-open import Multiplicative using (MultiplicativeStructure; Mult; module Build)
+open import CommMonoid using (CMStructure; CMon; module Build)
 
 ---------------------------------------------------------------------------
 -- The surface Quantum Pi language
@@ -19,10 +19,10 @@ private
     t t₁ t₂ t₃ t₄ : U
 
 -- Set things up
-  MS : MultiplicativeStructure
-  MS = Mult U I _×ᵤ_
+  CM : CMStructure
+  CM = CMon U I _×ᵤ_
 
-  module M = Build MS
+  module M = Build CM
   
 -- Arrow combinators
 

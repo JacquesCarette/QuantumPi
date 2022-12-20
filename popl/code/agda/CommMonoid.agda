@@ -1,19 +1,20 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module Multiplicative where
+module CommMonoid where
 
--- Generate a "multiplicative" structure over a given language
+-- Generate a "commutative monoid" structure over a given language
+-- It uses multiplicative notation, but doesn't assume that.
 
-record MultiplicativeStructure : Set₁ where
-  constructor Mult
+record CMStructure : Set₁ where
+  constructor CMon
   infixr 40 _×ᵤ_
   field
     U : Set
     I : U
     _×ᵤ_ : U → U → U
 
-module Build (M : MultiplicativeStructure) where
-  open MultiplicativeStructure M
+module Build (CM : CMStructure) where
+  open CMStructure CM
 
   private
     variable

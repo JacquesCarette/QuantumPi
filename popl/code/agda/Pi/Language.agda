@@ -3,7 +3,7 @@
 module Pi.Language where
 
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
-open import Multiplicative using (MultiplicativeStructure; Mult; module Build)
+open import CommMonoid using (CMStructure; CMon; module Build)
 
 -------------------------------------------------------------------------------------
 -- 1-combinators
@@ -18,10 +18,10 @@ infixr 20 _⊕_
 infixr 30 _⊗_
 
 -- Set things up
-MS : MultiplicativeStructure
-MS = Mult U I _×ᵤ_
+CM× : CMStructure
+CM× = CMon U I _×ᵤ_
 
-module M = Build MS
+module M× = Build CM×
 
 data _⟷_ : U → U → Set where
   id⟷  : t ⟷  t
@@ -32,7 +32,7 @@ data _⟷_ : U → U → Set where
   unite₊l : O +ᵤ t ⟷  t
   uniti₊l : t ⟷  O +ᵤ t
   ---
-  mult    : t₁ M.⇔ t₂ → t₁ ⟷ t₂
+  mult    : t₁ M×.⇔ t₂ → t₁ ⟷ t₂
   --
   dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
   factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ +ᵤ t₂) ×ᵤ t₃
@@ -43,11 +43,11 @@ data _⟷_ : U → U → Set where
   _⊕_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ +ᵤ t₂ ⟷ t₃ +ᵤ t₄)
   _⊗_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
 
-pattern unite⋆l = mult M.unite⋆
-pattern uniti⋆l = mult M.uniti⋆
-pattern swap⋆   = mult M.swap⋆
-pattern assocl⋆ = mult M.assocl⋆
-pattern assocr⋆ = mult M.assocr⋆
+pattern unite⋆l = mult M×.unite⋆
+pattern uniti⋆l = mult M×.uniti⋆
+pattern swap⋆   = mult M×.swap⋆
+pattern assocl⋆ = mult M×.assocl⋆
+pattern assocr⋆ = mult M×.assocr⋆
 
 -------------------------------------------------------------------------------------
 -- Inverse

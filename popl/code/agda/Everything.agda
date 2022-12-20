@@ -9,6 +9,13 @@ module Everything where
 -- It is also a convenient place to give a mapping between the paper and the code.
 
 ------------------------------------------------------------------------------------
+-- Preparatory constructions
+
+-- Set up the combinators that come with a commutative monoid. We'll end up
+-- using this 3 times, so it is worth the abstraction.
+open import CommMonoid
+
+------------------------------------------------------------------------------------
 -- Syntactic constructions
 
 -- - Pi.Types gives the representation of types (as a data-structure)
