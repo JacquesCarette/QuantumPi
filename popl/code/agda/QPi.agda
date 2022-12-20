@@ -2,15 +2,11 @@
 
 module QPi where
 
-open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
+open import Data.Nat using (ℕ; zero; suc)
 open import Data.Float using (Float)
-  renaming (_+_ to _+f_; _*_ to _*f_)
-open import Data.Empty using (⊥)
-open import Data.Unit using (⊤; tt)
 open import Data.Bool using (Bool; false; true; _∧_; _∨_; if_then_else_)
-open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Product using (_×_; _,_)
-open import Function using (_∘_)
+-- open import Function using (_∘_)
 open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -32,8 +28,6 @@ open import QPi.Semantics using (embed)
 private
   variable
     t t₁ t₂ : U
-    c c₁ c₂ c₃ c₄ c₅ c₆ : t₁ ⟷ t₂
-    d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
 
 ---------------------------------------------------------------------------
 -- Infrastructure for examples
