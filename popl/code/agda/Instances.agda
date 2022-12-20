@@ -12,7 +12,9 @@ open import Data.Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
 
 open import Pi.Types using (U; I; _×ᵤ_; ⟦_⟧)
-open import Amalgamation using (TList; Categorical; evalTL)
+open import Pi.Language using (_⟷_)
+open import Amalgamation using (module Build; Categorical)
+open Build (_⟷_) using (TList; evalTL)
 import ArrowsOverAmalg as A
 open import Ancillae using (N; N⇒U; enumN; Anc; Two; _×ₙ_)
 open import StatesAndEffects using (_↭_; lift)

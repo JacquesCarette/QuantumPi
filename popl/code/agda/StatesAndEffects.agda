@@ -7,12 +7,12 @@ module StatesAndEffects where
 open import Data.Maybe using (nothing)
 
 open import Pi.Types using (U;I;  _×ᵤ_)
-open import Pi.Language using (!⟷)
+open import Pi.Language using (_⟷_; !⟷)
 open import Ancillae using (N; N⇒U; a*; unpack)
-open import Amalgamation using (TList; cons₁)
+open import Amalgamation using (module Build)
+open Build (_⟷_) using (TList; cons₁)
 import ArrowsOverAmalg as A
 open A using (_>>>_)
--- import Arrows.Terms as AT
 
 -------------------------------------------------------------------------------------
 private

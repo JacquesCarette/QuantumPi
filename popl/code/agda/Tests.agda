@@ -12,8 +12,9 @@ open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types
-open import Pi.Language using (id⟷; swap₊; _⊗_)
-open import Amalgamation using (TList)
+open import Pi.Language using (_⟷_; id⟷; swap₊; _⊗_)
+open import Amalgamation using (module Build)
+open Build (_⟷_) using (TList)
 import ArrowsOverAmalg as A
 import Arrows.Terms as AT
 open import StatesAndEffects using (_↭_; _>>>>_)

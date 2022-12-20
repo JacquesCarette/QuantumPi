@@ -4,9 +4,10 @@
 module Arrows.Terms where
 
 open import Pi.Types using (U; _+ᵤ_; _×ᵤ_; 𝟚)
-open import Pi.Language using (swap₊)
+open import Pi.Language using (_⟷_; swap₊)
 open import Pi.Terms using (ctrl; cx; ccx)
-open import Amalgamation using (TList)
+open import Amalgamation using (module Build)
+open Build (_⟷_) using (TList)
 open import ArrowsOverAmalg using (arr₁; arr₂; _>>>_; id; _***_)
 
 -------------------------------------------------------------------------------------
