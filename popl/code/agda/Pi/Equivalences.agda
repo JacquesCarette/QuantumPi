@@ -129,17 +129,19 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
   triangle⊕l : {t₁ t₂ : U} →
     (unite₊r {t₁} ⊕ id⟷ {t₂}) ⟷₂ (assocr₊ ◎ (id⟷ ⊕ unite₊l))
   triangle⊕r : {t₁ t₂ : U} →
-    (assocr₊ ◎ (id⟷ {t₁} ⊕ unite₊l {t₂})) ⟷₂ (unite₊r ⊕ id⟷)
+    (assocr₊ ◎ (id⟷ {t₁} ⊕ unite₊l)) ⟷₂ (unite₊r ⊕ id⟷ {t₂})
   triangle⊗l : {t₁ t₂ : U} →
     ((unite⋆r {t₁}) ⊗ id⟷ {t₂}) ⟷₂ (assocr⋆ ◎ (id⟷ ⊗ unite⋆l))
   triangle⊗r : {t₁ t₂ : U} →
     (assocr⋆ ◎ (id⟷ {t₁} ⊗ unite⋆l)) ⟷₂ (unite⋆r ⊗ id⟷ {t₂})
   pentagon⊕l : {t₁ t₂ t₃ t₄ : U} →
-    (assocr₊ ◎ (assocr₊ {t₁} {t₂} {_+ᵤ_ t₃ t₄})) ⟷₂
+   _⟷₂_ {((t₁ +ᵤ t₂) +ᵤ t₃) +ᵤ t₄}
+    (assocr₊ ◎ assocr₊)
     (((assocr₊ ⊕ id⟷) ◎ assocr₊) ◎ (id⟷ ⊕ assocr₊))
   pentagon⊕r : {t₁ t₂ t₃ t₄ : U} →
-    (((assocr₊ {t₁} {t₂} {t₃} ⊕ id⟷ {t₄}) ◎ assocr₊) ◎ (id⟷ ⊕ assocr₊))
-     ⟷₂ (assocr₊ ◎ assocr₊)    
+   _⟷₂_ {((t₁ +ᵤ t₂) +ᵤ t₃) +ᵤ t₄}
+    (((assocr₊ ⊕ id⟷ {t₄}) ◎ assocr₊) ◎ (id⟷ ⊕ assocr₊))
+    (assocr₊ ◎ assocr₊)    
   pentagon⊗l : {t₁ t₂ t₃ t₄ : U} →
     _⟷₂_ {((t₁ ×ᵤ t₂) ×ᵤ t₃) ×ᵤ t₄} (assocr⋆ ◎ assocr⋆)
     (((assocr⋆ ⊗ id⟷ {t₄}) ◎ assocr⋆) ◎ (id⟷ ⊗ assocr⋆))
@@ -149,22 +151,26 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     (assocr⋆ ◎ assocr⋆)
 --   -- from the braiding
 --   -- unit coherence
-  unite₊l-coh-l : {t₁ : U} → (unite₊l {t₁}) ⟷₂ (swap₊ ◎ unite₊r)
-  unite₊l-coh-r : {t₁ : U} → (swap₊ ◎ unite₊r) ⟷₂ (unite₊l {t₁})
+  unite₊l-coh-l : {t₁ : U} → _⟷₂_ {O +ᵤ t₁} unite₊l (swap₊ ◎ unite₊r)
+  unite₊l-coh-r : {t₁ : U} → _⟷₂_ {O +ᵤ t₁} (swap₊ ◎ unite₊r) unite₊l
   unite⋆l-coh-l : {t₁ : U} → _⟷₂_ {I ×ᵤ t₁} unite⋆l (swap⋆ ◎ unite⋆r)
   unite⋆l-coh-r : {t₁ : U} → _⟷₂_ {I ×ᵤ t₁} (swap⋆ ◎ unite⋆r) unite⋆l
   hexagonr⊕l : {t₁ t₂ t₃ : U} →
-    ((assocr₊ ◎ swap₊) ◎ assocr₊ {t₁} {t₂} {t₃}) ⟷₂
+    _⟷₂_ {(t₁ +ᵤ t₂) +ᵤ t₃}
+    ((assocr₊ ◎ swap₊) ◎ assocr₊)
     (((swap₊ ⊕ id⟷) ◎ assocr₊) ◎ (id⟷ ⊕ swap₊))
   hexagonr⊕r : {t₁ t₂ t₃ : U} →
-    (((swap₊ ⊕ id⟷) ◎ assocr₊) ◎ (id⟷ ⊕ swap₊)) ⟷₂
-    ((assocr₊ ◎ swap₊) ◎ assocr₊ {t₁} {t₂} {t₃})
+    _⟷₂_ {(t₁ +ᵤ t₂) +ᵤ t₃}
+    (((swap₊ ⊕ id⟷) ◎ assocr₊) ◎ (id⟷ ⊕ swap₊))
+    ((assocr₊ ◎ swap₊) ◎ assocr₊)
   hexagonl⊕l : {t₁ t₂ t₃ : U} →
-    ((assocl₊ ◎ swap₊) ◎ assocl₊ {t₁} {t₂} {t₃}) ⟷₂
+    _⟷₂_ {t₁ +ᵤ (t₂ +ᵤ t₃)}
+    ((assocl₊ ◎ swap₊) ◎ assocl₊)
     (((id⟷ ⊕ swap₊) ◎ assocl₊) ◎ (swap₊ ⊕ id⟷))
   hexagonl⊕r : {t₁ t₂ t₃ : U} →
-    (((id⟷ ⊕ swap₊) ◎ assocl₊) ◎ (swap₊ ⊕ id⟷)) ⟷₂
-    ((assocl₊ ◎ swap₊) ◎ assocl₊ {t₁} {t₂} {t₃})
+    _⟷₂_ {t₁ +ᵤ (t₂ +ᵤ t₃)}
+    (((id⟷ ⊕ swap₊) ◎ assocl₊) ◎ (swap₊ ⊕ id⟷))
+    ((assocl₊ ◎ swap₊) ◎ assocl₊)
   hexagonr⊗l : {t₁ t₂ t₃ : U} →
     _⟷₂_ {(t₁ ×ᵤ t₂) ×ᵤ t₃}
     ((assocr⋆ ◎ swap⋆) ◎ assocr⋆)
@@ -181,8 +187,6 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     _⟷₂_ {t₁ ×ᵤ (t₂ ×ᵤ t₃)}
     (((id⟷ ⊗ swap⋆) ◎ assocl⋆) ◎ (swap⋆ ⊗ id⟷))
     ((assocl⋆ ◎ swap⋆) ◎ assocl⋆)
-    -- (((id⟷ ⊗ swap⋆) ◎ assocl⋆) ◎ (swap⋆ ⊗ id⟷)) ⟷₂
-    -- ((assocl⋆ ◎ swap⋆) ◎ assocl⋆ {t₁} {t₂} {t₃})
   absorbl⟷₂l : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
     ((c₁ ⊗ id⟷ {O}) ◎ absorbl) ⟷₂ (absorbl ◎ id⟷ {O})
   absorbl⟷₂r : {t₁ t₂ : U} {c₁ : t₁ ⟷ t₂} →
@@ -193,7 +197,8 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     (factorzr ◎ (c₁ ⊗ id⟷)) ⟷₂ (id⟷ ◎ factorzr)
   -- from the coherence conditions of RigCategory
   assocl₊-dist-dist⟷₂l : {t₁ t₂ t₃ t₄ : U} →
-    (((assocl₊ {t₁} {t₂} {t₃} ⊗ id⟷ {t₄}) ◎ dist) ◎ (dist ⊕ id⟷)) ⟷₂
+   _⟷₂_ {(t₁ +ᵤ t₂ +ᵤ t₃) ×ᵤ t₄}
+    (((assocl₊ ⊗ id⟷ {t₄}) ◎ dist) ◎ (dist ⊕ id⟷))
     ((dist ◎ (id⟷ ⊕ dist)) ◎ assocl₊)
   assocl₊-dist-dist⟷₂r : {t₁ t₂ t₃ t₄ : U} →
     ((dist {t₁} ◎ (id⟷ ⊕ dist {t₂} {t₃} {t₄})) ◎ assocl₊) ⟷₂

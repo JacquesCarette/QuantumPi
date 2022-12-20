@@ -18,19 +18,17 @@ infixr 20 _⊕_
 infixr 30 _⊗_
 
 -- Set things up
-CM× : CMStructure
+CM× CM+ : CMStructure
 CM× = CMon U I _×ᵤ_
+CM+ = CMon U O _+ᵤ_
 
 module M× = Build CM×
+module M+ = Build CM+
 
 data _⟷_ : U → U → Set where
   id⟷  : t ⟷  t
   --
-  swap₊   : t₁ +ᵤ t₂ ⟷  t₂ +ᵤ t₁
-  assocr₊ : (t₁ +ᵤ t₂) +ᵤ t₃ ⟷ t₁ +ᵤ (t₂ +ᵤ t₃)
-  assocl₊ : t₁ +ᵤ (t₂ +ᵤ t₃) ⟷ (t₁ +ᵤ t₂) +ᵤ t₃
-  unite₊l : O +ᵤ t ⟷  t
-  uniti₊l : t ⟷  O +ᵤ t
+  add     : t₁ M+.⇔ t₂ → t₁ ⟷ t₂
   ---
   mult    : t₁ M×.⇔ t₂ → t₁ ⟷ t₂
   --
@@ -48,6 +46,12 @@ pattern uniti⋆l = mult M×.uniti⋆
 pattern swap⋆   = mult M×.swap⋆
 pattern assocl⋆ = mult M×.assocl⋆
 pattern assocr⋆ = mult M×.assocr⋆
+
+pattern unite₊l = add M+.unite⋆
+pattern uniti₊l = add M+.uniti⋆
+pattern swap₊   = add M+.swap⋆
+pattern assocl₊ = add M+.assocl⋆
+pattern assocr₊ = add M+.assocr⋆
 
 -------------------------------------------------------------------------------------
 -- Inverse
