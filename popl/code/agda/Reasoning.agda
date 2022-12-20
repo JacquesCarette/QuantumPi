@@ -143,7 +143,7 @@ zhcx =
   ((id⇔ *** zgate) >>> (id⇔ *** had) >>> cx)
     ≡⟨ trans≡ assoc>>>l (cong≡ (trans≡ homL*** (cong*** idl>>>l id≡)) id≡) ⟩
   (id⇔ *** ((had >>> xgate >>> had) >>> had)) >>> cx
-    ≡⟨ {!!} ⟩
+    ≡⟨ {!!} ⟩ 
   id⇔ *** (had >>> xgate) >>> cx
     ≡⟨ {!!} ⟩
   (cz >>> (id⇔ *** had) >>> (id⇔ *** xgate)) ≡∎
