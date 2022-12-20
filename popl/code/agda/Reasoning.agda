@@ -50,10 +50,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   linv>>>r  : id⇔ ≡ (d >>> inv d)
   rinv>>>l  : (inv d >>> d) ≡ id⇔
   rinv>>>r  : id⇔ ≡ (inv d >>> d)
-  unitel⋆≡r : (unite⋆ >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆)
-  uniter⋆≡r : ((d₂ *** d₁) >>> unite⋆) ≡ (unite⋆ >>> d₂)
-  unitil⋆≡r : (uniti⋆ >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆)
-  unitir⋆≡r : (d₂ >>> uniti⋆) ≡ (uniti⋆ >>> (d₂ *** d₁))
+  unitel⋆≡r : (unite⋆r >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆r)
+  uniter⋆≡r : ((d₂ *** d₁) >>> unite⋆r) ≡ (unite⋆r >>> d₂)
+  unitil⋆≡r : (uniti⋆r >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆r)
+  unitir⋆≡r : (d₂ >>> uniti⋆r) ≡ (uniti⋆r >>> (d₂ *** d₁))
   swapl⋆≡ : (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
   swapr⋆≡ : ((d₂ *** d₁) >>> swap⋆) ≡ (swap⋆ >>> (d₁ *** d₂))
   id≡     : d ≡ d

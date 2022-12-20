@@ -3,6 +3,7 @@
 module Pi.Language where
 
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; 𝟚)
+open import Multiplicative using (MultiplicativeStructure; Mult; module Build)
 
 -------------------------------------------------------------------------------------
 -- 1-combinators
@@ -16,7 +17,13 @@ infixr 10 _◎_
 infixr 20 _⊕_
 infixr 30 _⊗_
 
-data _⟷_  : U → U → Set where
+-- Set things up
+MS : MultiplicativeStructure
+MS = Mult U I _×ᵤ_
+
+module M = Build MS
+
+data _⟷_ : U → U → Set where
   id⟷  : t ⟷  t
   --
   swap₊   : t₁ +ᵤ t₂ ⟷  t₂ +ᵤ t₁
@@ -25,11 +32,7 @@ data _⟷_  : U → U → Set where
   unite₊l : O +ᵤ t ⟷  t
   uniti₊l : t ⟷  O +ᵤ t
   ---
-  swap⋆   : t₁ ×ᵤ t₂ ⟷  t₂ ×ᵤ t₁
-  assocr⋆ : (t₁ ×ᵤ t₂) ×ᵤ t₃ ⟷ t₁ ×ᵤ (t₂ ×ᵤ t₃)
-  assocl⋆ : t₁ ×ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ ×ᵤ t₂) ×ᵤ t₃
-  unite⋆l : I ×ᵤ t ⟷  t
-  uniti⋆l : t ⟷  I ×ᵤ t
+  mult    : t₁ M.⇔ t₂ → t₁ ⟷ t₂
   --
   dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
   factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ +ᵤ t₂) ×ᵤ t₃
@@ -39,6 +42,12 @@ data _⟷_  : U → U → Set where
   _◎_     : (t₁ ⟷ t₂) → (t₂ ⟷ t₃) → (t₁ ⟷ t₃)
   _⊕_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ +ᵤ t₂ ⟷ t₃ +ᵤ t₄)
   _⊗_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
+
+pattern unite⋆l = mult M.unite⋆
+pattern uniti⋆l = mult M.uniti⋆
+pattern swap⋆   = mult M.swap⋆
+pattern assocl⋆ = mult M.assocl⋆
+pattern assocr⋆ = mult M.assocr⋆
 
 -------------------------------------------------------------------------------------
 -- Inverse
@@ -75,7 +84,7 @@ unite⋆r : {t : U} → t ×ᵤ I ⟷  t
 unite⋆r = swap⋆ ◎ unite⋆l
 
 uniti⋆r : {t : U} → t ⟷ t ×ᵤ I
-uniti⋆r = uniti⋆l ◎ swap⋆
+uniti⋆r =  uniti⋆l ◎ swap⋆ 
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

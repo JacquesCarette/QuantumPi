@@ -7,7 +7,6 @@ open import Data.Nat using (ℕ; zero; suc)
 open import Pi.Types using (U; I; _×ᵤ_; 𝟚)
 open import Pi.Language as Π using (_⟷_)
 import Pi.Terms as ΠT
-open import Instances using (evalSE)
 
 open import QPi.Syntax
 
@@ -85,7 +84,7 @@ showAll cx
 -- Classical structures
 
 copyZ copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-copyZ = uniti⋆ >>> (id⇔ *** zero) >>> cx
+copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
 copyϕ = had >>> copyZ >>> (had *** had)
 
 -- Simon
@@ -105,7 +104,7 @@ postulate
   discard : t ⇔ I
 
 fst : (t₁ ×ᵤ t₂) ⇔ t₁
-fst = (id⇔ *** discard) >>> unite⋆
+fst = (id⇔ *** discard) >>> unite⋆r
 
 snd : (t₁ ×ᵤ t₂) ⇔ t₂
 snd = swap⋆ >>> fst
