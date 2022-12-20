@@ -25,13 +25,6 @@ private
 -------------------------------------------------------------------------------------
 -- Example terms
 
--- With annotations
-zero : I ↭ (I +ᵤ I)
-zero = lift A.swap×
-
-assertZero : (I +ᵤ I) ↭ I
-assertZero = lift A.swap×
-
 -- Sanity check
 inv0 : invSE zero ≡ assertZero
 inv0 = refl

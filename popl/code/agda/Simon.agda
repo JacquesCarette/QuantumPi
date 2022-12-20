@@ -9,7 +9,6 @@ open import Pi.Reasoning
 open import Pi.Terms
 import ArrowsOverAmalg as A
 open import StatesAndEffects
-open import SPi.Terms using (zero)
 
 private
   variable

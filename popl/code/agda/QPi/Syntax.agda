@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module QPi.Syntax where
 

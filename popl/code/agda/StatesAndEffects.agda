@@ -6,7 +6,7 @@ module StatesAndEffects where
 
 open import Data.Maybe using (nothing)
 
-open import Pi.Types using (U;I;  _×ᵤ_)
+open import Pi.Types using (U;I; _+ᵤ_; _×ᵤ_)
 open import Pi.Language using (_⟷_; !⟷)
 open import Ancillae using (N; N⇒U; a*; unpack)
 open import Amalgamation using (module Build)
@@ -92,6 +92,13 @@ xs *** ys = firstSE xs >>>> secondSE ys
 -- inverse
 invSE : t₁ ↭ t₂ → t₂ ↭ t₁
 invSE (lift m) = lift (A.inv m)
+
+-- The two fundamental pieces, the zero state and the assertZero effect:
+zero : I ↭ (I +ᵤ I)
+zero = lift A.swap×
+
+assertZero : (I +ᵤ I) ↭ I
+assertZero = lift A.swap×
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

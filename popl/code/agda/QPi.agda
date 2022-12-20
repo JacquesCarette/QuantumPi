@@ -19,40 +19,21 @@ open import Pi.Language as Π using (_⟷_)
 import Pi.Terms as ΠT
 open import ArrowsOverAmalg using (arr₁; arr₂)
 open import StatesAndEffects using (_↭_; arr; _>>>>_; invSE)
-  renaming (_***_ to _****_)
-open import SPi.Terms using () renaming (zero to kzero; assertZero to bzero)
+  renaming (_***_ to _****_; zero to kzero; assertZero to bzero)
+-- open import SPi.Terms using () renaming ()
 open import Instances using (evalSE)
 open import FloatUtils using (vec; mat; tooSmall)
 
 open import QPi.Syntax
+open import QPi.Semantics using (embed)
 
 ---------------------------------------------------------------------------
--- Semantics
 
 private
   variable
     t t₁ t₂ : U
     c c₁ c₂ c₃ c₄ c₅ c₆ : t₁ ⟷ t₂
     d d₁ d₂ d₃ d₄ d₅ d₆ : t₁ ⇔ t₂
-
-private
-  pizA : (t₁ ⟷ t₂) → t₁ ↭ t₂
-  pizA c = arr (arr₁ c)
-
-embed : (t₁ ⇔ t₂) → t₁ ↭ t₂
-embed (arrZ c) = pizA c
-embed (arrϕ c) = arr (arr₂ c)
-embed unite⋆ = pizA Π.unite⋆r
-embed uniti⋆ = pizA Π.uniti⋆r
-embed swap⋆ = pizA Π.swap⋆
-embed assocl⋆ = pizA Π.assocl⋆
-embed assocr⋆ = pizA Π.assocr⋆
-embed id⇔ = pizA Π.id⟷
-embed (d₁ >>> d₂) = embed d₁ >>>> embed d₂ 
-embed (d₁ *** d₂) = embed d₁ **** embed d₂ 
-embed (inv d) = invSE (embed d)
-embed zero = kzero
-embed assertZero = bzero
 
 ---------------------------------------------------------------------------
 -- Infrastructure for examples

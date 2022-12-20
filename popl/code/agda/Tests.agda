@@ -17,8 +17,8 @@ open import Amalgamation using (module Build)
 open Build (_⟷_) using (TList)
 import ArrowsOverAmalg as A
 import Arrows.Terms as AT
-open import StatesAndEffects using (_↭_; _>>>>_)
-open import SPi.Terms using (CX; zero; plus; minus; one; assertZero)
+open import StatesAndEffects using (_↭_; _>>>>_; zero; assertZero)
+open import SPi.Terms using (CX; plus; minus; one)
 open import Unitary
 import PiZ
 import PiH

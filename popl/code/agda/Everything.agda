@@ -85,6 +85,7 @@ open import TestsSlow
 -- QPi and reasoning
 
 open import QPi.Syntax
+open import QPi.Semantics
 open import QPi
 open import Reasoning
 
