@@ -2,8 +2,11 @@
 
 module Pi.Reasoning where
 
+open import Relation.Binary.Bundles using (Setoid)
+import Relation.Binary.Reasoning.Setoid as SetoidR
+
 open import Pi.Types using (U)
-open import Pi.Language using (_⟷_; _◎_; id⟷)
+open import Pi.Language using (_⟷_; _◎_; id⟷; !⟷)
 
 private
   variable
@@ -12,14 +15,29 @@ private
 -------------------------------------------------------------------------------------
 -- Equational reasoning
 
-infixr 10 _⟨_⟩_
-infix  15 _∎
+PiSetoid : Setoid _ _
+PiSetoid = record
+  { Carrier = U
+  ; _≈_ = _⟷_
+  ; isEquivalence = record
+    { refl = id⟷
+    ; sym = !⟷
+    ; trans = _◎_
+    }
+  }
 
-_⟨_⟩_ : (t₁ : U) → (t₁ ⟷  t₂) → (t₂ ⟷  t₃) → (t₁ ⟷  t₃)
-_ ⟨ c₁ ⟩ c₂ = c₁ ◎ c₂
+private
+  module Base = SetoidR PiSetoid
+  
+open Base public
+  hiding (step-≈)
 
-_∎ : (t : U) → t ⟷  t
-_∎ t = id⟷
+infixr 2 step-≈
+
+step-≈ : ∀ (x : U) {y z} → y IsRelatedTo z → x ⟷ y → x IsRelatedTo z
+step-≈ = Base.step-≈
+
+syntax step-≈ x y⟷z x⟷y = x ⟨ x⟷y ⟩ y⟷z
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

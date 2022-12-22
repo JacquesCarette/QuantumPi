@@ -17,7 +17,7 @@ private
 -- Simon fragments
 
 A[B[CD]]→[AC][BD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷ (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)
-A[B[CD]]→[AC][BD] {t₁} {t₂} {t₃} {t₄} =
+A[B[CD]]→[AC][BD] {t₁} {t₂} {t₃} {t₄} = begin
  t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷ ⊗ assocl⋆ ⟩
  t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷ ⊗ swap⋆ ⊗ id⟷ ⟩
  t₁ ×ᵤ (t₃ ×ᵤ t₂) ×ᵤ t₄     ⟨ id⟷ ⊗ assocr⋆ ⟩
@@ -25,14 +25,14 @@ A[B[CD]]→[AC][BD] {t₁} {t₂} {t₃} {t₄} =
  (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)   ∎
 
 A[B[CD]]→[AD][BC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)
-A[B[CD]]→[AD][BC] {t₁} {t₂} {t₃} {t₄} =
+A[B[CD]]→[AD][BC] {t₁} {t₂} {t₃} {t₄} = begin
  t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))   ⟨ id⟷ ⊗ assocl⋆ ⟩
  t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄     ⟨ id⟷ ⊗ swap⋆ ⟩
  t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)     ⟨ assocl⋆ ⟩
  (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)   ∎
 
 A[B[CD]]→[BC][AD]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷ (t₂ ×ᵤ t₃) ×ᵤ (t₁ ×ᵤ t₄)
-A[B[CD]]→[BC][AD] {t₁} {t₂} {t₃} {t₄} =
+A[B[CD]]→[BC][AD] {t₁} {t₂} {t₃} {t₄} = begin
   t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄))  ⟨ id⟷ ⊗ assocl⋆ ⟩
   t₁ ×ᵤ (t₂ ×ᵤ t₃) ×ᵤ t₄    ⟨ id⟷ ⊗ swap⋆ ⟩
   t₁ ×ᵤ t₄ ×ᵤ (t₂ ×ᵤ t₃)    ⟨ assocl⋆ ⟩
@@ -43,7 +43,7 @@ A[B[CD]]→[BD][AC]  : t₁ ×ᵤ (t₂ ×ᵤ (t₃ ×ᵤ t₄)) ⟷ (t₂ ×ᵤ
 A[B[CD]]→[BD][AC] {t₁} {t₂} {t₃} {t₄} = A[B[CD]]→[AC][BD] ◎ swap⋆
 
 [AC][BD]→[AD][BC] : {t₁ t₂ t₃ t₄ : U} → (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄) ⟷ (t₁ ×ᵤ t₄) ×ᵤ (t₂ ×ᵤ t₃)
-[AC][BD]→[AD][BC] {t₁} {t₂} {t₃} {t₄} =
+[AC][BD]→[AD][BC] {t₁} {t₂} {t₃} {t₄} = begin
   (t₁ ×ᵤ t₃) ×ᵤ (t₂ ×ᵤ t₄)   ⟨ assocr⋆ ⟩
    t₁ ×ᵤ (t₃ ×ᵤ (t₂ ×ᵤ t₄))  ⟨ id⟷ ⊗ assocl⋆ ⟩
    t₁ ×ᵤ ((t₃ ×ᵤ t₂) ×ᵤ t₄)  ⟨ id⟷ ⊗ swap⋆ ⟩
