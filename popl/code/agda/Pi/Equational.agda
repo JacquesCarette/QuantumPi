@@ -1,6 +1,8 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module Pi.Reasoning where
+-- Define syntax for presenting Pi using equational style
+
+module Pi.Equational where
 
 open import Relation.Binary.Bundles using (Setoid)
 import Relation.Binary.Reasoning.Setoid as SetoidR
@@ -13,20 +15,20 @@ private
     t t₁ t₂ t₃ : U
     
 -------------------------------------------------------------------------------------
--- Equational reasoning
-
-PiSetoid : Setoid _ _
-PiSetoid = record
-  { Carrier = U
-  ; _≈_ = _⟷_
-  ; isEquivalence = record
-    { refl = id⟷
-    ; sym = !⟷
-    ; trans = _◎_
-    }
-  }
+-- Equational reasoning, from stdlib
 
 private
+  PiSetoid : Setoid _ _
+  PiSetoid = record
+    { Carrier = U
+    ; _≈_ = _⟷_
+    ; isEquivalence = record
+      { refl = id⟷
+      ; sym = !⟷
+      ; trans = _◎_
+      }
+    }
+
   module Base = SetoidR PiSetoid
   
 open Base public

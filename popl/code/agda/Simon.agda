@@ -5,7 +5,7 @@ module Simon where
 
 open import Pi.Types
 open import Pi.Language
-open import Pi.Reasoning
+open import Pi.Equational
 open import Pi.Terms
 import ArrowsOverAmalg as A
 open import StatesAndEffects

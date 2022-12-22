@@ -22,7 +22,7 @@ open import CommMonoid
 -- - Pi.Language gives the representation of combinators (ditto, i.e. as syntax)
 --     and some additional combinators (that could be in the syntax) expressible using swap
 --     and the proof of reversibility of the syntax
--- - Pi.Reasoning gives some reasoning combinators
+-- - Pi.Equation gives some syntax for presenting Pi in equational style
 -- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
 -- - Pi.Equivalences gives a (syntactic) language of Pi term equivalences
 -- - Pi.DefinedEquiv defines some extra equivalences (on items from Pi.Terms)
@@ -30,7 +30,7 @@ open import CommMonoid
 -- Basically: the contents of 3.1 up to the semantics
 open import Pi.Types
 open import Pi.Language
-open import Pi.Reasoning
+open import Pi.Equational
 open import Pi.Terms
 open import Pi.Equivalences
 open import Pi.DefinedEquiv
