@@ -205,18 +205,89 @@ data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set 
     (((assocl₊ ⊗ id⟷) ◎ dist) ◎ (dist ⊕ id⟷))
 
 -------------------------------------------------------------------------------------
--- Equational reasoning
-
--- the precedences are all wrong...
-infix  60  _▤       
-infixr 50  _⟨_⟩_   
-
-_⟨_⟩_ : {t₁ t₂ : U} (c₁ : t₁ ⟷ t₂) {c₂ : t₁ ⟷ t₂} {c₃ : t₁ ⟷ t₂} → 
-         (c₁ ⟷₂ c₂) → (c₂ ⟷₂ c₃) → (c₁ ⟷₂ c₃)
-_ ⟨ α ⟩ β = trans⟷₂ α β
-
-_▤ : {t₁ t₂ : U} → (c : t₁ ⟷ t₂) → (c ⟷₂ c)
-_▤ c = id⟷₂
+-- This is invertible too
+!⟷₂ : {t₁ t₂ : U} {c₁ c₂ : t₁ ⟷ t₂} → c₁ ⟷₂ c₂ → c₂ ⟷₂ c₁
+!⟷₂ assoc◎l = assoc◎r
+!⟷₂ assoc◎r = assoc◎l
+!⟷₂ assocl⊕l = assocl⊕r
+!⟷₂ assocl⊕r = assocl⊕l
+!⟷₂ assocl⊗l = assocl⊗r
+!⟷₂ assocl⊗r = assocl⊗l
+!⟷₂ assocr⊕r = assocr⊕l
+!⟷₂ assocr⊗l = assocr⊗r
+!⟷₂ assocr⊗r = assocr⊗l
+!⟷₂ assocr⊕l = assocr⊕r
+!⟷₂ dist⟷₂l = dist⟷₂r
+!⟷₂ dist⟷₂r = dist⟷₂l
+!⟷₂ factor⟷₂l = factor⟷₂r
+!⟷₂ factor⟷₂r = factor⟷₂l
+!⟷₂ idl◎l = idl◎r
+!⟷₂ idl◎r = idl◎l
+!⟷₂ idr◎l = idr◎r
+!⟷₂ idr◎r = idr◎l
+!⟷₂ linv◎l = linv◎r
+!⟷₂ linv◎r = linv◎l
+!⟷₂ rinv◎l = rinv◎r
+!⟷₂ rinv◎r = rinv◎l
+!⟷₂ unite₊l⟷₂l = unite₊l⟷₂r
+!⟷₂ unite₊l⟷₂r = unite₊l⟷₂l
+!⟷₂ uniti₊l⟷₂l = uniti₊l⟷₂r
+!⟷₂ uniti₊l⟷₂r = uniti₊l⟷₂l
+!⟷₂ unite₊r⟷₂l = unite₊r⟷₂r
+!⟷₂ unite₊r⟷₂r = unite₊r⟷₂l
+!⟷₂ uniti₊r⟷₂l = uniti₊r⟷₂r
+!⟷₂ uniti₊r⟷₂r = uniti₊r⟷₂l
+!⟷₂ swapl₊⟷₂ = swapr₊⟷₂
+!⟷₂ swapr₊⟷₂ = swapl₊⟷₂
+!⟷₂ unitel⋆⟷₂l = uniter⋆⟷₂l
+!⟷₂ uniter⋆⟷₂l = unitel⋆⟷₂l
+!⟷₂ unitil⋆⟷₂l = unitir⋆⟷₂l
+!⟷₂ unitir⋆⟷₂l = unitil⋆⟷₂l
+!⟷₂ unitel⋆⟷₂r = uniter⋆⟷₂r
+!⟷₂ uniter⋆⟷₂r = unitel⋆⟷₂r
+!⟷₂ unitil⋆⟷₂r = unitir⋆⟷₂r
+!⟷₂ unitir⋆⟷₂r = unitil⋆⟷₂r
+!⟷₂ swapl⋆⟷₂ = swapr⋆⟷₂
+!⟷₂ swapr⋆⟷₂ = swapl⋆⟷₂
+!⟷₂ id⟷₂ = id⟷₂
+!⟷₂ (trans⟷₂ x x₁) = trans⟷₂ (!⟷₂ x₁) (!⟷₂ x)
+!⟷₂ (x ⊡ x₁) = !⟷₂ x ⊡ !⟷₂ x₁
+!⟷₂ (resp⊕⟷₂ x x₁) = resp⊕⟷₂ (!⟷₂ x) (!⟷₂ x₁)
+!⟷₂ (resp⊗⟷₂ x x₁) = resp⊗⟷₂ (!⟷₂ x) (!⟷₂ x₁)
+!⟷₂ id⟷⊕id⟷⟷₂ = split⊕-id⟷
+!⟷₂ split⊕-id⟷ = id⟷⊕id⟷⟷₂
+!⟷₂ hom⊕◎⟷₂ = hom◎⊕⟷₂
+!⟷₂ hom◎⊕⟷₂ = hom⊕◎⟷₂
+!⟷₂ id⟷⊗id⟷⟷₂ = split⊗-id⟷
+!⟷₂ split⊗-id⟷ = id⟷⊗id⟷⟷₂
+!⟷₂ hom⊗◎⟷₂ = hom◎⊗⟷₂
+!⟷₂ hom◎⊗⟷₂ = hom⊗◎⟷₂
+!⟷₂ triangle⊕l = triangle⊕r
+!⟷₂ triangle⊕r = triangle⊕l
+!⟷₂ triangle⊗l = triangle⊗r
+!⟷₂ triangle⊗r = triangle⊗l
+!⟷₂ pentagon⊕l = pentagon⊕r
+!⟷₂ pentagon⊕r = pentagon⊕l
+!⟷₂ pentagon⊗l = pentagon⊗r
+!⟷₂ pentagon⊗r = pentagon⊗l
+!⟷₂ unite₊l-coh-l = unite₊l-coh-r
+!⟷₂ unite₊l-coh-r = unite₊l-coh-l
+!⟷₂ unite⋆l-coh-l = unite⋆l-coh-r
+!⟷₂ unite⋆l-coh-r = unite⋆l-coh-l
+!⟷₂ hexagonr⊕l = hexagonr⊕r
+!⟷₂ hexagonr⊕r = hexagonr⊕l
+!⟷₂ hexagonl⊕l = hexagonl⊕r
+!⟷₂ hexagonl⊕r = hexagonl⊕l
+!⟷₂ hexagonr⊗l = hexagonr⊗r
+!⟷₂ hexagonr⊗r = hexagonr⊗l
+!⟷₂ hexagonl⊗l = hexagonl⊗r
+!⟷₂ hexagonl⊗r = hexagonl⊗l
+!⟷₂ absorbl⟷₂l = absorbl⟷₂r
+!⟷₂ absorbl⟷₂r = absorbl⟷₂l
+!⟷₂ factorzr⟷₂l = factorzr⟷₂r
+!⟷₂ factorzr⟷₂r = factorzr⟷₂l
+!⟷₂ assocl₊-dist-dist⟷₂l = assocl₊-dist-dist⟷₂r
+!⟷₂ assocl₊-dist-dist⟷₂r = assocl₊-dist-dist⟷₂l
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ open import CommMonoid
 -- - Pi.Equation gives some syntax for presenting Pi in equational style
 -- - Pi.Terms gives some extra combinators (ctrl, cx, ccx)
 -- - Pi.Equivalences gives a (syntactic) language of Pi term equivalences
+-- - Pi.TermReasoning gives a syntax for doing equational reasoning over Pi terms
 -- - Pi.DefinedEquiv defines some extra equivalences (on items from Pi.Terms)
 
 -- Basically: the contents of 3.1 up to the semantics
@@ -33,6 +34,7 @@ open import Pi.Language
 open import Pi.Equational
 open import Pi.Terms
 open import Pi.Equivalences
+open import Pi.TermReasoning
 open import Pi.DefinedEquiv
 
 -- PiTagless gives a representation independent version of PiSyntax.
