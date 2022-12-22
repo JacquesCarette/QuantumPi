@@ -98,6 +98,7 @@ open import QPi.Semantics
 open import QPi.Execute
 open import QPi.Terms
 open import QPi.Measurement
+open import QPi.Equivalences
 open import Reasoning
 
 ------------------------------------------------------------------------------------
