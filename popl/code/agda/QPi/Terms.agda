@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module QPi where
+module QPi.Terms where
 
 open import Data.Nat using (ℕ; zero; suc)
 
@@ -35,39 +35,39 @@ map4*** f = f *** f *** f *** f
 
 -- Basic gates, states, and effects
 
-xgate had zgate : 𝟚 ⇔ 𝟚
-xgate = arrZ Π.swap₊ 
-had = arrϕ Π.swap₊
-zgate = had >>> xgate >>> had
+X H Z : 𝟚 ⇔ 𝟚
+X = arrZ Π.swap₊ 
+H = arrϕ Π.swap₊
+Z = H >>> X >>> H
 
 ctrlZ : (t ⟷ t) → 𝟚 ×ᵤ t ⇔ 𝟚 ×ᵤ t
 ctrlZ c = arrZ (ΠT.ctrl c)
 
 cx cz : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 cx = ctrlZ Π.swap₊ 
-cz = id⇔ *** had >>> cx >>> id⇔ *** had
+cz = id⇔ *** H >>> cx >>> id⇔ *** H
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 ccx = arrZ ΠT.ccx
 
 one plus minus : I ⇔ 𝟚 
-one = zero >>> xgate
-plus = zero >>> had
-minus = plus >>> zgate
+one = zero >>> X
+plus = zero >>> H
+minus = plus >>> Z
 
 assertOne assertPlus assertMinus : 𝟚 ⇔ I
-assertOne = xgate >>> assertZero
-assertPlus = had >>> assertZero
-assertMinus = zgate >>> assertPlus
+assertOne = X >>> assertZero
+assertPlus = H >>> assertZero
+assertMinus = Z >>> assertPlus
 
 {--
 
-showAll xgate
+showAll X
 (𝕋 , (𝔽 , 1) ∷ []) ∷
 (𝔽 , (𝕋 , 1) ∷ []) ∷
 []
 
-showAll had
+showAll H
 (𝕋 , (𝕋 , 0.7071067811706743) ∷ (𝔽 , 0.707106781202421) ∷ []) ∷
 (𝔽 , (𝕋 , 0.707106781202421) ∷ (𝔽 , -0.7071067811706743) ∷ []) ∷
 []
@@ -85,7 +85,7 @@ showAll cx
 
 copyZ copyϕ : 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
 copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
-copyϕ = had >>> copyZ >>> (had *** had)
+copyϕ = H >>> copyZ >>> (H *** H)
 
 -- Simon
 
@@ -94,20 +94,20 @@ cxGroup = Π.id⟷
 
 simon : I ×ᵤ I ×ᵤ I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 simon = map4*** zero >>>
-        had *** had *** id⇔ *** id⇔ >>>
+        H *** H *** id⇔ *** id⇔ >>>
         arrZ cxGroup >>>
-        had *** had *** id⇔ *** id⇔ 
+        H *** H *** id⇔ *** id⇔ 
 
 -- Grover
 
 amp : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 
-amp = map3*** had >>>
-      map3*** xgate >>>
-      id⇔ *** id⇔ *** had >>>
+amp = map3*** H >>>
+      map3*** X >>>
+      id⇔ *** id⇔ *** H >>>
       ccx >>>
-      id⇔ *** id⇔ *** had >>>
-      map3*** xgate >>>
-      map3*** had
+      id⇔ *** id⇔ *** H >>>
+      map3*** X >>>
+      map3*** H
 
 u : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 u = id⇔ *** id⇔ *** id⇔
@@ -116,9 +116,9 @@ u = id⇔ *** id⇔ *** id⇔
 -- ctrl S
 
 ctrlS : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
-ctrlS = (id⇔ *** id⇔ *** had) >>>
+ctrlS = (id⇔ *** id⇔ *** H) >>>
         ccx >>>
-        (id⇔ *** id⇔ *** had) >>>
+        (id⇔ *** id⇔ *** H) >>>
         ccx
 
 {--

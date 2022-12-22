@@ -10,7 +10,7 @@ open import Pi.Language as Π using (_⟷_)
 import Pi.Terms as ΠT
 
 open import QPi.Syntax
-open import QPi using (copyZ; copyϕ; map3***; plus; amp; repeat; u)
+open import QPi.Terms using (copyZ; copyϕ; map3***; plus; amp; repeat; u)
 
 ---------------------------------------------------------------------------
 

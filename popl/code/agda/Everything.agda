@@ -94,7 +94,7 @@ open import TestsSlow
 open import QPi.Syntax
 open import QPi.Semantics
 open import QPi.Execute
-open import QPi
+open import QPi.Terms
 open import QPi.Measurement
 open import Reasoning
 
