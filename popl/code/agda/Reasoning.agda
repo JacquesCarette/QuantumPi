@@ -2,6 +2,9 @@
 
 module Reasoning where
 
+open import Relation.Binary.Bundles using (Setoid)
+import Relation.Binary.Reasoning.Setoid as SetoidR
+
 open import Pi.Types using (U)
 open import Pi.Language as Π using (_◎_; _⟷_; id⟷; !⟷)
 import Pi.Terms as ΠT
@@ -17,43 +20,56 @@ open import QPi.Measurement using (measureϕ; measureZ)
 private
   variable
     t t₁ t₂ t₃ : U
-    c c₁ c₂ c₃ : t₁ ⟷ t₂
     d d₁ d₂ d₃ d₄ : t₁ ⇔ t₂
 
-infixr 10 _；_
-_；_ : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
-_；_ = trans≡
+infixr 10 _◯_
+_◯_ : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
+_◯_ = trans≡
 
--- Equational reasoning
+-- Equational reasoning, from stdlib
 
-infixr 10 _≡⟨_⟩_
-infix  15 _≡∎
+private
+  ≡Setoid : {t₁ t₂ : U} → Setoid _ _
+  ≡Setoid {t₁} {t₂} = record
+    { Carrier = t₁ ⇔ t₂
+    ; _≈_ = _≡_
+    ; isEquivalence = record
+      { refl = id≡
+      ; sym = !≡
+      ; trans = trans≡
+      }
+    }
 
-_≡⟨_⟩_ : (d₁ : t₁ ⇔ t₂) → (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
-_ ≡⟨ e₁ ⟩ e₂ = trans≡ e₁ e₂ 
+  module Base {t₁ t₂} = SetoidR (≡Setoid {t₁} {t₂})
+  
+open Base public hiding (step-≈; step-≡)
 
-_≡∎ : (d : t₁ ⇔ t₂) → d ≡ d
-_≡∎ t = id≡
+infixr 2 step-≡
+step-≡ :  (x : t₁ ⇔ t₂) {y z : t₁ ⇔ t₂} →
+  _IsRelatedTo_ y z → x ≡ y → x IsRelatedTo z
+step-≡ = Base.step-≈
+
+syntax step-≡ x y≡z x≡y = x ≡⟨ x≡y ⟩ y≡z
 
 ---------------------------------------------------------------------------
 -- Example proofs
 
 xInv : (X >>> X) ≡ id⇔
-xInv =
+xInv = begin
   X >>> X                  ≡⟨ arrZR ⟩
   arrZ (Π.swap₊ ◎ Π.swap₊) ≡⟨ classicalZ linv◎l ⟩
   arrZ id⟷                 ≡⟨ arrZidL ⟩
-  id⇔                      ≡∎
+  id⇔                      ∎
 
 hadInv : (H >>> H) ≡ id⇔
 hadInv = trans≡ arrϕR (trans≡ (classicalϕ linv◎l) arrϕidL)  
 
 minusZ≡plus : (minus >>> Z) ≡ plus
-minusZ≡plus =
+minusZ≡plus = begin
   (minus >>> Z)
     ≡⟨ id≡ ⟩
   ((plus >>> H >>> X >>> H) >>> H >>> X >>> H)
-    ≡⟨ ((cong≡ (assoc>>>l ； assoc>>>l) id≡) ； assoc>>>r) ； (cong≡ id≡ assoc>>>l) ⟩ 
+    ≡⟨ ((cong≡ (assoc>>>l ◯ assoc>>>l) id≡) ◯ assoc>>>r) ◯ (cong≡ id≡ assoc>>>l) ⟩ 
   (((plus >>> H) >>> X) >>> (H >>> H) >>> X >>> H)
     ≡⟨ cong≡ id≡ (trans≡ (cong≡ hadInv id≡) idl>>>l) ⟩
   (((plus >>> H) >>> X) >>> X >>> H)
@@ -62,10 +78,10 @@ minusZ≡plus =
     ≡⟨ cong≡ id≡ (trans≡ (cong≡ xInv id≡) idl>>>l) ⟩
   ((plus >>> H) >>> H)
     ≡⟨ trans≡ (trans≡ assoc>>>r (cong≡ id≡ hadInv)) idr>>>l ⟩ 
-  plus ≡∎
+  plus ∎
 
 oneMinusPlus : ((one *** minus) >>> cz) ≡ (one *** plus)
-oneMinusPlus =
+oneMinusPlus = begin
   (one *** minus) >>> (id⇔ *** H) >>> cx >>> (id⇔ *** H)
     ≡⟨ trans≡ assoc>>>l (cong≡ homL*** id≡) ⟩ 
   ((one >>> id⇔) *** (minus >>> H)) >>> cx >>> (id⇔ *** H)
@@ -82,37 +98,37 @@ oneMinusPlus =
     ≡⟨ trans≡ homL*** (cong*** idl>>>l assoc>>>r ) ⟩ 
   one *** (minus >>> H >>> X >>> H)
     ≡⟨ cong*** id≡ minusZ≡plus  ⟩ 
-  (one *** plus) ≡∎
+  (one *** plus) ∎
 
 
 xcxA : id⇔ *** X >>> cx ≡ cx >>> id⇔ *** X
-xcxA =
+xcxA = begin
   id⇔ *** X >>> cx
     ≡⟨ {!!} ⟩ 
   arrZ ((id⟷ Π.⊗ Π.swap₊) Π.◎ ΠT.cx)
     ≡⟨ classicalZ xcx ⟩
   arrZ (ΠT.cx Π.◎ (id⟷ Π.⊗ Π.swap₊))
     ≡⟨ {!!} ⟩
-  cx >>> id⇔ *** X ≡∎
+  cx >>> id⇔ *** X ∎
 
 
 zhcx : ((id⇔ *** Z) >>> (id⇔ *** H) >>> cx) ≡
        (cz >>> (id⇔ *** H) >>> (id⇔ *** X))
-zhcx =
+zhcx = begin
   ((id⇔ *** Z) >>> (id⇔ *** H) >>> cx)
     ≡⟨ trans≡ assoc>>>l (cong≡ (trans≡ homL*** (cong*** idl>>>l id≡)) id≡) ⟩
   (id⇔ *** ((H >>> X >>> H) >>> H)) >>> cx
     ≡⟨ {!!} ⟩ 
   id⇔ *** (H >>> X) >>> cx
     ≡⟨ {!!} ⟩
-  (cz >>> (id⇔ *** H) >>> (id⇔ *** X)) ≡∎
+  (cz >>> (id⇔ *** H) >>> (id⇔ *** X)) ∎
 
 
 measure : measureϕ ≡ (H >>> measureZ >>> H)
-measure =
+measure = begin
   measureϕ
     ≡⟨ {!!} ⟩
-  (H >>> measureZ >>> H) ≡∎
+  (H >>> measureZ >>> H) ∎
 
 ---------------------------------------------------------------------------
 
