@@ -64,12 +64,64 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   homR*** : ((d₁ >>> d₃) *** (d₂ >>> d₄)) ≡ ((d₁ *** d₂) >>> (d₃ *** d₄))
   -- execution equations
   e1L : zero >>> assertZero ≡ id⇔
+  e1R : id⇔ ≡ zero >>> assertZero
   e2L : (zero *** id⇔) >>> ctrlZ c ≡ zero *** id⇔
+  e2R : zero *** id⇔ ≡ (zero *** id⇔) >>> ctrlZ c
   e3L : (one *** id⇔) >>> ctrlZ c ≡ one *** arrZ c
+  e3R : one *** arrZ c ≡ (one *** id⇔) >>> ctrlZ c
   -- complementarity
   C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
         (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
       ≡ id⇔
+  C˘ : id⇔ ≡ ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
+        (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
 
 ---------------------------------------------------------------------------
 
+-- _≡_ should be an equivalence relation, so invertible. It's syntactically
+-- so close, may as well finish it.
+!≡ : {t₁ t₂ : U} {c₁ c₂ : t₁ ⇔ t₂} → c₁ ≡ c₂ → c₂ ≡ c₁
+!≡ (classicalZ x) = classicalZ (!⟷₂ x)
+!≡ (classicalϕ x) = classicalϕ (!⟷₂ x)
+!≡ arrZidL = arrZidR
+!≡ arrZidR = arrZidL
+!≡ arrϕidL = arrϕidR
+!≡ arrϕidR = arrϕidL
+!≡ arrZL = arrZR
+!≡ arrZR = arrZL
+!≡ arrϕL = arrϕR
+!≡ arrϕR = arrϕL
+!≡ assoc>>>l = assoc>>>r
+!≡ assoc>>>r = assoc>>>l
+!≡ assocl***l = assocl***r
+!≡ assocl***r = assocl***l
+!≡ assocr***l = assocr***r
+!≡ assocr***r = assocr***l
+!≡ idl>>>l = idl>>>r
+!≡ idl>>>r = idl>>>l
+!≡ idr>>>l = idr>>>r
+!≡ idr>>>r = idr>>>l
+!≡ linv>>>l = linv>>>r
+!≡ linv>>>r = linv>>>l
+!≡ rinv>>>l = rinv>>>r
+!≡ rinv>>>r = rinv>>>l
+!≡ unitel⋆≡r = uniter⋆≡r
+!≡ uniter⋆≡r = unitel⋆≡r
+!≡ unitil⋆≡r = unitir⋆≡r
+!≡ unitir⋆≡r = unitil⋆≡r
+!≡ swapl⋆≡ = swapr⋆≡
+!≡ swapr⋆≡ = swapl⋆≡
+!≡ id≡ = id≡
+!≡ (trans≡ x x₁) = trans≡ (!≡ x₁) (!≡ x)
+!≡ (cong≡ x x₁) = cong≡ (!≡ x) (!≡ x₁)
+!≡ (cong*** x x₁) = cong*** (!≡ x) (!≡ x₁)
+!≡ homL*** = homR***
+!≡ homR*** = homL***
+!≡ e1L = e1R
+!≡ e1R = e1L
+!≡ e2L = e2R
+!≡ e2R = e2L
+!≡ e3L = e3R
+!≡ e3R = e3L
+!≡ C = C˘
+!≡ C˘ = C
