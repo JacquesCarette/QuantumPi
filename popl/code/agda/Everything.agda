@@ -102,6 +102,3 @@ open import QPi.Equivalences
 open import Reasoning
 
 ------------------------------------------------------------------------------------
--- Not currently used, but maybe should be
-open import IAmalgamation
-------------------------------------------------------------------------------------

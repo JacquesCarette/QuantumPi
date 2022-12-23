@@ -15,41 +15,7 @@ open import QPi.Terms using (ctrlZ; one; copyZ; copyϕ; X; Z;
   H; minus; plus; cx; cz)
 open import QPi.Equivalences
 open import QPi.Measurement using (measureϕ; measureZ)
-
----------------------------------------------------------------------------
-private
-  variable
-    t t₁ t₂ t₃ : U
-    d d₁ d₂ d₃ d₄ : t₁ ⇔ t₂
-
-infixr 10 _◯_
-_◯_ : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
-_◯_ = trans≡
-
--- Equational reasoning, from stdlib
-
-private
-  ≡Setoid : {t₁ t₂ : U} → Setoid _ _
-  ≡Setoid {t₁} {t₂} = record
-    { Carrier = t₁ ⇔ t₂
-    ; _≈_ = _≡_
-    ; isEquivalence = record
-      { refl = id≡
-      ; sym = !≡
-      ; trans = trans≡
-      }
-    }
-
-  module Base {t₁ t₂} = SetoidR (≡Setoid {t₁} {t₂})
-  
-open Base public hiding (step-≈; step-≡)
-
-infixr 2 step-≡
-step-≡ :  (x : t₁ ⇔ t₂) {y z : t₁ ⇔ t₂} →
-  _IsRelatedTo_ y z → x ≡ y → x IsRelatedTo z
-step-≡ = Base.step-≈
-
-syntax step-≡ x y≡z x≡y = x ≡⟨ x≡y ⟩ y≡z
+open import QPi.TermReasoning
 
 ---------------------------------------------------------------------------
 -- Example proofs
@@ -62,7 +28,7 @@ xInv = begin
   id⇔                      ∎
 
 hadInv : (H >>> H) ≡ id⇔
-hadInv = trans≡ arrϕR (trans≡ (classicalϕ linv◎l) arrϕidL)  
+hadInv = arrϕR ◯ classicalϕ linv◎l ◯ arrϕidL
 
 minusZ≡plus : (minus >>> Z) ≡ plus
 minusZ≡plus = begin
