@@ -5,11 +5,11 @@ module Pi.Equivalences where
 open import Pi.Types
 open import Pi.Language
 
-infix  30 _⟷₂_
+infix 5 _⟷₂_
 
 data _⟷₂_ : {t₁ t₂ : U} → (t₁ ⟷ t₂) → (t₁ ⟷ t₂) → Set where
   assoc◎l : {t₁ t₂ t₃ t₄ : U} {c₁ : t₁ ⟷ t₂} {c₂ : t₂ ⟷ t₃} {c₃ : t₃ ⟷ t₄} →
-          (c₁ ◎ (c₂ ◎ c₃)) ⟷₂ ((c₁ ◎ c₂) ◎ c₃)
+          c₁ ◎ (c₂ ◎ c₃) ⟷₂ (c₁ ◎ c₂) ◎ c₃
   assoc◎r : {t₁ t₂ t₃ t₄ : U} {c₁ : t₁ ⟷ t₂} {c₂ : t₂ ⟷ t₃} {c₃ : t₃ ⟷ t₄} →
           ((c₁ ◎ c₂) ◎ c₃) ⟷₂ (c₁ ◎ (c₂ ◎ c₃))
   assocl⊕l : {t₁ t₂ t₃ t₄ t₅ t₆ : U}

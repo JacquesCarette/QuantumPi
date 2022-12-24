@@ -15,8 +15,11 @@ private
 ctrl : t ⟷ t → (𝟚 ×ᵤ t) ⟷ (𝟚 ×ᵤ t)
 ctrl c = dist ◎ (id⟷ ⊕ id⟷ ⊗ c) ◎ factor
 
+x : 𝟚 ⟷ 𝟚
+x = swap₊
+
 cx : 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚
-cx = ctrl swap₊
+cx = ctrl x
 
 ccx : 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚 ⟷ 𝟚 ×ᵤ 𝟚 ×ᵤ 𝟚
 ccx = ctrl cx
