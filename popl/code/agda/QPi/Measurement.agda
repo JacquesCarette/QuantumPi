@@ -11,7 +11,7 @@ import Pi.Terms as ΠT
 
 open import QPi.Syntax
 open import QPi.Terms using (copyZ; copyϕ; map3***; plus; amp; repeat; u)
-
+open import QPi.Equivalences using (_≡_)
 ---------------------------------------------------------------------------
 
 private
@@ -23,6 +23,7 @@ private
 -- postulate measurement
 postulate
   discard : t ⇔ I
+  discardL : (d : t₁ ⇔ t₂) → d >>> discard ≡ discard
 
 fst : (t₁ ×ᵤ t₂) ⇔ t₁
 fst = (id⇔ *** discard) >>> unite⋆r

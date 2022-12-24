@@ -2,8 +2,8 @@
 
 module QPi.Equivalences where
 
-open import Pi.Types using (U)
-open import Pi.Language as Π using (_◎_; _⟷_; id⟷; !⟷)
+open import Pi.Types using (U; _×ᵤ_)
+open import Pi.Language as Π using (_◎_; _⟷_; id⟷; !⟷; _⊗_)
 import Pi.Terms as ΠT
 open import Pi.Equivalences
 open import QPi.Syntax
@@ -34,6 +34,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   arrZR    : (arrZ c₁ >>> arrZ c₂) ≡ (arrZ (c₁ ◎ c₂))
   arrϕL    : (arrϕ (c₁ ◎ c₂)) ≡ (arrϕ c₁ >>> arrϕ c₂)
   arrϕR    : (arrϕ c₁ >>> arrϕ c₂) ≡ (arrϕ (c₁ ◎ c₂))
+  arrZL*   : (arrZ (c₁ ⊗ c₂)) ≡ (arrZ c₁ *** arrZ c₂)
+  arrZR*   : (arrZ c₁ *** arrZ c₂) ≡ (arrZ (c₁ ⊗ c₂))
+  arrϕL*   : (arrϕ (c₁ ⊗ c₂)) ≡ (arrϕ c₁ *** arrϕ c₂)
+  arrϕR*   : (arrϕ c₁ *** arrϕ c₂) ≡ (arrϕ (c₁ ⊗ c₂))
   -- 
   assoc>>>l : (d₁ >>> (d₂ >>> d₃)) ≡ ((d₁ >>> d₂) >>> d₃)
   assoc>>>r : ((d₁ >>> d₂) >>> d₃) ≡ (d₁ >>> (d₂ >>> d₃))
@@ -62,6 +66,8 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   cong***  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ *** d₂) ≡ (d₃ *** d₄))
   homL*** : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
   homR*** : ((d₁ >>> d₃) *** (d₂ >>> d₄)) ≡ ((d₁ *** d₂) >>> (d₃ *** d₄))
+  id***id : {t₁ t₂ : U} → (id⇔ {t₁} *** id⇔ {t₂}) ≡ id⇔
+  split***-id : {t₁ t₂ : U} → (id⇔ {_×ᵤ_ t₁ t₂}) ≡ (id⇔ *** id⇔)
   -- execution equations
   e1L : zero >>> assertZero ≡ id⇔
   e1R : id⇔ ≡ zero >>> assertZero
@@ -91,6 +97,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
 !≡ arrZR = arrZL
 !≡ arrϕL = arrϕR
 !≡ arrϕR = arrϕL
+!≡ arrZL* = arrZR*
+!≡ arrZR* = arrZL*
+!≡ arrϕL* = arrϕR*
+!≡ arrϕR* = arrϕL*
 !≡ assoc>>>l = assoc>>>r
 !≡ assoc>>>r = assoc>>>l
 !≡ assocl***l = assocl***r
@@ -117,6 +127,8 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
 !≡ (cong*** x x₁) = cong*** (!≡ x) (!≡ x₁)
 !≡ homL*** = homR***
 !≡ homR*** = homL***
+!≡ id***id = split***-id
+!≡ split***-id = id***id
 !≡ e1L = e1R
 !≡ e1R = e1L
 !≡ e2L = e2R
