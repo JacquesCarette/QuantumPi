@@ -17,6 +17,8 @@ open import CommMonoid
 
 -- Signature of the things that "Linear Algebra" must provide
 open import LinearAlgebraSig
+-- And the abstract rotation marix
+open import AbstractRotation
 
 ------------------------------------------------------------------------------------
 -- Syntactic constructions

@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
--- Various definitions around Float that get re-used
+-- Explicit Rotation Matrix to be used by the main unitary model
 
 module FloatRotMat where
 
