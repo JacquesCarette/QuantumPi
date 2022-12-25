@@ -8,8 +8,12 @@ open import Data.Product using (_,_)
 open import Data.Sum using (inj₁; inj₂)
 open import Function using (_∘_; id)
 
-open import FloatUtils using (π; cπ/8; sπ/8; vec; Rω; Rω⁻¹)
+open import LinearAlgebraSig using (LASig)
+open import FloatLA using (FloatLA)
+open import FloatRotMat using (Rω; Rω⁻¹)
 open import Pi.Types using (U; O; I; _+ᵤ_; _×ᵤ_; ⟦_⟧)
+
+open LASig FloatLA using (vec)
 
 𝒰 : (t : U) → Set
 𝒰 t = vec ⟦ t ⟧

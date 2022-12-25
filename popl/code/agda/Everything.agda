@@ -15,6 +15,9 @@ module Everything where
 -- using this 3 times, so it is worth the abstraction.
 open import CommMonoid
 
+-- Signature of the things that "Linear Algebra" must provide
+open import LinearAlgebraSig
+
 ------------------------------------------------------------------------------------
 -- Syntactic constructions
 
@@ -59,6 +62,11 @@ open import Simon
 ------------------------------------------------------------------------------------
 -- Utilities useful in various places below
 open import FloatUtils
+
+-- an implementation of the signature of linear algebra for Float
+open import FloatLA
+-- and the key rotation matrix in that signature
+open import FloatRotMat
 
 ------------------------------------------------------------------------------------
 -- Two semantics for Pi rotated with respect to each other 

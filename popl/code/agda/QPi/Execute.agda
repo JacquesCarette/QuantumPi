@@ -11,11 +11,16 @@ open import Data.List using (List; _∷_; []; map; foldr)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types using (U; O; ⟦_⟧; enum; _≟_)
-open import FloatUtils using (vec; mat; tooSmall)
+open import FloatUtils using (tooSmall)
+open import LinearAlgebraSig using (LASig)
+open import FloatLA using (FloatLA)
+
 open import Instances using (evalSE)
 
 open import QPi.Syntax using (_⇔_)
 open import QPi.Semantics using (embed)
+
+open LASig FloatLA using (vec; mat)
 
 ---------------------------------------------------------------------------
 
