@@ -8,7 +8,7 @@ open import Data.List using (List; _∷_; []; map)
 open import Data.Product using (_×_; _,_)
 open import Data.Sum using (inj₁; inj₂)
 open import Data.Unit using (tt)
-open import Function using (_∘_)
+open import Function.Base using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Pi.Types
@@ -19,11 +19,17 @@ import ArrowsOverAmalg as A
 import Arrows.Terms as AT
 open import StatesAndEffects using (_↭_; _>>>>_; zero; assertZero)
 open import SPi.Terms using (CX; plus; minus; one)
-open import Unitary
-import PiZ
-import PiH
+open import Unitary renaming (module Build to UBuild)
+open import PiZ using (module MkPiZ)
+open import PiH using (module MkPiH)
 open import Instances using (evalTL₁; evalSE)
 open import Simon using (simon₁; simon₂)
+open import Float.LASig using (FloatVec)
+open import Float.RotMat using (Rot)
+
+module PH = MkPiH FloatVec Rot
+module PZ = MkPiZ FloatVec
+open UBuild FloatVec Rot using (R; R⁻¹)
 
 ---------------------------------------------------------------------------------------
 -- Infrastructure for testing
@@ -34,16 +40,16 @@ show {t} v = map (λ i → (i , v i)) (enum t)
 -- Note: these tests are EVIL because they use the most brutal equality possible on the worst thing imaginable, i.e. Floats.
 
 -- Test things in Amalgamated language
-test-notH : show (evalTL₁ AT.H PiH.trueH) ≡ (𝔽 , 0.9238795325155821) ∷ (𝕋 , -0.38268343235472) ∷ []
+test-notH : show (evalTL₁ AT.H PH.trueH) ≡ (𝔽 , 0.9238795325155821) ∷ (𝕋 , -0.38268343235472) ∷ []
 test-notH = refl
 
-test-id : show (evalTL₁ (A.id) PiH.trueH) ≡ (𝔽 , 0.38268343235472) ∷ (𝕋 , 0.9238795325155821) ∷ []
+test-id : show (evalTL₁ (A.id) PH.trueH) ≡ (𝔽 , 0.38268343235472) ∷ (𝕋 , 0.9238795325155821) ∷ []
 test-id = refl
 
-test-Had-true : show (evalTL₁ AT.H PiZ.trueZ) ≡ (𝔽 , 0.707106781202421) ∷ (𝕋 , -0.7071067811706743) ∷ []
+test-Had-true : show (evalTL₁ AT.H PZ.trueZ) ≡ (𝔽 , 0.707106781202421) ∷ (𝕋 , -0.7071067811706743) ∷ []
 test-Had-true = refl
 
-test-Had-false : show (evalTL₁ AT.H PiZ.falseZ) ≡ (𝔽 , 0.7071067811706743) ∷ (𝕋 , 0.707106781202421) ∷ []
+test-Had-false : show (evalTL₁ AT.H PZ.falseZ) ≡ (𝔽 , 0.7071067811706743) ∷ (𝕋 , 0.707106781202421) ∷ []
 test-Had-false = refl
 
 test-vec2 : ⟦ 𝟚 ×ᵤ 𝟚 ⟧ → Float
@@ -63,14 +69,14 @@ test-cxZ = refl
 test-SE-cxZ =
   show (evalSE CX test-vec2)
 
-test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PiZ.evalZ (id⟷ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
+test-Had2-00 :  show ((R⁻¹ (𝟚 ×ᵤ 𝟚) ∘ PZ.evalZ (id⟷ ⊗ swap₊) ∘ R (𝟚 ×ᵤ 𝟚))  test-vec2) ≡
   ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
   ((𝔽 , 𝕋) , 0.0) ∷
   ((𝕋 , 𝔽) , 0.707106781202421) ∷
   ((𝕋 , 𝕋) , -0.7071067811706743) ∷ []
 test-Had2-00 = refl
 
-test-Had2-0 : show (PiH.evalH (id⟷ ⊗ swap₊) test-vec2) ≡
+test-Had2-0 : show (PH.evalH (id⟷ ⊗ swap₊) test-vec2) ≡
       ((𝔽 , 𝔽) , -1.1102230246251565e-16) ∷
       ((𝔽 , 𝕋) , 0.0) ∷
       ((𝕋 , 𝔽) , 0.707106781202421) ∷

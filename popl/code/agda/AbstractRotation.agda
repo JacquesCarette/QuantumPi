@@ -10,7 +10,7 @@ open import Data.Unit using (⊤; tt)
 open import LinearAlgebraSig using (LASig)
 
 record RotMat (L : LASig) : Set where
-  open LASig L using (linop)
+  open LASig L using (aut)
   field
-    Rω : linop (⊤ ⊎ ⊤)
-    Rω⁻¹ : linop (⊤ ⊎ ⊤)
+    Rω : aut (⊤ ⊎ ⊤)
+    Rω⁻¹ : aut (⊤ ⊎ ⊤)

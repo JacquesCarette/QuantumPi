@@ -66,9 +66,9 @@ open import Simon
 open import FloatUtils
 
 -- an implementation of the signature of linear algebra for Float
-open import FloatLA
+open import Float.LASig
 -- and the key rotation matrix in that signature
-open import FloatRotMat
+open import Float.RotMat
 
 ------------------------------------------------------------------------------------
 -- Two semantics for Pi rotated with respect to each other 
