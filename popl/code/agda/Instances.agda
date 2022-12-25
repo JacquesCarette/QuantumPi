@@ -19,7 +19,7 @@ import ArrowsOverAmalg as A
 open import Ancillae using (N; N⇒U; enumN; Anc; Two; _×ₙ_)
 open import StatesAndEffects using (_↭_; lift)
 
-open import Unitary using (𝒰)
+open import Unitary using (UVec)
 open import PiZ using (evalZ)
 open import PiH using (evalH)
 open import GenericPi using (Fwd)
@@ -39,7 +39,7 @@ _○_ : {A B C : Set} → (A → B) → (B → C) → (A → C)
 f ○ g = λ a → g (f a)
 
 private
-  effect : {t₂ : U} (n : N) → 𝒰 (t₂ ×ᵤ (N⇒U n)) → 𝒰 (t₂ ×ᵤ I)
+  effect : {t₂ : U} (n : N) → UVec (t₂ ×ᵤ (N⇒U n)) → UVec (t₂ ×ᵤ I)
   effect n f z = effect′ (head (enumN n))
     where effect′ : Maybe ⟦ N⇒U n ⟧ → F.Float
           effect′ (just x) = f (proj₁ z , x)
@@ -51,7 +51,7 @@ private
   delta (just (x₁ ×ₙ x₂)) x        = delta (just x₁) (proj₁ x) F.* delta (just x₂) (proj₂ x)
   delta nothing           _        = 1.0
 
-  state : {t : U} (n : N) → 𝒰 (t ×ᵤ I) → 𝒰 (t ×ᵤ (N⇒U n))
+  state : {t : U} (n : N) → UVec (t ×ᵤ I) → UVec (t ×ᵤ (N⇒U n))
   state n f (x , i) = delta n i F.* f ( x , tt )
 
 -- re-expand out to test each part

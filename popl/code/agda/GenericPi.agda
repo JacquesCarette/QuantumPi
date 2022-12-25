@@ -10,14 +10,14 @@ open import Function using (_∘_)
 
 open import Pi.Types using (U; I; O; _+ᵤ_; _×ᵤ_; 𝟚)
 open import PiTagless using (Pi)
-open import Unitary using (𝒰)
+open import Unitary using (UVec)
 
 -----------------------------------------------------------------------
 -- This interpretation is "generic" in the sense that it works over an
 -- arbitrary basis of 𝒰.
 
 Fwd : U → U → Set
-Fwd t₁ t₂ = 𝒰 t₁ → 𝒰 t₂
+Fwd t₁ t₂ = UVec t₁ → UVec t₂
 
 -- The interpretations pretty much follow the types. The only tricky one is for product,
 -- which implements the Kronecker product.
@@ -44,7 +44,7 @@ GenericPi = record
   }
 
 -- Note that this definition has to be coherent with 𝕋 and 𝔽 in PiSyntax
-true false : 𝒰 𝟚
+true false : UVec 𝟚
 true (inj₁ y) = 0.0
 true (inj₂ x) = 1.0
 false (inj₁ y) = 1.0

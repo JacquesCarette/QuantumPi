@@ -6,7 +6,7 @@ open import Pi.Types using (U; 𝟚)
 open import Pi.Language using (_⟷_)
 open import PiTagless using (generalize)
 open import GenericPi using (Fwd; GenericPi; true; false)
-open import Unitary using (𝒰)
+open import Unitary using (UVec)
 
 -----------------------------------------------------------------------
 -- Below we start the work that correspoints to the Z interpretation
@@ -15,7 +15,7 @@ open import Unitary using (𝒰)
 evalZ : {t₁ t₂ : U} → t₁ ⟷ t₂ → Fwd t₁ t₂
 evalZ {t₁} {t₂} c = generalize GenericPi c
 
-trueZ falseZ : 𝒰 𝟚
+trueZ falseZ : UVec 𝟚
 trueZ = true
 falseZ = false
 
