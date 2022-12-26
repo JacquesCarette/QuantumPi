@@ -4,7 +4,7 @@ module PiZ where
 
 open import Pi.Types using (U; 𝟚)
 open import Pi.Language using (_⟷_)
-open import PiTagless using (generalize)
+open import Pi.SyntaxToTagless using (generalize)
 open import GenericPi using (Fwd; GenericPi)
 open import Unitary using (UVec)
 open import LinearAlgebraSig using (LASig)

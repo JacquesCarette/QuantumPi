@@ -19,11 +19,7 @@ module Build (L : LASig) (RM : RotMat L) where
   open LASig L using (vec; aut; _⊕_; _⊗_)
   open RotMat RM
 
-  {-
-
-  -}
-  
-  -- Family R from Definition 6 in Section 4.3
+   -- Family R from Definition 6 in Section 4.3
   -- It is more complicated here because inequations are not constructive.
   -- Note that we use v below to choose which *row* we're in.
   -- This definition also assumes 'x' is in normal form, i.e. contains no

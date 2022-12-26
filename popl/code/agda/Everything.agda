@@ -47,7 +47,9 @@ open import Pi.DefinedEquiv
 -- instances (as records).
 -- The reversibility constraint is packed separately, as some instances are only
 -- "externally" reversible.
-open import PiTagless
+open import Pi.Tagless
+-- and we can use syntax to generalize to any interpretation
+open import Pi.SyntaxToTagless
 
 -- Syntactic arrow constructions parameterized by evaluators in the tagless style
 open import Amalgamation

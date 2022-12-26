@@ -3,7 +3,7 @@
 module GenericPi where
 
 open import Pi.Types using (U; ⟦_⟧; 𝟚)
-open import PiTagless using (Pi)
+open import Pi.Tagless using (Pi)
 open import LinearAlgebraSig using (LASig)
 
 -----------------------------------------------------------------------
