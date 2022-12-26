@@ -62,10 +62,10 @@ seq₂₁*** = idl>>>r ⟩⊗⟨ idr>>>r ◯ homR***
 
 xInv : (X >>> X) ≡ id⇔
 xInv = begin
-  X >>> X                  ≡⟨ arrZR ⟩
-  arrZ (Π.swap₊ ◎ Π.swap₊) ≡⟨ classicalZ linv◎l ⟩
+  X >>> X                   ≡⟨ arrZR ⟩
+  arrZ (Π.swap₊ ◎ Π.swap₊)  ≡⟨ classicalZ linv◎l ⟩
   arrZ id⟷                 ≡⟨ arrZidL ⟩
-  id⇔                      ∎
+  id⇔                       ∎
 
 hadInv : (H >>> H) ≡ id⇔
 hadInv = arrϕR ◯ classicalϕ linv◎l ◯ arrϕidL

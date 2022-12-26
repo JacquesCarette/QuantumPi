@@ -26,10 +26,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   classicalZ  : (c₁ ⟷₂ c₂) → (arrZ c₁ ≡ arrZ c₂)
   classicalϕ  : (c₁ ⟷₂ c₂) → (arrϕ c₁ ≡ arrϕ c₂)
   -- arrow axioms
-  arrZidL   : arrZ (id⟷ {t}) ≡ id⇔ 
-  arrZidR   : id⇔  ≡ arrZ (id⟷ {t})
-  arrϕidL   : arrϕ (id⟷ {t}) ≡ id⇔ 
-  arrϕidR   : id⇔  ≡ arrϕ (id⟷ {t})
+  arrZidL  : arrZ (id⟷ {t}) ≡ id⇔ 
+  arrZidR  : id⇔  ≡ arrZ (id⟷ {t})
+  arrϕidL  : arrϕ (id⟷ {t}) ≡ id⇔ 
+  arrϕidR  : id⇔  ≡ arrϕ (id⟷ {t})
   arrZL    : (arrZ (c₁ ◎ c₂)) ≡ (arrZ c₁ >>> arrZ c₂)
   arrZR    : (arrZ c₁ >>> arrZ c₂) ≡ (arrZ (c₁ ◎ c₂))
   arrϕL    : (arrϕ (c₁ ◎ c₂)) ≡ (arrϕ c₁ >>> arrϕ c₂)
@@ -38,36 +38,36 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   arrZR*   : (arrZ c₁ *** arrZ c₂) ≡ (arrZ (c₁ ⊗ c₂))
   arrϕL*   : (arrϕ (c₁ ⊗ c₂)) ≡ (arrϕ c₁ *** arrϕ c₂)
   arrϕR*   : (arrϕ c₁ *** arrϕ c₂) ≡ (arrϕ (c₁ ⊗ c₂))
-  -- 
-  assoc>>>l : (d₁ >>> (d₂ >>> d₃)) ≡ ((d₁ >>> d₂) >>> d₃)
-  assoc>>>r : ((d₁ >>> d₂) >>> d₃) ≡ (d₁ >>> (d₂ >>> d₃))
-  assocl***l : ((d₁ *** (d₂ *** d₃)) >>> assocl⋆) ≡ (assocl⋆ >>> ((d₁ *** d₂) *** d₃))
-  assocl***r : (assocl⋆ >>> ((d₁ *** d₂) *** d₃)) ≡ ((d₁ *** (d₂ *** d₃)) >>> assocl⋆)
-  assocr***l : (assocr⋆ >>> (d₁ *** (d₂ *** d₃))) ≡ (((d₁ *** d₂) *** d₃) >>> assocr⋆)
-  assocr***r : (((d₁ *** d₂) *** d₃) >>> assocr⋆) ≡ (assocr⋆ >>> (d₁ *** (d₂ *** d₃)))
-  idl>>>l   : (id⇔ >>> d) ≡ d
-  idl>>>r   : d ≡ (id⇔ >>> d)
-  idr>>>l   : (d >>> id⇔) ≡ d
-  idr>>>r   : d ≡ (d >>> id⇔)
-  linv>>>l  : (d >>> inv d) ≡ id⇔
-  linv>>>r  : id⇔ ≡ (d >>> inv d)
-  rinv>>>l  : (inv d >>> d) ≡ id⇔
-  rinv>>>r  : id⇔ ≡ (inv d >>> d)
-  unitel⋆≡r : (unite⋆r >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆r)
-  uniter⋆≡r : ((d₂ *** d₁) >>> unite⋆r) ≡ (unite⋆r >>> d₂)
-  unitil⋆≡r : (uniti⋆r >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆r)
-  unitir⋆≡r : (d₂ >>> uniti⋆r) ≡ (uniti⋆r >>> (d₂ *** d₁))
-  swapl⋆≡ : (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
-  swapr⋆≡ : ((d₂ *** d₁) >>> swap⋆) ≡ (swap⋆ >>> (d₁ *** d₂))
-  id≡     : d ≡ d
-  trans≡  : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
+  -- monoidal coherence
+  assoc>>>l   : (d₁ >>> (d₂ >>> d₃)) ≡ ((d₁ >>> d₂) >>> d₃)
+  assoc>>>r   : ((d₁ >>> d₂) >>> d₃) ≡ (d₁ >>> (d₂ >>> d₃))
+  assocl***l  : ((d₁ *** (d₂ *** d₃)) >>> assocl⋆) ≡ (assocl⋆ >>> ((d₁ *** d₂) *** d₃))
+  assocl***r  : (assocl⋆ >>> ((d₁ *** d₂) *** d₃)) ≡ ((d₁ *** (d₂ *** d₃)) >>> assocl⋆)
+  assocr***l  : (assocr⋆ >>> (d₁ *** (d₂ *** d₃))) ≡ (((d₁ *** d₂) *** d₃) >>> assocr⋆)
+  assocr***r  : (((d₁ *** d₂) *** d₃) >>> assocr⋆) ≡ (assocr⋆ >>> (d₁ *** (d₂ *** d₃)))
+  idl>>>l     : (id⇔ >>> d) ≡ d
+  idl>>>r     : d ≡ (id⇔ >>> d)
+  idr>>>l     : (d >>> id⇔) ≡ d
+  idr>>>r     : d ≡ (d >>> id⇔)
+  linv>>>l    : (d >>> inv d) ≡ id⇔
+  linv>>>r    : id⇔ ≡ (d >>> inv d)
+  rinv>>>l    : (inv d >>> d) ≡ id⇔
+  rinv>>>r    : id⇔ ≡ (inv d >>> d)
+  unitel⋆≡r   : (unite⋆r >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆r)
+  uniter⋆≡r   : ((d₂ *** d₁) >>> unite⋆r) ≡ (unite⋆r >>> d₂)
+  unitil⋆≡r   : (uniti⋆r >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆r)
+  unitir⋆≡r   : (d₂ >>> uniti⋆r) ≡ (uniti⋆r >>> (d₂ *** d₁))
+  swapl⋆≡     :   (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
+  swapr⋆≡     : ((d₂ *** d₁) >>> swap⋆) ≡ (swap⋆ >>> (d₁ *** d₂))
+  id≡         : d ≡ d
+  trans≡      : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
   -- congruence; functor
-  cong≡  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ >>> d₂) ≡ (d₃ >>> d₄))
-  cong***  : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ *** d₂) ≡ (d₃ *** d₄))
-  homL*** : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
-  homR*** : ((d₁ >>> d₃) *** (d₂ >>> d₄)) ≡ ((d₁ *** d₂) >>> (d₃ *** d₄))
-  id***id : {t₁ t₂ : U} → (id⇔ {t₁} *** id⇔ {t₂}) ≡ id⇔
-  split***-id : {t₁ t₂ : U} → (id⇔ {_×ᵤ_ t₁ t₂}) ≡ (id⇔ *** id⇔)
+  cong≡        : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ >>> d₂) ≡ (d₃ >>> d₄))
+  cong***      : (d₁ ≡ d₃) → (d₂ ≡ d₄) → ((d₁ *** d₂) ≡ (d₃ *** d₄))
+  homL***      : ((d₁ *** d₂) >>> (d₃ *** d₄)) ≡ ((d₁ >>> d₃) *** (d₂ >>> d₄))
+  homR***      : ((d₁ >>> d₃) *** (d₂ >>> d₄)) ≡ ((d₁ *** d₂) >>> (d₃ *** d₄))
+  id***id      : {t₁ t₂ : U} → (id⇔ {t₁} *** id⇔ {t₂}) ≡ id⇔
+  split***-id  : {t₁ t₂ : U} → (id⇔ {_×ᵤ_ t₁ t₂}) ≡ (id⇔ *** id⇔)
   -- execution equations
   e1L : zero >>> assertZero ≡ id⇔
   e1R : id⇔ ≡ zero >>> assertZero
@@ -76,10 +76,10 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   e3L : (one *** id⇔) >>> ctrlZ c ≡ one *** arrZ c
   e3R : one *** arrZ c ≡ (one *** id⇔) >>> ctrlZ c
   -- complementarity
-  C : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
+  C   : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
         (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
-      ≡ id⇔
-  C˘ : id⇔ ≡ ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
+        ≡ id⇔
+  C˘  : id⇔ ≡ ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
         (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
 
 ---------------------------------------------------------------------------
