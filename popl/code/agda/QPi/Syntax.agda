@@ -24,20 +24,14 @@ private
 
   module M = Build CM
   
--- Arrow combinators
-
 data _⇔_ : U → U → Set where
-  arrZ  : (t₁ ⟷ t₂) → (t₁ ⇔ t₂) 
-  arrϕ  : (t₁ ⟷ t₂) → (t₁ ⇔ t₂)
-  -- multiplicative structure 
-  mult     : t₁ M.⇔ t₂ → t₁ ⇔ t₂
-  -- composition (sequential and parallel)
-  id⇔    : t ⇔ t
-  _>>>_  : (t₁ ⇔ t₂) → (t₂ ⇔ t₃) → (t₁ ⇔ t₃)
-  _***_  : (t₁ ⇔ t₃) → (t₂ ⇔ t₄) → (t₁ ×ᵤ t₂ ⇔ t₃ ×ᵤ t₄)
-  -- inverse
-  inv    : (t₁ ⇔ t₂) → (t₂ ⇔ t₁)
-  -- states and effects
+  arrZ        : (t₁ ⟷ t₂) → (t₁ ⇔ t₂) 
+  arrϕ        : (t₁ ⟷ t₂) → (t₁ ⇔ t₂)
+  mult        : t₁ M.⇔ t₂ → t₁ ⇔ t₂
+  id⇔         : t ⇔ t
+  _>>>_       : (t₁ ⇔ t₂) → (t₂ ⇔ t₃) → (t₁ ⇔ t₃)
+  _***_       : (t₁ ⇔ t₃) → (t₂ ⇔ t₄) → (t₁ ×ᵤ t₂ ⇔ t₃ ×ᵤ t₄)
+  inv         : (t₁ ⇔ t₂) → (t₂ ⇔ t₁)
   zero        : I ⇔ 𝟚
   assertZero  : 𝟚 ⇔ I
 

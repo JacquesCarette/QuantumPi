@@ -26,20 +26,16 @@ module M× = Build CM×
 module M+ = Build CM+
 
 data _⟷_ : U → U → Set where
-  id⟷  : t ⟷  t
-  --
-  add     : t₁ M+.⇔ t₂ → t₁ ⟷ t₂
-  ---
-  mult    : t₁ M×.⇔ t₂ → t₁ ⟷ t₂
-  --
-  dist : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
-  factor : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ +ᵤ t₂) ×ᵤ t₃
-  absorbl : t ×ᵤ O ⟷ O
-  factorzr : O ⟷  t ×ᵤ O
-  --
-  _◎_     : (t₁ ⟷ t₂) → (t₂ ⟷ t₃) → (t₁ ⟷ t₃)
-  _⊕_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ +ᵤ t₂ ⟷ t₃ +ᵤ t₄)
-  _⊗_     : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
+  id⟷      : t ⟷  t
+  add       : t₁ M+.⇔ t₂ → t₁ ⟷ t₂
+  mult      : t₁ M×.⇔ t₂ → t₁ ⟷ t₂
+  dist      : (t₁ +ᵤ t₂) ×ᵤ t₃ ⟷ (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃)
+  factor    : {t₁ t₂ t₃ : U} → (t₁ ×ᵤ t₃) +ᵤ (t₂ ×ᵤ t₃) ⟷ (t₁ +ᵤ t₂) ×ᵤ t₃
+  absorbl   : t ×ᵤ O ⟷ O
+  factorzr  : O ⟷  t ×ᵤ O
+  _◎_       : (t₁ ⟷ t₂) → (t₂ ⟷ t₃) → (t₁ ⟷ t₃)
+  _⊕_       : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ +ᵤ t₂ ⟷ t₃ +ᵤ t₄)
+  _⊗_       : (t₁ ⟷ t₃) → (t₂ ⟷ t₄) → (t₁ ×ᵤ t₂ ⟷ t₃ ×ᵤ t₄)
 
 pattern unite⋆l = mult M×.unite⋆
 pattern uniti⋆l = mult M×.uniti⋆

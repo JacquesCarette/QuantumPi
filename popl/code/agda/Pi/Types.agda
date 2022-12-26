@@ -13,10 +13,10 @@ open import Data.Unit using (⊤; tt)
 -- Types
 
 data U : Set where
-  O : U
-  I : U
-  _+ᵤ_ : U → U → U
-  _×ᵤ_ : U → U → U
+  O     : U
+  I     : U
+  _+ᵤ_  : U → U → U
+  _×ᵤ_  : U → U → U
 
 infixr 40 _+ᵤ_ _×ᵤ_
 
