@@ -75,8 +75,7 @@ hadInv = arrϕR ◯ classicalϕ linv◎l ◯ arrϕidL
 
 minusZ≡plus : (minus >>> Z) ≡ plus
 minusZ≡plus = begin
-  (minus >>> Z)
-    ≡⟨ id≡ ⟩
+  (minus >>> Z)                                    ≡⟨ id≡ ⟩
   ((plus >>> H >>> X >>> H) >>> H >>> X >>> H)     ≡⟨ ((assoc>>>l ◯ assoc>>>l) ⟩◎⟨id ) ◯ pullʳ assoc>>>l ⟩
   (((plus >>> H) >>> X) >>> (H >>> H) >>> X >>> H) ≡⟨ id⟩◎⟨ ((hadInv ⟩◎⟨id) ◯ idl>>>l) ⟩
   (((plus >>> H) >>> X) >>> X >>> H)               ≡⟨ pullʳ assoc>>>l ⟩
