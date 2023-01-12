@@ -9,9 +9,11 @@ open import Data.List
 
 open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
 open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero)
-open import QPi.Terms using (one; X; H; cx; cz)
+open import QPi.Terms using (one; X; H; cx; cz; plus; minus)
 open import QPi.Measurement using (measureZ; discard)
-open import QPi.Execute using (showAll)
+open import QPi.Execute using (run; ket)
+open import QPi.Equivalences
+open import QPi.TermReasoning
 
 -- Regular Deutsch circuit for f = id
 
@@ -33,15 +35,39 @@ deutschNF =
   >>> swap⋆ >>> cz >>> swap⋆
 --  >>> measureZ *** discard >>> unite⋆r
 
-test1 = showAll deutsch
-test2 = showAll deutschNF
-
+test1 = run deutsch (ket (tt , tt))
 {--
-
-(tt , tt) ,
-
-((𝕋 , 𝔽) , 0.7071067811706745) ∷
-((𝕋 , 𝕋) , -0.7071067812024211)
-
+((𝕋 , 𝔽) , 0.7071067811865479) ∷
+((𝕋 , 𝕋) , -0.7071067811865477) ∷ []
 --}
 
+test2 = run deutschNF (ket (tt , tt))
+{--
+((𝕋 , 𝔽) , 0.7071067811706745) ∷
+((𝕋 , 𝕋) , -0.7071067812024211) ∷ []
+--}
+
+eq1 : deutsch ≡ one *** minus
+eq1 = begin
+  zero *** one >>> H *** H >>> cx >>> H *** id⇔
+    ≡⟨ {!!} ⟩
+  plus *** minus >>> cx >>> H *** id⇔
+    ≡⟨ {!!} ⟩
+  minus *** minus >>> H *** id⇔
+    ≡⟨ {!!} ⟩
+  one *** minus ∎
+
+eq2 : deutschNF ≡ one *** minus
+eq2 = begin
+  zero *** zero >>> id⇔ *** H >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
+    ≡⟨ {!!} ⟩
+  zero *** plus >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
+    ≡⟨ {!!} ⟩
+  one *** plus >>> swap⋆ >>> cz >>> swap⋆
+    ≡⟨ {!!} ⟩
+  plus *** one >>> cz >>> swap⋆
+    ≡⟨ {!!} ⟩
+  minus *** one >>> swap⋆
+    ≡⟨ {!!} ⟩
+  one *** minus ∎
+        
