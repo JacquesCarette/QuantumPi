@@ -3,7 +3,7 @@
 module QPi.Syntax where
 
 open import Pi.Types using (U; I; _×ᵤ_; 𝟚)
-open import Pi.Language using (_⟷_)
+open import Pi.Language using (_⟷_; !⟷)
 
 open import CommMonoid using (CMStructure; CMon; module Build)
 
@@ -31,7 +31,6 @@ data _⇔_ : U → U → Set where
   id⇔         : t ⇔ t
   _>>>_       : (t₁ ⇔ t₂) → (t₂ ⇔ t₃) → (t₁ ⇔ t₃)
   _***_       : (t₁ ⇔ t₃) → (t₂ ⇔ t₄) → (t₁ ×ᵤ t₂ ⇔ t₃ ×ᵤ t₄)
-  inv         : (t₁ ⇔ t₂) → (t₂ ⇔ t₁)
   zero        : I ⇔ 𝟚
   assertZero  : 𝟚 ⇔ I
 
@@ -47,4 +46,19 @@ unite⋆r = swap⋆ >>> unite⋆l
 
 uniti⋆r : {t : U} → t ⇔ t ×ᵤ I
 uniti⋆r =  uniti⋆l >>> swap⋆ 
+
+inv : t₁ ⇔ t₂ → t₂ ⇔ t₁
+inv (arrZ c) = arrZ (!⟷ c)
+inv (arrϕ c) = arrϕ (!⟷ c)
+inv (unite⋆l) = uniti⋆l
+inv (uniti⋆l) = unite⋆l
+inv (swap⋆) = swap⋆
+inv (assocl⋆) = assocr⋆
+inv (assocr⋆) = assocl⋆
+inv id⇔ = id⇔
+inv (d₁ >>> d₂) = inv d₂ >>> inv d₁
+inv (d₁ *** d₂) = inv d₁ *** inv d₂
+inv zero = assertZero
+inv assertZero = zero
+
 ---------------------------------------------------------------------------

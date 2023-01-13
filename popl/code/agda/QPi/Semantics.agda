@@ -32,7 +32,6 @@ embed assocr⋆     = pizA Π.assocr⋆
 embed id⇔         = pizA Π.id⟷
 embed (d₁ >>> d₂) = embed d₁ >>>> embed d₂ 
 embed (d₁ *** d₂) = embed d₁ **** embed d₂ 
-embed (inv d)     = invSE (embed d)
 embed zero        = kzero
 embed assertZero  = bzero
 

@@ -101,7 +101,7 @@ eq2 = begin
   swap⋆ >>> minus *** one >>> swap⋆
     ≡⟨ id⟩◎⟨ swapr⋆≡ ⟩
   swap⋆ >>> swap⋆ >>> one *** minus
-    ≡⟨ assoc>>>l ◯ {!rinv>>>l!} ⟩◎⟨id ⟩ 
+    ≡⟨ assoc>>>l ◯ rinv>>>l ⟩◎⟨id ⟩ 
   id⇔ >>> one *** minus
     ≡⟨ idl>>>l ⟩ 
   one *** minus ∎
