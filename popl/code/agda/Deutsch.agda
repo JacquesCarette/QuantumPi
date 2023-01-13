@@ -8,13 +8,21 @@ open import Data.Product
 open import Data.List
 
 open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
+open import Pi.Language using (_⟷_; !⟷)
+open import Pi.Equivalences using (_⟷₂_)
 open import Reasoning using (hadInv)
-open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero)
+open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; mult; inv)
 open import QPi.Terms using (one; X; H; Z; cx; cz; plus; minus)
 open import QPi.Measurement using (measureZ; discard)
 open import QPi.Execute using (run; ket)
 open import QPi.Equivalences
 open import QPi.TermReasoning
+
+private
+  variable
+    t₁ t₂ : U
+    c : t₁ ⟷ t₂
+
 
 -- Regular Deutsch circuit for f = id
 
@@ -47,6 +55,9 @@ test2 = run deutschNF (ket (tt , tt))
 ((𝕋 , 𝔽) , 0.7071067811706745) ∷
 ((𝕋 , 𝕋) , -0.7071067812024211) ∷ []
 --}
+
+--piinv : (c ⟷₂ !⟷ c) → mult c >>> inv (mult c) ≡ id⇔
+--piinv p = ? 
 
 oneH : one >>> H ≡ minus
 oneH = begin

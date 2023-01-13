@@ -51,6 +51,7 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   idr>>>r     : d ≡ (d >>> id⇔)
   -- restrict to d = mult c or d = arr c
   linv>>>l    : (d >>> inv d) ≡ id⇔
+--  linv>>>l    : ∀ {s} → (mult s >>> inv (mult s)) ≡ id⇔
   linv>>>r    : id⇔ ≡ (d >>> inv d)
   rinv>>>l    : (inv d >>> d) ≡ id⇔
   rinv>>>r    : id⇔ ≡ (inv d >>> d)
