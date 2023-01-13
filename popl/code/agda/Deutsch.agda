@@ -66,27 +66,43 @@ Hminus = begin
     ≡⟨ assoc>>>r ◯ id⟩◎⟨ hadInv ◯ idr>>>l ⟩
   one ∎
 
+pmcx : plus *** minus >>> cx ≡ minus *** minus
+pmcx = begin
+  plus *** minus >>> cx
+    ≡⟨ {!!} ⟩
+  minus *** minus ∎
+
 eq1 : deutsch ≡ one *** minus
 eq1 = begin
   zero *** one >>> H *** H >>> cx >>> H *** id⇔
     ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
   plus *** minus >>> cx >>> H *** id⇔
-    ≡⟨ {!!} ⟩
+    ≡⟨ assoc>>>l ◯ pmcx ⟩◎⟨id ⟩
   minus *** minus >>> H *** id⇔
     ≡⟨ homL*** ◯ cong*** Hminus idr>>>l ⟩
   one *** minus ∎
 
+pocz : plus *** one >>> cz ≡ minus *** one
+pocz = begin
+  plus *** one >>> cz
+    ≡⟨ {!!} ⟩
+  minus *** one ∎
+
 eq2 : deutschNF ≡ one *** minus
 eq2 = begin
   zero *** zero >>> id⇔ *** H >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ {!!} ⟩
+    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** idr>>>l id≡) ⟩◎⟨id ⟩ 
   zero *** plus >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ {!!} ⟩
+    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ idr>>>l) ⟩◎⟨id ⟩
   one *** plus >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ {!!} ⟩
-  plus *** one >>> cz >>> swap⋆
-    ≡⟨ {!!} ⟩
-  minus *** one >>> swap⋆
-    ≡⟨ {!!} ⟩
+    ≡⟨ assoc>>>l ◯ swapr⋆≡ ⟩◎⟨id ◯ assoc>>>r ⟩
+  swap⋆ >>> plus *** one >>> cz >>> swap⋆
+    ≡⟨ id⟩◎⟨ (assoc>>>l ◯ pocz ⟩◎⟨id) ⟩
+  swap⋆ >>> minus *** one >>> swap⋆
+    ≡⟨ id⟩◎⟨ swapr⋆≡ ⟩
+  swap⋆ >>> swap⋆ >>> one *** minus
+    ≡⟨ assoc>>>l ◯ {!rinv>>>l!} ⟩◎⟨id ⟩ 
+  id⇔ >>> one *** minus
+    ≡⟨ idl>>>l ⟩ 
   one *** minus ∎
         
