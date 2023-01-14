@@ -11,7 +11,7 @@ open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
 open import Pi.Language using (_⟷_; !⟷)
 open import Pi.Equivalences using (_⟷₂_)
 open import Reasoning using (hadInv)
-open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; mult; inv)
+open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; inv)
 open import QPi.Terms using (one; X; H; Z; cx; cz; plus; minus)
 open import QPi.Measurement using (measureZ; discard)
 open import QPi.Execute using (run; ket)
@@ -23,26 +23,26 @@ private
     t₁ t₂ : U
     c : t₁ ⟷ t₂
 
-
 -- Regular Deutsch circuit for f = id
 
 deutsch : I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚
--- deutsch : I ×ᵤ I ⇔ 𝟚
 deutsch =
       zero *** one
   >>> H *** H 
   >>> cx
   >>> H *** id⇔
---  >>> measureZ *** discard >>> unite⋆r
-  
+
+czS : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
+czS = swap⋆ >>> cz >>> swap⋆
+
 deutschNF : I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚
--- deutschNF : I ×ᵤ I ⇔ 𝟚 
 deutschNF =
       zero *** zero
   >>> id⇔ *** H
   >>> X *** id⇔
-  >>> swap⋆ >>> cz >>> swap⋆
---  >>> measureZ *** discard >>> unite⋆r
+  >>> czS
+
+-- The two circuit are extensionally equivalent
 
 test1 = run deutsch (ket (tt , tt))
 {--
@@ -56,8 +56,20 @@ test2 = run deutschNF (ket (tt , tt))
 ((𝕋 , 𝕋) , -0.7071067812024211) ∷ []
 --}
 
---piinv : (c ⟷₂ !⟷ c) → mult c >>> inv (mult c) ≡ id⇔
---piinv p = ? 
+cxS : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
+cxS = swap⋆ >>> cx >>> swap⋆ 
+
+czcx : czS ≡ H *** id⇔ >>> cxS >>> H *** id⇔
+czcx = begin
+  swap⋆ >>> cz >>> swap⋆
+    ≡⟨ id⟩◎⟨ (assoc>>>l ⟩◎⟨id) ◯ id⟩◎⟨ trans≡ assoc>>>r assoc>>>r ⟩
+  swap⋆ >>> id⇔ *** H >>> cx >>> id⇔ *** H >>> swap⋆
+    ≡⟨ assoc>>>l ◯ swapl⋆≡ ⟩◎⟨id ◯ assoc>>>r ⟩ 
+  H *** id⇔ >>> swap⋆ >>> cx >>> id⇔ *** H >>> swap⋆ 
+    ≡⟨ id⟩◎⟨ id⟩◎⟨ id⟩◎⟨ swapr⋆≡ ⟩ 
+  H *** id⇔ >>> swap⋆ >>> cx >>> swap⋆ >>> H *** id⇔
+    ≡⟨ id⟩◎⟨ (trans≡ assoc>>>l assoc>>>l ◯ assoc>>>r ⟩◎⟨id) ⟩ 
+  H *** id⇔ >>> cxS >>> H *** id⇔ ∎
 
 oneH : one >>> H ≡ minus
 oneH = begin
@@ -69,51 +81,22 @@ oneH = begin
     ≡⟨ assoc>>>l ⟩
   plus >>> Z ∎
 
-Hminus : minus >>> H ≡ one
-Hminus = begin
-  minus >>> H
-    ≡⟨ (!≡ oneH) ⟩◎⟨id ⟩
-  (one >>> H) >>> H
-    ≡⟨ assoc>>>r ◯ id⟩◎⟨ hadInv ◯ idr>>>l ⟩
-  one ∎
-
-pmcx : plus *** minus >>> cx ≡ minus *** minus
-pmcx = begin
-  plus *** minus >>> cx
-    ≡⟨ {!!} ⟩
-  minus *** minus ∎
-
-eq1 : deutsch ≡ one *** minus
+eq1 : deutsch ≡ plus *** minus >>> cx >>> H *** id⇔
 eq1 = begin
   zero *** one >>> H *** H >>> cx >>> H *** id⇔
     ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
-  plus *** minus >>> cx >>> H *** id⇔
-    ≡⟨ assoc>>>l ◯ pmcx ⟩◎⟨id ⟩
-  minus *** minus >>> H *** id⇔
-    ≡⟨ homL*** ◯ cong*** Hminus idr>>>l ⟩
-  one *** minus ∎
+  plus *** minus >>> cx >>> H *** id⇔ ∎
 
-pocz : plus *** one >>> cz ≡ minus *** one
-pocz = begin
-  plus *** one >>> cz
-    ≡⟨ {!!} ⟩
-  minus *** one ∎
-
-eq2 : deutschNF ≡ one *** minus
+eq2 : deutschNF ≡ minus *** plus >>> cxS >>> H *** id⇔
 eq2 = begin
-  zero *** zero >>> id⇔ *** H >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** idr>>>l id≡) ⟩◎⟨id ⟩ 
-  zero *** plus >>> X *** id⇔ >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ idr>>>l) ⟩◎⟨id ⟩
-  one *** plus >>> swap⋆ >>> cz >>> swap⋆
-    ≡⟨ assoc>>>l ◯ swapr⋆≡ ⟩◎⟨id ◯ assoc>>>r ⟩
-  swap⋆ >>> plus *** one >>> cz >>> swap⋆
-    ≡⟨ id⟩◎⟨ (assoc>>>l ◯ pocz ⟩◎⟨id) ⟩
-  swap⋆ >>> minus *** one >>> swap⋆
-    ≡⟨ id⟩◎⟨ swapr⋆≡ ⟩
-  swap⋆ >>> swap⋆ >>> one *** minus
-    ≡⟨ assoc>>>l ◯ rinv>>>l ⟩◎⟨id ⟩ 
-  id⇔ >>> one *** minus
-    ≡⟨ idl>>>l ⟩ 
-  one *** minus ∎
-        
+  zero *** zero >>> id⇔ *** H >>> X *** id⇔ >>> czS
+    ≡⟨ id⟩◎⟨ (assoc>>>l ◯ (homL*** ◯ cong*** idl>>>l idr>>>l) ⟩◎⟨id) ⟩ 
+  zero *** zero >>> X *** H >>> czS
+    ≡⟨ assoc>>>l ◯ (homL*** ⟩◎⟨id) ⟩
+  one *** plus >>> czS
+    ≡⟨ id⟩◎⟨ czcx ⟩ 
+  one *** plus >>> H *** id⇔ >>> cxS >>> H *** id⇔
+    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** oneH idr>>>l) ⟩◎⟨id ⟩ 
+  minus *** plus >>> cxS >>> H *** id⇔ ∎
+
+

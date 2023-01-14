@@ -21,7 +21,6 @@ private
     c c₁ c₂ c₃ : t₁ ⟷ t₂
     d d₁ d₂ d₃ d₄ : t₁ ⇔ t₂
 
-
 data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set where
   classicalZ  : (c₁ ⟷₂ c₂) → (arrZ c₁ ≡ arrZ c₂)
   classicalϕ  : (c₁ ⟷₂ c₂) → (arrϕ c₁ ≡ arrϕ c₂)
@@ -49,17 +48,16 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   idl>>>r     : d ≡ (id⇔ >>> d)
   idr>>>l     : (d >>> id⇔) ≡ d
   idr>>>r     : d ≡ (d >>> id⇔)
-  -- restrict to d = mult c or d = arr c
-  linv>>>l    : (d >>> inv d) ≡ id⇔
---  linv>>>l    : ∀ {s} → (mult s >>> inv (mult s)) ≡ id⇔
-  linv>>>r    : id⇔ ≡ (d >>> inv d)
-  rinv>>>l    : (inv d >>> d) ≡ id⇔
-  rinv>>>r    : id⇔ ≡ (inv d >>> d)
+  -- other combinators ok; not just swap; but not zero/assertZero
+  linv>>>l    : (swap⋆ >>> inv swap⋆) ≡ id⇔ {t₁ ×ᵤ t₂}
+  linv>>>r    : id⇔ {t₁ ×ᵤ t₂} ≡ (swap⋆ >>> inv swap⋆)  
+  rinv>>>l    : (inv swap⋆  >>> swap⋆ ) ≡ id⇔ {t₁ ×ᵤ t₂}
+  rinv>>>r    : id⇔ {t₁ ×ᵤ t₂} ≡ (inv swap⋆  >>> swap⋆ )
   unitel⋆≡r   : (unite⋆r >>> d₂) ≡ ((d₂ *** d₁) >>> unite⋆r)
   uniter⋆≡r   : ((d₂ *** d₁) >>> unite⋆r) ≡ (unite⋆r >>> d₂)
   unitil⋆≡r   : (uniti⋆r >>> (d₂ *** d₁)) ≡ (d₂ >>> uniti⋆r)
   unitir⋆≡r   : (d₂ >>> uniti⋆r) ≡ (uniti⋆r >>> (d₂ *** d₁))
-  swapl⋆≡     :   (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
+  swapl⋆≡     : (swap⋆ >>> (d₁ *** d₂)) ≡ ((d₂ *** d₁) >>> swap⋆)
   swapr⋆≡     : ((d₂ *** d₁) >>> swap⋆) ≡ (swap⋆ >>> (d₁ *** d₂))
   id≡         : d ≡ d
   trans≡      : (d₁ ≡ d₂) → (d₂ ≡ d₃) → (d₁ ≡ d₃)
