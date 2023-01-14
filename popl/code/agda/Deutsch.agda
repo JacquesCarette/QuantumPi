@@ -8,10 +8,11 @@ open import Data.Product
 open import Data.List
 
 open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
-open import Pi.Language using (_⟷_; !⟷)
+open import Pi.Language using (_⟷_; id⟷; swap₊; _⊕_; _⊗_; dist; factor; !⟷)
 open import Pi.Equivalences using (_⟷₂_)
 open import Reasoning using (hadInv)
-open import QPi.Syntax using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; inv)
+open import QPi.Syntax
+  using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; inv; arrZ; arrϕ)
 open import QPi.Terms using (one; X; H; Z; cx; cz; plus; minus)
 open import QPi.Measurement using (measureZ; discard)
 open import QPi.Execute using (run; ket)
@@ -92,10 +93,31 @@ minusH = begin
   one ∎
 
 pmcx : plus *** minus >>> cx ≡ minus *** minus
-pmcx = {!!}
+pmcx = begin
+  plus *** minus >>> cx
+    ≡⟨ {!!} ⟩ 
+  (zero *** one >>>
+   arrϕ swap₊ *** arrϕ swap₊ >>>
+   arrZ dist >>>
+   arrZ (id⟷ ⊕ id⟷ ⊗ swap₊) >>>
+   arrZ factor)
+    ≡⟨ {!!} ⟩
+  minus *** minus ∎  
 
 mpcxS : minus *** plus >>> cxS ≡ minus *** minus
-mpcxS = {!!}
+mpcxS = begin
+  minus *** plus >>> cxS
+    ≡⟨ {!!} ⟩
+  (one *** zero >>>
+   arrϕ swap₊ *** arrϕ swap₊ >>>
+   swap⋆ >>>
+   arrZ dist >>>
+   arrZ (id⟷ ⊕ id⟷ ⊗ swap₊) >>>
+   arrZ factor >>>
+   swap⋆)
+    ≡⟨ {!!} ⟩
+  minus *** minus ∎
+
 
 eq1 : deutsch ≡ one *** minus
 eq1 = begin
@@ -125,3 +147,4 @@ eq2 = begin
 
 eq : deutsch ≡ deutschNF
 eq = trans≡ eq1 (!≡ eq2)
+
