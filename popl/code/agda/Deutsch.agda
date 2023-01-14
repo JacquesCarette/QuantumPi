@@ -42,7 +42,7 @@ deutschNF =
   >>> X *** id⇔
   >>> czS
 
--- The two circuit are extensionally equivalent
+-- The two circuits are extensionally equivalent
 
 test1 = run deutsch (ket (tt , tt))
 {--
@@ -81,13 +81,33 @@ oneH = begin
     ≡⟨ assoc>>>l ⟩
   plus >>> Z ∎
 
-eq1 : deutsch ≡ plus *** minus >>> cx >>> H *** id⇔
+minusH : minus >>> H ≡ one
+minusH = begin
+  minus >>> H
+    ≡⟨ (!≡ oneH) ⟩◎⟨id ⟩
+  (one >>> H) >>> H
+    ≡⟨ assoc>>>r ◯ id⟩◎⟨ hadInv ⟩
+  one >>> id⇔
+    ≡⟨ idr>>>l ⟩
+  one ∎
+
+pmcx : plus *** minus >>> cx ≡ minus *** minus
+pmcx = {!!}
+
+mpcxS : minus *** plus >>> cxS ≡ minus *** minus
+mpcxS = {!!}
+
+eq1 : deutsch ≡ one *** minus
 eq1 = begin
   zero *** one >>> H *** H >>> cx >>> H *** id⇔
     ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
-  plus *** minus >>> cx >>> H *** id⇔ ∎
+  plus *** minus >>> cx >>> H *** id⇔ 
+    ≡⟨ assoc>>>l ◯ pmcx ⟩◎⟨id ⟩
+  minus *** minus >>> H *** id⇔     
+    ≡⟨ homL*** ◯ cong*** minusH idr>>>l ⟩
+  one *** minus ∎
 
-eq2 : deutschNF ≡ minus *** plus >>> cxS >>> H *** id⇔
+eq2 : deutschNF ≡ one *** minus 
 eq2 = begin
   zero *** zero >>> id⇔ *** H >>> X *** id⇔ >>> czS
     ≡⟨ id⟩◎⟨ (assoc>>>l ◯ (homL*** ◯ cong*** idl>>>l idr>>>l) ⟩◎⟨id) ⟩ 
@@ -97,6 +117,11 @@ eq2 = begin
     ≡⟨ id⟩◎⟨ czcx ⟩ 
   one *** plus >>> H *** id⇔ >>> cxS >>> H *** id⇔
     ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** oneH idr>>>l) ⟩◎⟨id ⟩ 
-  minus *** plus >>> cxS >>> H *** id⇔ ∎
+  minus *** plus >>> cxS >>> H *** id⇔ 
+    ≡⟨ assoc>>>l ◯ mpcxS ⟩◎⟨id ⟩ 
+  minus *** minus >>> H *** id⇔ 
+    ≡⟨ homL*** ◯ cong*** minusH idr>>>l ⟩ 
+  one *** minus ∎
 
-
+eq : deutsch ≡ deutschNF
+eq = trans≡ eq1 (!≡ eq2)
