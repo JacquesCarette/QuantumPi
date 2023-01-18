@@ -12,8 +12,7 @@ open import Pi.Language using (_⟷_; id⟷; swap₊; _⊕_; _⊗_; dist; factor
 open import Pi.Equivalences using (_⟷₂_)
 open import Reasoning using (hadInv)
 open import QPi.Syntax
-  using (_⇔_; id⇔; swap⋆; unite⋆r; _***_; _>>>_; zero; inv; arrZ; arrϕ)
-open import QPi.Terms using (one; X; H; Z; cx; cz; plus; minus)
+open import QPi.Terms
 open import QPi.Measurement using (measureZ; discard)
 open import QPi.Execute using (run; ket)
 open import QPi.Equivalences
@@ -33,15 +32,12 @@ deutsch =
   >>> cx
   >>> H *** id⇔
 
-czS : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-czS = swap⋆ >>> cz >>> swap⋆
-
 deutschNF : I ×ᵤ I ⇔ 𝟚 ×ᵤ 𝟚
 deutschNF =
       zero *** zero
   >>> id⇔ *** H
   >>> X *** id⇔
-  >>> czS
+  >>> swap⋆ >>> cz >>> swap⋆
 
 -- The two circuits are extensionally equivalent
 
@@ -57,8 +53,43 @@ test2 = run deutschNF (ket (tt , tt))
 ((𝕋 , 𝕋) , -0.7071067812024211) ∷ []
 --}
 
-cxS : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚
-cxS = swap⋆ >>> cx >>> swap⋆ 
+-- Proof
+
+oneH : one >>> H ≡ minus
+oneH = begin
+  (zero >>> X) >>> H
+    ≡⟨ assoc>>>r ⟩
+  zero >>> X >>> H
+    ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
+  zero >>> H >>> H >>> X >>> H
+    ≡⟨ assoc>>>l ⟩
+  plus >>> Z ∎
+
+cxexp : copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ ≡ cx
+cxexp = begin
+  copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ
+    ≡⟨ {!!} ⟩
+  cx ∎
+
+deutschEq : deutsch ≡ one *** minus
+deutschEq = begin
+  deutsch
+    ≡⟨ id≡ ⟩
+  zero *** one >>> H *** H >>> cx >>> H *** id⇔
+    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
+  plus *** minus >>> cx >>> H *** id⇔ 
+    ≡⟨ id⟩◎⟨ !≡ cxexp ⟩◎⟨id ⟩
+  plus *** minus >>> (copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ) >>> H *** id⇔ 
+    ≡⟨ {!!} ⟩
+  one *** minus ∎
+
+
+{--
+      zero *** one
+  >>> H *** H 
+  >>> cx
+  >>> H *** id⇔
+
 
 czcx : czS ≡ H *** id⇔ >>> cxS >>> H *** id⇔
 czcx = begin
@@ -72,15 +103,6 @@ czcx = begin
     ≡⟨ id⟩◎⟨ (trans≡ assoc>>>l assoc>>>l ◯ assoc>>>r ⟩◎⟨id) ⟩ 
   H *** id⇔ >>> cxS >>> H *** id⇔ ∎
 
-oneH : one >>> H ≡ minus
-oneH = begin
-  (zero >>> X) >>> H
-    ≡⟨ assoc>>>r ⟩
-  zero >>> X >>> H
-    ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
-  zero >>> H >>> H >>> X >>> H
-    ≡⟨ assoc>>>l ⟩
-  plus >>> Z ∎
 
 minusH : minus >>> H ≡ one
 minusH = begin
@@ -91,6 +113,46 @@ minusH = begin
   one >>> id⇔
     ≡⟨ idr>>>l ⟩
   one ∎
+
+comp1 :
+      uniti⋆r *** id⇔
+  >>> (id⇔ *** zero) *** id⇔ 
+  >>> cx *** id⇔
+  >>> id⇔ *** (H *** H)
+  >>> id⇔ *** cx
+  >>> id⇔ *** (id⇔ *** assertZero) 
+  >>> id⇔ *** (id⇔ *** zero) 
+  >>> id⇔ *** cx
+  >>> id⇔ *** (H *** H)
+  >>> cx *** id⇔ 
+  >>> (id⇔ *** assertZero) *** id⇔ 
+  >>> unite⋆r *** id⇔
+  ≡ id⇔
+comp1 = begin
+      uniti⋆r *** id⇔
+  >>> (id⇔ *** zero) *** id⇔ 
+  >>> cx *** id⇔
+  >>> id⇔ *** (H *** H)
+  >>> id⇔ *** cx
+  >>> id⇔ *** (id⇔ *** assertZero) 
+  >>> id⇔ *** (id⇔ *** zero) 
+  >>> id⇔ *** cx
+  >>> id⇔ *** (H *** H)
+  >>> cx *** id⇔ 
+  >>> (id⇔ *** assertZero) *** id⇔ 
+  >>> unite⋆r *** id⇔
+    ≡⟨ {!!} ⟩
+  ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
+   (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
+    ≡⟨ C ⟩
+  id⇔ ∎
+
+{--
+copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
+invCopyZ = cx >>> (id⇔ *** assertZero) >>> unite⋆r
+copyϕ = H >>> copyZ >>> (H *** H)
+invcopyϕ = (H *** H) >>> invCopyZ >>> H
+--}
 
 pmcx : plus *** minus >>> cx ≡ minus *** minus
 pmcx = begin
@@ -148,3 +210,4 @@ eq2 = begin
 eq : deutsch ≡ deutschNF
 eq = trans≡ eq1 (!≡ eq2)
 
+--}
