@@ -10,7 +10,7 @@ open import Data.List
 open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
 open import Pi.Language using (_⟷_; id⟷; swap₊; _⊕_; _⊗_; dist; factor; !⟷)
 open import Pi.Equivalences using (_⟷₂_; assoc◎r)
-open import Reasoning using (hadInv)
+open import Reasoning 
 open import QPi.Syntax
 open import QPi.Terms
 open import QPi.Measurement using (measureZ; discard)
@@ -55,31 +55,19 @@ test2 = run deutschNF (ket (tt , tt))
 
 -- Proof
 
-oneH : one >>> H ≡ minus
-oneH = begin
-  (zero >>> X) >>> H
-    ≡⟨ assoc>>>r ⟩
-  zero >>> X >>> H
-    ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
-  zero >>> H >>> H >>> X >>> H
-    ≡⟨ assoc>>>l ⟩
-  plus >>> Z ∎
-
 invCx : inv cx ≡ cx
 invCx = classicalZ assoc◎r
 
 invCopyZ : inv copyZ ≡ cx >>> (id⇔ *** assertZero) >>> unite⋆r
-invCopyZ = begin
-  inv copyZ
-    ≡⟨ assoc>>>r ◯ invCx ⟩◎⟨id ⟩
-  cx >>> (id⇔ *** assertZero) >>> unite⋆r ∎
+invCopyZ = assoc>>>r ◯ invCx ⟩◎⟨id 
 
-invCopyϕ : inv copyϕ ≡ (H *** H) >>> cx >>> (id⇔ *** assertZero) >>> unite⋆r >>> H
+invCopyϕ : inv copyϕ ≡
+           (H *** H) >>> cx >>> (id⇔ *** assertZero) >>> unite⋆r >>> H
 invCopyϕ = begin
   inv copyϕ
-    ≡⟨ assoc>>>r ◯ id⟩◎⟨ invCopyZ ⟩◎⟨id ⟩
+    ≡⟨ pullʳ (invCopyZ ⟩◎⟨id) ⟩
   (H *** H) >>> (cx >>> (id⇔ *** assertZero) >>> unite⋆r) >>> H 
-    ≡⟨ id⟩◎⟨ (assoc>>>r ◯ id⟩◎⟨ assoc>>>r) ⟩
+    ≡⟨ id⟩◎⟨ (pullʳ assoc>>>r) ⟩
   (H *** H) >>> cx >>> (id⇔ *** assertZero) >>> unite⋆r >>> H ∎
 
 cxexp : copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ ≡ cx
@@ -90,8 +78,6 @@ cxexp = begin
 
 deutschEq : deutsch ≡ one *** minus
 deutschEq = begin
-  deutsch
-    ≡⟨ id≡ ⟩
   zero *** one >>> H *** H >>> cx >>> H *** id⇔
     ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
   plus *** minus >>> cx >>> H *** id⇔ 
@@ -99,9 +85,31 @@ deutschEq = begin
   plus *** minus >>> (copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ) >>> H *** id⇔ 
     ≡⟨ {!!} ⟩
   one *** minus ∎
-
+ where
+   oneH : one >>> H ≡ minus
+   oneH = begin
+     (zero >>> X) >>> H
+       ≡⟨ assoc>>>r ⟩
+     zero >>> X >>> H
+       ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
+     zero >>> H >>> H >>> X >>> H
+       ≡⟨ assoc>>>l ⟩
+     plus >>> Z ∎
 
 {--
+
+plus *** minus
+(plus >>> copyZ) *** minus
+
+plus >>> copyZ
+(plus *** zero) >>> cx
+
+
+copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
+invCopyZ = cx >>> (id⇔ *** assertZero) >>> unite⋆r
+copyϕ = H >>> copyZ >>> (H *** H)
+invcopyϕ = (H *** H) >>> invCopyZ >>> H
+
       zero *** one
   >>> H *** H 
   >>> cx
