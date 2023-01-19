@@ -9,7 +9,7 @@ open import Data.List
 
 open import Pi.Types using (U; I; 𝟚; _×ᵤ_; 𝔽; 𝕋)
 open import Pi.Language using (_⟷_; id⟷; swap₊; _⊕_; _⊗_; dist; factor; !⟷)
-open import Pi.Equivalences using (_⟷₂_)
+open import Pi.Equivalences using (_⟷₂_; assoc◎r)
 open import Reasoning using (hadInv)
 open import QPi.Syntax
 open import QPi.Terms
@@ -64,6 +64,23 @@ oneH = begin
   zero >>> H >>> H >>> X >>> H
     ≡⟨ assoc>>>l ⟩
   plus >>> Z ∎
+
+invCx : inv cx ≡ cx
+invCx = classicalZ assoc◎r
+
+invCopyZ : inv copyZ ≡ cx >>> (id⇔ *** assertZero) >>> unite⋆r
+invCopyZ = begin
+  inv copyZ
+    ≡⟨ assoc>>>r ◯ invCx ⟩◎⟨id ⟩
+  cx >>> (id⇔ *** assertZero) >>> unite⋆r ∎
+
+invCopyϕ : inv copyϕ ≡ (H *** H) >>> cx >>> (id⇔ *** assertZero) >>> unite⋆r >>> H
+invCopyϕ = begin
+  inv copyϕ
+    ≡⟨ assoc>>>r ◯ id⟩◎⟨ invCopyZ ⟩◎⟨id ⟩
+  (H *** H) >>> (cx >>> (id⇔ *** assertZero) >>> unite⋆r) >>> H 
+    ≡⟨ id⟩◎⟨ (assoc>>>r ◯ id⟩◎⟨ assoc>>>r) ⟩
+  (H *** H) >>> cx >>> (id⇔ *** assertZero) >>> unite⋆r >>> H ∎
 
 cxexp : copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ ≡ cx
 cxexp = begin
