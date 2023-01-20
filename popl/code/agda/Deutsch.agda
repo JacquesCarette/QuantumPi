@@ -18,6 +18,9 @@ open import QPi.Execute using (run; ket)
 open import QPi.Equivalences
 open import QPi.TermReasoning
 
+------------------------------------------------------------------------------------
+-- Circuit for Deutsch and its NF 
+
 private
   variable
     t₁ t₂ : U
@@ -53,7 +56,44 @@ test2 = run deutschNF (ket (tt , tt))
 ((𝕋 , 𝕋) , -0.7071067812024211) ∷ []
 --}
 
--- Proof
+------------------------------------------------------------------------------------
+-- Proof of equivalence
+
+cxS czS : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 
+cxS = swap⋆ >>> cx >>> swap⋆
+czS = swap⋆ >>> cz >>> swap⋆
+
+oneH : one >>> H ≡ minus
+oneH = begin
+  (zero >>> X) >>> H
+    ≡⟨ assoc>>>r ⟩
+  zero >>> X >>> H
+    ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
+  zero >>> H >>> H >>> X >>> H
+    ≡⟨ assoc>>>l ⟩
+  plus >>> Z ∎
+
+minusH : minus >>> H ≡ one
+minusH = begin
+  minus >>> H
+    ≡⟨ (!≡ oneH) ⟩◎⟨id ⟩
+  (one >>> H) >>> H
+    ≡⟨ assoc>>>r ◯ id⟩◎⟨ hadInv ⟩
+  one >>> id⇔
+    ≡⟨ idr>>>l ⟩
+  one ∎
+
+czcx : czS ≡ H *** id⇔ >>> cxS >>> H *** id⇔
+czcx = begin
+  swap⋆ >>> cz >>> swap⋆
+    ≡⟨ id⟩◎⟨ (assoc>>>l ⟩◎⟨id) ◯ id⟩◎⟨ trans≡ assoc>>>r assoc>>>r ⟩
+  swap⋆ >>> id⇔ *** H >>> cx >>> id⇔ *** H >>> swap⋆
+    ≡⟨ assoc>>>l ◯ swapl⋆≡ ⟩◎⟨id ◯ assoc>>>r ⟩ 
+  H *** id⇔ >>> swap⋆ >>> cx >>> id⇔ *** H >>> swap⋆ 
+    ≡⟨ id⟩◎⟨ id⟩◎⟨ id⟩◎⟨ swapr⋆≡ ⟩ 
+  H *** id⇔ >>> swap⋆ >>> cx >>> swap⋆ >>> H *** id⇔
+    ≡⟨ id⟩◎⟨ (trans≡ assoc>>>l assoc>>>l ◯ assoc>>>r ⟩◎⟨id) ⟩ 
+  H *** id⇔ >>> cxS >>> H *** id⇔ ∎
 
 invCx : inv cx ≡ cx
 invCx = classicalZ assoc◎r
@@ -76,135 +116,17 @@ cxexp = begin
     ≡⟨ {!!} ⟩
   cx ∎
 
-deutschEq : deutsch ≡ one *** minus
-deutschEq = begin
-  zero *** one >>> H *** H >>> cx >>> H *** id⇔
-    ≡⟨ assoc>>>l ◯ (homL*** ◯ cong*** id≡ oneH) ⟩◎⟨id ⟩ 
-  plus *** minus >>> cx >>> H *** id⇔ 
-    ≡⟨ id⟩◎⟨ !≡ cxexp ⟩◎⟨id ⟩
-  plus *** minus >>> (copyZ *** id⇔ >>> assocr⋆ >>> id⇔ *** inv copyϕ) >>> H *** id⇔ 
-    ≡⟨ {!!} ⟩
-  one *** minus ∎
- where
-   oneH : one >>> H ≡ minus
-   oneH = begin
-     (zero >>> X) >>> H
-       ≡⟨ assoc>>>r ⟩
-     zero >>> X >>> H
-       ≡⟨ id⟩◎⟨ (idl>>>r ◯ (!≡ hadInv ⟩◎⟨id) ◯ assoc>>>r) ⟩ 
-     zero >>> H >>> H >>> X >>> H
-       ≡⟨ assoc>>>l ⟩
-     plus >>> Z ∎
-
-{--
-
-plus *** minus
-(plus >>> copyZ) *** minus
-
-plus >>> copyZ
-(plus *** zero) >>> cx
-
-
-copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
-invCopyZ = cx >>> (id⇔ *** assertZero) >>> unite⋆r
-copyϕ = H >>> copyZ >>> (H *** H)
-invcopyϕ = (H *** H) >>> invCopyZ >>> H
-
-      zero *** one
-  >>> H *** H 
-  >>> cx
-  >>> H *** id⇔
-
-
-czcx : czS ≡ H *** id⇔ >>> cxS >>> H *** id⇔
-czcx = begin
-  swap⋆ >>> cz >>> swap⋆
-    ≡⟨ id⟩◎⟨ (assoc>>>l ⟩◎⟨id) ◯ id⟩◎⟨ trans≡ assoc>>>r assoc>>>r ⟩
-  swap⋆ >>> id⇔ *** H >>> cx >>> id⇔ *** H >>> swap⋆
-    ≡⟨ assoc>>>l ◯ swapl⋆≡ ⟩◎⟨id ◯ assoc>>>r ⟩ 
-  H *** id⇔ >>> swap⋆ >>> cx >>> id⇔ *** H >>> swap⋆ 
-    ≡⟨ id⟩◎⟨ id⟩◎⟨ id⟩◎⟨ swapr⋆≡ ⟩ 
-  H *** id⇔ >>> swap⋆ >>> cx >>> swap⋆ >>> H *** id⇔
-    ≡⟨ id⟩◎⟨ (trans≡ assoc>>>l assoc>>>l ◯ assoc>>>r ⟩◎⟨id) ⟩ 
-  H *** id⇔ >>> cxS >>> H *** id⇔ ∎
-
-
-minusH : minus >>> H ≡ one
-minusH = begin
-  minus >>> H
-    ≡⟨ (!≡ oneH) ⟩◎⟨id ⟩
-  (one >>> H) >>> H
-    ≡⟨ assoc>>>r ◯ id⟩◎⟨ hadInv ⟩
-  one >>> id⇔
-    ≡⟨ idr>>>l ⟩
-  one ∎
-
-comp1 :
-      uniti⋆r *** id⇔
-  >>> (id⇔ *** zero) *** id⇔ 
-  >>> cx *** id⇔
-  >>> id⇔ *** (H *** H)
-  >>> id⇔ *** cx
-  >>> id⇔ *** (id⇔ *** assertZero) 
-  >>> id⇔ *** (id⇔ *** zero) 
-  >>> id⇔ *** cx
-  >>> id⇔ *** (H *** H)
-  >>> cx *** id⇔ 
-  >>> (id⇔ *** assertZero) *** id⇔ 
-  >>> unite⋆r *** id⇔
-  ≡ id⇔
-comp1 = begin
-      uniti⋆r *** id⇔
-  >>> (id⇔ *** zero) *** id⇔ 
-  >>> cx *** id⇔
-  >>> id⇔ *** (H *** H)
-  >>> id⇔ *** cx
-  >>> id⇔ *** (id⇔ *** assertZero) 
-  >>> id⇔ *** (id⇔ *** zero) 
-  >>> id⇔ *** cx
-  >>> id⇔ *** (H *** H)
-  >>> cx *** id⇔ 
-  >>> (id⇔ *** assertZero) *** id⇔ 
-  >>> unite⋆r *** id⇔
-    ≡⟨ {!!} ⟩
-  ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
-   (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
-    ≡⟨ C ⟩
-  id⇔ ∎
-
-{--
-copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
-invCopyZ = cx >>> (id⇔ *** assertZero) >>> unite⋆r
-copyϕ = H >>> copyZ >>> (H *** H)
-invcopyϕ = (H *** H) >>> invCopyZ >>> H
---}
-
 pmcx : plus *** minus >>> cx ≡ minus *** minus
 pmcx = begin
   plus *** minus >>> cx
     ≡⟨ {!!} ⟩ 
-  (zero *** one >>>
-   arrϕ swap₊ *** arrϕ swap₊ >>>
-   arrZ dist >>>
-   arrZ (id⟷ ⊕ id⟷ ⊗ swap₊) >>>
-   arrZ factor)
-    ≡⟨ {!!} ⟩
-  minus *** minus ∎  
+  minus *** minus ∎
 
 mpcxS : minus *** plus >>> cxS ≡ minus *** minus
 mpcxS = begin
   minus *** plus >>> cxS
     ≡⟨ {!!} ⟩
-  (one *** zero >>>
-   arrϕ swap₊ *** arrϕ swap₊ >>>
-   swap⋆ >>>
-   arrZ dist >>>
-   arrZ (id⟷ ⊕ id⟷ ⊗ swap₊) >>>
-   arrZ factor >>>
-   swap⋆)
-    ≡⟨ {!!} ⟩
   minus *** minus ∎
-
 
 eq1 : deutsch ≡ one *** minus
 eq1 = begin
@@ -234,5 +156,68 @@ eq2 = begin
 
 eq : deutsch ≡ deutschNF
 eq = trans≡ eq1 (!≡ eq2)
+
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+L1 L2 L3 : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 
+
+L1 = copyZ *** id⇔ >>>
+     assocr⋆ >>>
+     id⇔ *** inv copyϕ >>>
+     id⇔ *** copyϕ >>>
+     assocl⋆ >>>
+     inv copyZ *** id⇔
+
+L2 = uniti⋆r *** id⇔ >>>
+     (id⇔ *** zero) *** id⇔ >>>
+     cx *** id⇔ >>>
+     assocr⋆ >>>
+     id⇔ *** H *** H >>> 
+     id⇔ *** cx >>>
+     id⇔ *** id⇔ *** assertZero >>>
+     id⇔ *** unite⋆r >>> 
+     id⇔ *** H >>>
+     id⇔ *** H >>> 
+     id⇔ *** uniti⋆r >>> 
+     id⇔ *** id⇔ *** zero >>> 
+     id⇔ *** cx >>>
+     id⇔ *** H *** H >>>
+     assocl⋆ >>>
+     cx *** id⇔ >>>
+     (id⇔ *** assertZero) *** id⇔ >>>
+     unite⋆r *** id⇔
+
+L3 = uniti⋆r *** id⇔ >>>
+     (id⇔ *** zero) *** id⇔ >>>
+     cx *** id⇔ >>>
+     assocr⋆ >>>
+     id⇔ *** H *** H >>> 
+     id⇔ *** cx >>>
+     id⇔ *** id⇔ *** assertZero >>>
+     id⇔ *** id⇔ *** zero >>> 
+     id⇔ *** cx >>>
+     id⇔ *** H *** H >>>
+     assocl⋆ >>>
+     cx *** id⇔ >>>
+     (id⇔ *** assertZero) *** id⇔ >>>
+     unite⋆r *** id⇔
+
+
+
+
+{--
+
+cx : 𝟚 ×ᵤ 𝟚 ⇔ 𝟚 ×ᵤ 𝟚 
+cx = id *** copyϕ >>> assocl >>> inv copyZ *** id
+
+zero *** plus >>> inv copyϕ ≡ plus
+zero *** plus >>> inv copyZ ≡ zero
+
+pmcx  : plus  *** minus >>> cx  ≡ minus *** minus
+mpcxS : minus *** plus  >>> cxS ≡ minus *** minus
+
+copyZ = uniti⋆r >>> (id⇔ *** zero) >>> cx
+copyϕ = H >>> copyZ >>> (H *** H)
 
 --}

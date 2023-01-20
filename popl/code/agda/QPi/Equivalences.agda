@@ -76,11 +76,11 @@ data _≡_ : {t₁ t₂ : U} → (t₁ ⇔ t₂) → (t₁ ⇔ t₂) → Set whe
   e3L : (one *** id⇔) >>> ctrlZ c ≡ one *** arrZ c
   e3R : one *** arrZ c ≡ (one *** id⇔) >>> ctrlZ c
   -- complementarity
-  C   : ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
-        (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
+  C   : ((copyZ *** id⇔) >>> assocr⋆ >>> (id⇔ *** (inv copyϕ)) >>>
+        (id⇔ *** copyϕ) >>> assocl⋆ >>> ((inv copyZ) *** id⇔))
         ≡ id⇔
-  C˘  : id⇔ ≡ ((copyZ *** id⇔) >>> (id⇔ *** (inv copyϕ)) >>>
-        (id⇔ *** copyϕ) >>> ((inv copyZ) *** id⇔))
+  C˘  : id⇔ ≡ ((copyZ *** id⇔) >>> assocr⋆ >>> (id⇔ *** (inv copyϕ)) >>>
+        (id⇔ *** copyϕ) >>> assocl⋆ >>> ((inv copyZ) *** id⇔))
 
 ---------------------------------------------------------------------------
 
