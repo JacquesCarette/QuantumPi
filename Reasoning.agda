@@ -16,6 +16,7 @@ open import QPi.Terms using (ctrlZ; one; copyZ; copyϕ; X; Z;
 open import QPi.Equivalences
 open import QPi.Measurement using (measureϕ; measureZ; fst; discard; discardL)
 open import QPi.TermReasoning
+ using (begin_; _∎; step-≡; _⟩◎⟨id; id⟩◎⟨_; id⟩⊗⟨_; _⟩⊗⟨id; _◯_; _⟩⊗⟨_)
 
 ---------------------------------------------------------------------------
 -- Extra infrastructure, much of it inspired by agda-categories
