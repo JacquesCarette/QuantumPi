@@ -19,6 +19,10 @@ we have not tested this in any way.
 
 To check everything, simply do
 ```
+make
+```
+(though this only really does)
+```
 agda Everything.agda
 ```
 at the command line. This should take less than 30 seconds, where the
